@@ -1,0 +1,847 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lhfeiyu.dao.PatientReportMapper">
+	<!--====================================== 设置开始-CONFIG_BEGIN ======================================-->
+	<sql id="table">patient_report</sql>
+	<!-- 基础字段 -->
+	<sql id="baseColumns">
+		A.id AS id,A.adicon_barcode AS adiconBarcode,A.patient_id AS patientId,A.doctor_id AS doctorId,A.hospital_name AS hospitalName,A.hospital_id AS hospitalId,A.doctor_result AS doctorResult,A.item_codes AS itemCodes,A.patient_name AS patientName,A.sex AS sex,A.age AS age,A.age_type AS ageType,A.department AS department,A.bed_no AS bedNo,A.collection_date AS collectionDate,A.received_date AS receivedDate,A.lis_date AS lisDate,A.report_date AS reportDate,A.customer_barcode AS customerBarcode,A.doctor AS doctor,A.technician AS technician,A.checked_by AS checkedBy,A.instrument AS instrument,A.serial_number AS serialNumber,A.sample_type AS sampleType,A.clinical_diagnosis AS clinicalDiagnosis,A.item_code AS itemCode,A.item_name_CN AS itemName_CN,A.item_name_EN AS itemName_EN,A.result AS result,A.result_hint AS resultHint,A.result_reference AS resultReference,A.result_unit AS resultUnit,A.test_method AS testMethod,A.test_method_EN AS testMethod_EN,A.result_pathology AS resultPathology,A.sample_char AS sampleChar,A.patient_number AS patientNumber,A.patient_phone AS patientPhone,A.str1 AS str1,A.str2 AS str2,A.str3 AS str3,A.str4 AS str4,A.str5 AS str5,A.service_flag AS serviceFlag,A.serial AS serial,A.type_id AS typeId,A.link_id AS linkId,A.group_id AS groupId,A.grade_id AS gradeId,A.main_status AS mainStatus,A.logic_status AS logicStatus,A.attr_decimal AS attrDecimal,A.main_ids AS mainIds,A.attr_str AS attrStr,A.attr_str2 AS attrStr2,A.attr_int AS attrInt,A.attr_int2 AS attrInt2,A.attr_num AS attrNum,A.attr_date AS attrDate,A.attr_datetime AS attrDatetime,A.sequence AS sequence,A.description AS description,A.remark AS remark,A.deleted_at AS deletedAt,A.deleted_by AS deletedBy,A.created_at AS createdAt,A.created_by AS createdBy,A.updated_at AS updatedAt,A.updated_by AS updatedBy
+	</sql>
+	<sql id="baseSearch">
+		<if test="deleted == null">AND A.deleted_at IS NULL</if> 
+		<if test="deleted != null">AND A.deleted_at IS not NULL</if>
+		<if test="id != null and id != '' ">AND A.id = #{id}</if>
+		<if test="patientReportId != null and patientReportId != '' ">AND A.id = #{patientReportId}</if>
+		<if test="serial != null and serial != '' ">AND A.serial = #{serial}</if>
+		<if test="mainStatus != null and mainStatus != '' ">AND A.main_status = #{mainStatus}</if>
+		<if test="logicStatus != null and logicStatus != '' ">AND A.logic_status = #{logicStatus}</if>
+	</sql>
+	<sql id="suffix"><!-- 分组排序  -->
+		<if test="groupBy != null and groupBy !='' "> GROUP BY #{groupBy,jdbcType=VARCHAR}</if>
+		<if test="orderBy != null and orderBy !='' "> ORDER BY <if test="selfOrder == null">A.</if>${orderBy}</if>
+		<if test="ascOrdesc != null and ascOrdesc !='' "> ${ascOrdesc}</if>
+		<if test="orderBy == null and ascOrdesc == null "> ORDER BY A.id DESC</if>
+	</sql>
+	<sql id="limitCount"><!-- 分页 -->
+		<if test="count != null and count !='' "> LIMIT ${start},${count}</if> 
+	</sql>
+	<!--====================================== 设置结束-CONFIG_FINISH ======================================-->
+	
+	<!--=@@@@@@============================= 自定义内容 开始 _@CAUTION_SELF_BEGIN@_ =============================@@@@@@=-->
+	<sql id="columns">
+	
+	</sql>
+	<sql id="search">
+		<if test="serialNumber != null and serialNumber != '' ">
+			AND A.serial_number = #{serialNumber}
+		</if>
+		<if test="itemCode != null and itemCode != '' ">
+			AND A.item_code = #{itemCode}
+		</if>
+		<if test="itemName_CN != null and itemName_CN != '' ">
+			AND A.item_name_CN LIKE '%${itemName_CN}%'
+		</if>
+		<if test="adiconBarcode != null and adiconBarcode != '' ">
+			AND A.adicon_barcode = #{adiconBarcode}
+		</if>
+		<if test="patientName != null and patientName != '' ">
+			AND A.patient_name LIKE '%${patientName}%'
+		</if>
+		<if test="adiconBarcodeLike != null and adiconBarcodeLike != '' ">
+			AND A.adicon_barcode LIKE '%${adiconBarcodeLike}%'
+		</if>
+		<if test="doctorName != null and doctorName != '' ">
+			AND A.patient_id IN (SELECT user_id FROM doctor_patient dp LEFT JOIN doctor d ON d.id = dp.doctor_id WHERE d.username LIKE '%${doctorName}%' OR d.realname LIKE '%${doctorName}%' ) 
+		</if>
+		<if test="doctorId != null and doctorId != '' ">
+			AND A.patient_id IN (SELECT user_id FROM doctor_patient WHERE doctor_id = #{doctorId} ) 
+		</if>
+		<if test="hospitalId != null and hospitalId != '' ">
+			AND A.patient_id IN (SELECT user_id FROM doctor_patient dp LEFT JOIN doctor d ON d.id = dp.doctor_id WHERE d.hospital_id = #{hospitalId} ) 
+		</if>
+		<if test="userId != null and userId != '' ">
+			AND A.patient_id = #{userId}
+		</if>
+		<if test="linkUserId != null and linkUserId != '' ">
+			AND (A.id IS NOT NULL AND u.id = #{linkUserId} OR u.relation_id = #{linkUserId})
+		</if>
+	</sql>
+	<sql id="leftJoin">
+		LEFT JOIN user u ON A.patient_id = u.id
+	</sql>
+	<!--=@@@@@@============================= 自定义内容 结束 _@CAUTION_SELF_FINISH@_ =============================@@@@@@=-->
+	
+	
+	<!--====================================== 查询开始-SELECT_BEGIN ======================================-->
+	<select id="selectListByCondition" parameterType="java.util.Map" resultType="com.lhfeiyu.po.PatientReport">
+    	SELECT 
+		<include refid="baseColumns"/><include refid="columns"/>
+		FROM <include refid="table"/> A 
+		<include refid="leftJoin"/>
+		WHERE 1=1 
+		<include refid="baseSearch"/><include refid="search"/>
+		<include refid="suffix"/>
+		<include refid="limitCount"/>
+	</select>
+	
+	<select id="selectByCondition" parameterType="java.util.Map" resultType="com.lhfeiyu.po.PatientReport">
+   		SELECT 
+		<include refid="baseColumns"/><include refid="columns"/>
+		FROM <include refid="table"/> A 
+		<include refid="leftJoin"/>
+		WHERE 1=1 
+		<include refid="baseSearch"/><include refid="search"/>
+		<include refid="suffix"/>
+		LIMIT 0,1 
+	</select>
+	
+	<select id="selectCountByCondition" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM <include refid="table"/> A 
+		<include refid="leftJoin"/>
+		WHERE 1=1
+		<include refid="baseSearch"/><include refid="search"/>
+	</select>
+	
+	<select id="selectByPrimaryKey" resultType="com.lhfeiyu.po.PatientReport" parameterType="java.lang.Integer">
+		SELECT <include refid="baseColumns"/> FROM <include refid="table"/> A WHERE A.id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<select id="selectBySerial" resultType="com.lhfeiyu.po.PatientReport">
+   		SELECT 
+		<include refid="baseColumns"/><include refid="columns"/>
+		FROM <include refid="table"/> A
+		<include refid="leftJoin"/>
+    	WHERE A.serial = #{serial,jdbcType=VARCHAR}
+		LIMIT 0,1 
+	</select>
+	<!--====================================== 查询结束-SELECT_FINISH ======================================-->
+	
+	<!--====================================== 修改开始-UPDATE_BEGIN ======================================-->
+	<!-- <-#-if cMap_has_next>,</-#-if> -->
+	<update id="updateByPrimaryKey" parameterType="com.lhfeiyu.po.PatientReport">
+	    UPDATE <include refid="table"/>
+		<set>
+			
+			adicon_barcode = #{adiconBarcode,jdbcType=VARCHAR},
+			patient_id = #{patientId,jdbcType=INTEGER},
+			doctor_id = #{doctorId,jdbcType=INTEGER},
+			hospital_name = #{hospitalName,jdbcType=VARCHAR},
+			hospital_id = #{hospitalId,jdbcType=INTEGER},
+			doctor_result = #{doctorResult,jdbcType=VARCHAR},
+			item_codes = #{itemCodes,jdbcType=VARCHAR},
+			patient_name = #{patientName,jdbcType=VARCHAR},
+			sex = #{sex,jdbcType=VARCHAR},
+			age = #{age,jdbcType=VARCHAR},
+			age_type = #{ageType,jdbcType=VARCHAR},
+			department = #{department,jdbcType=VARCHAR},
+			bed_no = #{bedNo,jdbcType=VARCHAR},
+			collection_date = #{collectionDate,jdbcType=TIMESTAMP},
+			received_date = #{receivedDate,jdbcType=TIMESTAMP},
+			lis_date = #{lisDate,jdbcType=TIMESTAMP},
+			report_date = #{reportDate,jdbcType=TIMESTAMP},
+			customer_barcode = #{customerBarcode,jdbcType=VARCHAR},
+			doctor = #{doctor,jdbcType=VARCHAR},
+			technician = #{technician,jdbcType=VARCHAR},
+			checked_by = #{checkedBy,jdbcType=VARCHAR},
+			instrument = #{instrument,jdbcType=VARCHAR},
+			serial_number = #{serialNumber,jdbcType=INTEGER},
+			sample_type = #{sampleType,jdbcType=VARCHAR},
+			clinical_diagnosis = #{clinicalDiagnosis,jdbcType=VARCHAR},
+			item_code = #{itemCode,jdbcType=VARCHAR},
+			item_name_CN = #{itemName_CN,jdbcType=VARCHAR},
+			item_name_EN = #{itemName_EN,jdbcType=VARCHAR},
+			result = #{result,jdbcType=VARCHAR},
+			result_hint = #{resultHint,jdbcType=VARCHAR},
+			result_reference = #{resultReference,jdbcType=VARCHAR},
+			result_unit = #{resultUnit,jdbcType=VARCHAR},
+			test_method = #{testMethod,jdbcType=VARCHAR},
+			test_method_EN = #{testMethod_EN,jdbcType=VARCHAR},
+			result_pathology = #{resultPathology,jdbcType=VARCHAR},
+			sample_char = #{sampleChar,jdbcType=VARCHAR},
+			patient_number = #{patientNumber,jdbcType=VARCHAR},
+			patient_phone = #{patientPhone,jdbcType=VARCHAR},
+			str1 = #{str1,jdbcType=VARCHAR},
+			str2 = #{str2,jdbcType=VARCHAR},
+			str3 = #{str3,jdbcType=VARCHAR},
+			str4 = #{str4,jdbcType=VARCHAR},
+			str5 = #{str5,jdbcType=VARCHAR},
+			service_flag = #{serviceFlag,jdbcType=VARCHAR},
+			serial = #{serial,jdbcType=VARCHAR},
+			type_id = #{typeId,jdbcType=INTEGER},
+			link_id = #{linkId,jdbcType=INTEGER},
+			group_id = #{groupId,jdbcType=INTEGER},
+			grade_id = #{gradeId,jdbcType=INTEGER},
+			main_status = #{mainStatus,jdbcType=INTEGER},
+			logic_status = #{logicStatus,jdbcType=INTEGER},
+			attr_decimal = #{attrDecimal,jdbcType=DECIMAL},
+			main_ids = #{mainIds,jdbcType=VARCHAR},
+			attr_str = #{attrStr,jdbcType=VARCHAR},
+			attr_str2 = #{attrStr2,jdbcType=VARCHAR},
+			attr_int = #{attrInt,jdbcType=INTEGER},
+			attr_int2 = #{attrInt2,jdbcType=INTEGER},
+			attr_num = #{attrNum,jdbcType=DECIMAL},
+			attr_date = #{attrDate,jdbcType=DATE},
+			attr_datetime = #{attrDatetime,jdbcType=TIMESTAMP},
+			sequence = #{sequence,jdbcType=INTEGER},
+			description = #{description,jdbcType=VARCHAR},
+			remark = #{remark,jdbcType=VARCHAR},
+			deleted_at = #{deletedAt,jdbcType=TIMESTAMP},
+			deleted_by = #{deletedBy,jdbcType=VARCHAR},
+			created_at = #{createdAt,jdbcType=TIMESTAMP},
+			created_by = #{createdBy,jdbcType=VARCHAR},
+			updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+			
+		  <if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+		  updated_at = NOW()
+		</set>
+	    WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateBySerial" parameterType="com.lhfeiyu.po.PatientReport">
+	    UPDATE <include refid="table"/>
+		<set>
+		  	
+		  	adicon_barcode = #{adiconBarcode,jdbcType=VARCHAR},
+		  	patient_id = #{patientId,jdbcType=INTEGER},
+		  	doctor_id = #{doctorId,jdbcType=INTEGER},
+		  	hospital_name = #{hospitalName,jdbcType=VARCHAR},
+		  	hospital_id = #{hospitalId,jdbcType=INTEGER},
+		  	doctor_result = #{doctorResult,jdbcType=VARCHAR},
+		  	item_codes = #{itemCodes,jdbcType=VARCHAR},
+		  	patient_name = #{patientName,jdbcType=VARCHAR},
+		  	sex = #{sex,jdbcType=VARCHAR},
+		  	age = #{age,jdbcType=VARCHAR},
+		  	age_type = #{ageType,jdbcType=VARCHAR},
+		  	department = #{department,jdbcType=VARCHAR},
+		  	bed_no = #{bedNo,jdbcType=VARCHAR},
+		  	collection_date = #{collectionDate,jdbcType=TIMESTAMP},
+		  	received_date = #{receivedDate,jdbcType=TIMESTAMP},
+		  	lis_date = #{lisDate,jdbcType=TIMESTAMP},
+		  	report_date = #{reportDate,jdbcType=TIMESTAMP},
+		  	customer_barcode = #{customerBarcode,jdbcType=VARCHAR},
+		  	doctor = #{doctor,jdbcType=VARCHAR},
+		  	technician = #{technician,jdbcType=VARCHAR},
+		  	checked_by = #{checkedBy,jdbcType=VARCHAR},
+		  	instrument = #{instrument,jdbcType=VARCHAR},
+		  	serial_number = #{serialNumber,jdbcType=INTEGER},
+		  	sample_type = #{sampleType,jdbcType=VARCHAR},
+		  	clinical_diagnosis = #{clinicalDiagnosis,jdbcType=VARCHAR},
+		  	item_code = #{itemCode,jdbcType=VARCHAR},
+		  	item_name_CN = #{itemName_CN,jdbcType=VARCHAR},
+		  	item_name_EN = #{itemName_EN,jdbcType=VARCHAR},
+		  	result = #{result,jdbcType=VARCHAR},
+		  	result_hint = #{resultHint,jdbcType=VARCHAR},
+		  	result_reference = #{resultReference,jdbcType=VARCHAR},
+		  	result_unit = #{resultUnit,jdbcType=VARCHAR},
+		  	test_method = #{testMethod,jdbcType=VARCHAR},
+		  	test_method_EN = #{testMethod_EN,jdbcType=VARCHAR},
+		  	result_pathology = #{resultPathology,jdbcType=VARCHAR},
+		  	sample_char = #{sampleChar,jdbcType=VARCHAR},
+		  	patient_number = #{patientNumber,jdbcType=VARCHAR},
+		  	patient_phone = #{patientPhone,jdbcType=VARCHAR},
+		  	str1 = #{str1,jdbcType=VARCHAR},
+		  	str2 = #{str2,jdbcType=VARCHAR},
+		  	str3 = #{str3,jdbcType=VARCHAR},
+		  	str4 = #{str4,jdbcType=VARCHAR},
+		  	str5 = #{str5,jdbcType=VARCHAR},
+		  	service_flag = #{serviceFlag,jdbcType=VARCHAR},
+		  	serial = #{serial,jdbcType=VARCHAR},
+		  	type_id = #{typeId,jdbcType=INTEGER},
+		  	link_id = #{linkId,jdbcType=INTEGER},
+		  	group_id = #{groupId,jdbcType=INTEGER},
+		  	grade_id = #{gradeId,jdbcType=INTEGER},
+		  	main_status = #{mainStatus,jdbcType=INTEGER},
+		  	logic_status = #{logicStatus,jdbcType=INTEGER},
+		  	attr_decimal = #{attrDecimal,jdbcType=DECIMAL},
+		  	main_ids = #{mainIds,jdbcType=VARCHAR},
+		  	attr_str = #{attrStr,jdbcType=VARCHAR},
+		  	attr_str2 = #{attrStr2,jdbcType=VARCHAR},
+		  	attr_int = #{attrInt,jdbcType=INTEGER},
+		  	attr_int2 = #{attrInt2,jdbcType=INTEGER},
+		  	attr_num = #{attrNum,jdbcType=DECIMAL},
+		  	attr_date = #{attrDate,jdbcType=DATE},
+		  	attr_datetime = #{attrDatetime,jdbcType=TIMESTAMP},
+		  	sequence = #{sequence,jdbcType=INTEGER},
+		  	description = #{description,jdbcType=VARCHAR},
+		  	remark = #{remark,jdbcType=VARCHAR},
+		  	deleted_at = #{deletedAt,jdbcType=TIMESTAMP},
+		  	deleted_by = #{deletedBy,jdbcType=VARCHAR},
+		  	created_at = #{createdAt,jdbcType=TIMESTAMP},
+		  	created_by = #{createdBy,jdbcType=VARCHAR},
+		  	updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+		  	
+		  <if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+		  updated_at = NOW()
+		</set>
+	    WHERE serial = #{serial,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateByIds">
+	    UPDATE <include refid="table"/>
+		<set>
+			
+			adicon_barcode = #{adiconBarcode,jdbcType=VARCHAR},
+			patient_id = #{patientId,jdbcType=INTEGER},
+			doctor_id = #{doctorId,jdbcType=INTEGER},
+			hospital_name = #{hospitalName,jdbcType=VARCHAR},
+			hospital_id = #{hospitalId,jdbcType=INTEGER},
+			doctor_result = #{doctorResult,jdbcType=VARCHAR},
+			item_codes = #{itemCodes,jdbcType=VARCHAR},
+			patient_name = #{patientName,jdbcType=VARCHAR},
+			sex = #{sex,jdbcType=VARCHAR},
+			age = #{age,jdbcType=VARCHAR},
+			age_type = #{ageType,jdbcType=VARCHAR},
+			department = #{department,jdbcType=VARCHAR},
+			bed_no = #{bedNo,jdbcType=VARCHAR},
+			collection_date = #{collectionDate,jdbcType=TIMESTAMP},
+			received_date = #{receivedDate,jdbcType=TIMESTAMP},
+			lis_date = #{lisDate,jdbcType=TIMESTAMP},
+			report_date = #{reportDate,jdbcType=TIMESTAMP},
+			customer_barcode = #{customerBarcode,jdbcType=VARCHAR},
+			doctor = #{doctor,jdbcType=VARCHAR},
+			technician = #{technician,jdbcType=VARCHAR},
+			checked_by = #{checkedBy,jdbcType=VARCHAR},
+			instrument = #{instrument,jdbcType=VARCHAR},
+			serial_number = #{serialNumber,jdbcType=INTEGER},
+			sample_type = #{sampleType,jdbcType=VARCHAR},
+			clinical_diagnosis = #{clinicalDiagnosis,jdbcType=VARCHAR},
+			item_code = #{itemCode,jdbcType=VARCHAR},
+			item_name_CN = #{itemName_CN,jdbcType=VARCHAR},
+			item_name_EN = #{itemName_EN,jdbcType=VARCHAR},
+			result = #{result,jdbcType=VARCHAR},
+			result_hint = #{resultHint,jdbcType=VARCHAR},
+			result_reference = #{resultReference,jdbcType=VARCHAR},
+			result_unit = #{resultUnit,jdbcType=VARCHAR},
+			test_method = #{testMethod,jdbcType=VARCHAR},
+			test_method_EN = #{testMethod_EN,jdbcType=VARCHAR},
+			result_pathology = #{resultPathology,jdbcType=VARCHAR},
+			sample_char = #{sampleChar,jdbcType=VARCHAR},
+			patient_number = #{patientNumber,jdbcType=VARCHAR},
+			patient_phone = #{patientPhone,jdbcType=VARCHAR},
+			str1 = #{str1,jdbcType=VARCHAR},
+			str2 = #{str2,jdbcType=VARCHAR},
+			str3 = #{str3,jdbcType=VARCHAR},
+			str4 = #{str4,jdbcType=VARCHAR},
+			str5 = #{str5,jdbcType=VARCHAR},
+			service_flag = #{serviceFlag,jdbcType=VARCHAR},
+			serial = #{serial,jdbcType=VARCHAR},
+			type_id = #{typeId,jdbcType=INTEGER},
+			link_id = #{linkId,jdbcType=INTEGER},
+			group_id = #{groupId,jdbcType=INTEGER},
+			grade_id = #{gradeId,jdbcType=INTEGER},
+			main_status = #{mainStatus,jdbcType=INTEGER},
+			logic_status = #{logicStatus,jdbcType=INTEGER},
+			attr_decimal = #{attrDecimal,jdbcType=DECIMAL},
+			main_ids = #{mainIds,jdbcType=VARCHAR},
+			attr_str = #{attrStr,jdbcType=VARCHAR},
+			attr_str2 = #{attrStr2,jdbcType=VARCHAR},
+			attr_int = #{attrInt,jdbcType=INTEGER},
+			attr_int2 = #{attrInt2,jdbcType=INTEGER},
+			attr_num = #{attrNum,jdbcType=DECIMAL},
+			attr_date = #{attrDate,jdbcType=DATE},
+			attr_datetime = #{attrDatetime,jdbcType=TIMESTAMP},
+			sequence = #{sequence,jdbcType=INTEGER},
+			description = #{description,jdbcType=VARCHAR},
+			remark = #{remark,jdbcType=VARCHAR},
+			deleted_at = #{deletedAt,jdbcType=TIMESTAMP},
+			deleted_by = #{deletedBy,jdbcType=VARCHAR},
+			created_at = #{createdAt,jdbcType=TIMESTAMP},
+			created_by = #{createdBy,jdbcType=VARCHAR},
+			updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+			
+		  <if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+		  updated_at = NOW()
+		</set>
+	    WHERE id IN( ${ids} )
+	</update>
+	
+	<update id="updateByCondition">
+		UPDATE <include refid="table"/> SET
+		<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+		updated_at = NOW(),
+		${condition}
+	</update>
+	
+	<update id="updateDeletedNowByIds">
+		UPDATE <include refid="table"/>
+		<set>
+			deleted_at = NOW(),
+			<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+			updated_at = NOW()
+		</set>
+		WHERE id IN( ${ids} )
+	</update>
+	
+	<update id="updateDeletedNullByIds">
+		UPDATE <include refid="table"/>
+		<set>
+			deleted_at = NULL,
+			<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+			updated_at = NOW()
+		</set>
+		WHERE id IN( ${ids} )
+	</update>
+	
+	<update id="updateDeletedNowById" parameterType="java.lang.Integer">
+		UPDATE <include refid="table"/>
+		<set>
+			deleted_at = NOW(),
+			<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+			updated_at = NOW()
+		</set>
+		WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateDeletedNullById">
+		UPDATE <include refid="table"/>
+		<set> 
+			deleted_at = NULL, 
+			<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+			updated_at = NOW()
+		</set>
+		WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateFieldById" parameterType="java.util.Map">
+		UPDATE <include refid="table"/>
+		<set>
+			<if test="expression1 != null">${expression1},</if>
+			<if test="expression2 != null">${expression2},</if>
+			<if test="expression3 != null">${expression3},</if>
+			<if test="expression4 != null">${expression4},</if>
+			<if test="expression5 != null">${expression5},</if>
+			<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+			updated_at = NOW()
+		</set>
+		WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateFieldByIds" parameterType="java.util.Map">
+		UPDATE <include refid="table"/>
+		<set>
+			<if test="expression1 != null">${expression1},</if>
+			<if test="expression2 != null">${expression2},</if>
+			<if test="expression3 != null">${expression3},</if>
+			<if test="expression4 != null">${expression4},</if>
+			<if test="expression5 != null">${expression5},</if>
+			<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+			updated_at = NOW()
+		</set>
+		WHERE id IN( ${ids} )
+	</update>
+	
+	
+	<update id="updateByPrimaryKeySelective" parameterType="com.lhfeiyu.po.PatientReport">
+	    UPDATE <include refid="table"/>
+		<set>
+				<if test="adiconBarcode != null">adicon_barcode = #{adiconBarcode,jdbcType=VARCHAR},</if>
+				<if test="patientId != null">patient_id = #{patientId,jdbcType=INTEGER},</if>
+				<if test="doctorId != null">doctor_id = #{doctorId,jdbcType=INTEGER},</if>
+				<if test="hospitalName != null">hospital_name = #{hospitalName,jdbcType=VARCHAR},</if>
+				<if test="hospitalId != null">hospital_id = #{hospitalId,jdbcType=INTEGER},</if>
+				<if test="doctorResult != null">doctor_result = #{doctorResult,jdbcType=VARCHAR},</if>
+				<if test="itemCodes != null">item_codes = #{itemCodes,jdbcType=VARCHAR},</if>
+				<if test="patientName != null">patient_name = #{patientName,jdbcType=VARCHAR},</if>
+				<if test="sex != null">sex = #{sex,jdbcType=VARCHAR},</if>
+				<if test="age != null">age = #{age,jdbcType=VARCHAR},</if>
+				<if test="ageType != null">age_type = #{ageType,jdbcType=VARCHAR},</if>
+				<if test="department != null">department = #{department,jdbcType=VARCHAR},</if>
+				<if test="bedNo != null">bed_no = #{bedNo,jdbcType=VARCHAR},</if>
+				<if test="collectionDate != null">collection_date = #{collectionDate,jdbcType=TIMESTAMP},</if>
+				<if test="receivedDate != null">received_date = #{receivedDate,jdbcType=TIMESTAMP},</if>
+				<if test="lisDate != null">lis_date = #{lisDate,jdbcType=TIMESTAMP},</if>
+				<if test="reportDate != null">report_date = #{reportDate,jdbcType=TIMESTAMP},</if>
+				<if test="customerBarcode != null">customer_barcode = #{customerBarcode,jdbcType=VARCHAR},</if>
+				<if test="doctor != null">doctor = #{doctor,jdbcType=VARCHAR},</if>
+				<if test="technician != null">technician = #{technician,jdbcType=VARCHAR},</if>
+				<if test="checkedBy != null">checked_by = #{checkedBy,jdbcType=VARCHAR},</if>
+				<if test="instrument != null">instrument = #{instrument,jdbcType=VARCHAR},</if>
+				<if test="serialNumber != null">serial_number = #{serialNumber,jdbcType=INTEGER},</if>
+				<if test="sampleType != null">sample_type = #{sampleType,jdbcType=VARCHAR},</if>
+				<if test="clinicalDiagnosis != null">clinical_diagnosis = #{clinicalDiagnosis,jdbcType=VARCHAR},</if>
+				<if test="itemCode != null">item_code = #{itemCode,jdbcType=VARCHAR},</if>
+				<if test="itemName_CN != null">item_name_CN = #{itemName_CN,jdbcType=VARCHAR},</if>
+				<if test="itemName_EN != null">item_name_EN = #{itemName_EN,jdbcType=VARCHAR},</if>
+				<if test="result != null">result = #{result,jdbcType=VARCHAR},</if>
+				<if test="resultHint != null">result_hint = #{resultHint,jdbcType=VARCHAR},</if>
+				<if test="resultReference != null">result_reference = #{resultReference,jdbcType=VARCHAR},</if>
+				<if test="resultUnit != null">result_unit = #{resultUnit,jdbcType=VARCHAR},</if>
+				<if test="testMethod != null">test_method = #{testMethod,jdbcType=VARCHAR},</if>
+				<if test="testMethod_EN != null">test_method_EN = #{testMethod_EN,jdbcType=VARCHAR},</if>
+				<if test="resultPathology != null">result_pathology = #{resultPathology,jdbcType=VARCHAR},</if>
+				<if test="sampleChar != null">sample_char = #{sampleChar,jdbcType=VARCHAR},</if>
+				<if test="patientNumber != null">patient_number = #{patientNumber,jdbcType=VARCHAR},</if>
+				<if test="patientPhone != null">patient_phone = #{patientPhone,jdbcType=VARCHAR},</if>
+				<if test="str1 != null">str1 = #{str1,jdbcType=VARCHAR},</if>
+				<if test="str2 != null">str2 = #{str2,jdbcType=VARCHAR},</if>
+				<if test="str3 != null">str3 = #{str3,jdbcType=VARCHAR},</if>
+				<if test="str4 != null">str4 = #{str4,jdbcType=VARCHAR},</if>
+				<if test="str5 != null">str5 = #{str5,jdbcType=VARCHAR},</if>
+				<if test="serviceFlag != null">service_flag = #{serviceFlag,jdbcType=VARCHAR},</if>
+				<if test="serial != null">serial = #{serial,jdbcType=VARCHAR},</if>
+				<if test="typeId != null">type_id = #{typeId,jdbcType=INTEGER},</if>
+				<if test="linkId != null">link_id = #{linkId,jdbcType=INTEGER},</if>
+				<if test="groupId != null">group_id = #{groupId,jdbcType=INTEGER},</if>
+				<if test="gradeId != null">grade_id = #{gradeId,jdbcType=INTEGER},</if>
+				<if test="mainStatus != null">main_status = #{mainStatus,jdbcType=INTEGER},</if>
+				<if test="logicStatus != null">logic_status = #{logicStatus,jdbcType=INTEGER},</if>
+				<if test="attrDecimal != null">attr_decimal = #{attrDecimal,jdbcType=DECIMAL},</if>
+				<if test="mainIds != null">main_ids = #{mainIds,jdbcType=VARCHAR},</if>
+				<if test="attrStr != null">attr_str = #{attrStr,jdbcType=VARCHAR},</if>
+				<if test="attrStr2 != null">attr_str2 = #{attrStr2,jdbcType=VARCHAR},</if>
+				<if test="attrInt != null">attr_int = #{attrInt,jdbcType=INTEGER},</if>
+				<if test="attrInt2 != null">attr_int2 = #{attrInt2,jdbcType=INTEGER},</if>
+				<if test="attrNum != null">attr_num = #{attrNum,jdbcType=DECIMAL},</if>
+				<if test="attrDate != null">attr_date = #{attrDate,jdbcType=DATE},</if>
+				<if test="attrDatetime != null">attr_datetime = #{attrDatetime,jdbcType=TIMESTAMP},</if>
+				<if test="sequence != null">sequence = #{sequence,jdbcType=INTEGER},</if>
+				<if test="description != null">description = #{description,jdbcType=VARCHAR},</if>
+				<if test="remark != null">remark = #{remark,jdbcType=VARCHAR},</if>
+				<if test="deletedAt != null">deleted_at = #{deletedAt,jdbcType=TIMESTAMP},</if>
+				<if test="deletedBy != null">deleted_by = #{deletedBy,jdbcType=VARCHAR},</if>
+				<if test="createdAt != null">created_at = #{createdAt,jdbcType=TIMESTAMP},</if>
+				<if test="createdBy != null">created_by = #{createdBy,jdbcType=VARCHAR},</if>
+				<if test="updatedAt != null">updated_at = #{updatedAt,jdbcType=TIMESTAMP},</if>
+		  <if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+		  updated_at = NOW()
+		</set>
+	    WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateBySerialSelective" parameterType="com.lhfeiyu.po.PatientReport">
+	    UPDATE <include refid="table"/>
+		<set>
+				<if test="adiconBarcode != null">adicon_barcode = #{adiconBarcode,jdbcType=VARCHAR},</if>
+				<if test="patientId != null">patient_id = #{patientId,jdbcType=INTEGER},</if>
+				<if test="doctorId != null">doctor_id = #{doctorId,jdbcType=INTEGER},</if>
+				<if test="hospitalName != null">hospital_name = #{hospitalName,jdbcType=VARCHAR},</if>
+				<if test="hospitalId != null">hospital_id = #{hospitalId,jdbcType=INTEGER},</if>
+				<if test="doctorResult != null">doctor_result = #{doctorResult,jdbcType=VARCHAR},</if>
+				<if test="itemCodes != null">item_codes = #{itemCodes,jdbcType=VARCHAR},</if>
+				<if test="patientName != null">patient_name = #{patientName,jdbcType=VARCHAR},</if>
+				<if test="sex != null">sex = #{sex,jdbcType=VARCHAR},</if>
+				<if test="age != null">age = #{age,jdbcType=VARCHAR},</if>
+				<if test="ageType != null">age_type = #{ageType,jdbcType=VARCHAR},</if>
+				<if test="department != null">department = #{department,jdbcType=VARCHAR},</if>
+				<if test="bedNo != null">bed_no = #{bedNo,jdbcType=VARCHAR},</if>
+				<if test="collectionDate != null">collection_date = #{collectionDate,jdbcType=TIMESTAMP},</if>
+				<if test="receivedDate != null">received_date = #{receivedDate,jdbcType=TIMESTAMP},</if>
+				<if test="lisDate != null">lis_date = #{lisDate,jdbcType=TIMESTAMP},</if>
+				<if test="reportDate != null">report_date = #{reportDate,jdbcType=TIMESTAMP},</if>
+				<if test="customerBarcode != null">customer_barcode = #{customerBarcode,jdbcType=VARCHAR},</if>
+				<if test="doctor != null">doctor = #{doctor,jdbcType=VARCHAR},</if>
+				<if test="technician != null">technician = #{technician,jdbcType=VARCHAR},</if>
+				<if test="checkedBy != null">checked_by = #{checkedBy,jdbcType=VARCHAR},</if>
+				<if test="instrument != null">instrument = #{instrument,jdbcType=VARCHAR},</if>
+				<if test="serialNumber != null">serial_number = #{serialNumber,jdbcType=INTEGER},</if>
+				<if test="sampleType != null">sample_type = #{sampleType,jdbcType=VARCHAR},</if>
+				<if test="clinicalDiagnosis != null">clinical_diagnosis = #{clinicalDiagnosis,jdbcType=VARCHAR},</if>
+				<if test="itemCode != null">item_code = #{itemCode,jdbcType=VARCHAR},</if>
+				<if test="itemName_CN != null">item_name_CN = #{itemName_CN,jdbcType=VARCHAR},</if>
+				<if test="itemName_EN != null">item_name_EN = #{itemName_EN,jdbcType=VARCHAR},</if>
+				<if test="result != null">result = #{result,jdbcType=VARCHAR},</if>
+				<if test="resultHint != null">result_hint = #{resultHint,jdbcType=VARCHAR},</if>
+				<if test="resultReference != null">result_reference = #{resultReference,jdbcType=VARCHAR},</if>
+				<if test="resultUnit != null">result_unit = #{resultUnit,jdbcType=VARCHAR},</if>
+				<if test="testMethod != null">test_method = #{testMethod,jdbcType=VARCHAR},</if>
+				<if test="testMethod_EN != null">test_method_EN = #{testMethod_EN,jdbcType=VARCHAR},</if>
+				<if test="resultPathology != null">result_pathology = #{resultPathology,jdbcType=VARCHAR},</if>
+				<if test="sampleChar != null">sample_char = #{sampleChar,jdbcType=VARCHAR},</if>
+				<if test="patientNumber != null">patient_number = #{patientNumber,jdbcType=VARCHAR},</if>
+				<if test="patientPhone != null">patient_phone = #{patientPhone,jdbcType=VARCHAR},</if>
+				<if test="str1 != null">str1 = #{str1,jdbcType=VARCHAR},</if>
+				<if test="str2 != null">str2 = #{str2,jdbcType=VARCHAR},</if>
+				<if test="str3 != null">str3 = #{str3,jdbcType=VARCHAR},</if>
+				<if test="str4 != null">str4 = #{str4,jdbcType=VARCHAR},</if>
+				<if test="str5 != null">str5 = #{str5,jdbcType=VARCHAR},</if>
+				<if test="serviceFlag != null">service_flag = #{serviceFlag,jdbcType=VARCHAR},</if>
+				<if test="serial != null">serial = #{serial,jdbcType=VARCHAR},</if>
+				<if test="typeId != null">type_id = #{typeId,jdbcType=INTEGER},</if>
+				<if test="linkId != null">link_id = #{linkId,jdbcType=INTEGER},</if>
+				<if test="groupId != null">group_id = #{groupId,jdbcType=INTEGER},</if>
+				<if test="gradeId != null">grade_id = #{gradeId,jdbcType=INTEGER},</if>
+				<if test="mainStatus != null">main_status = #{mainStatus,jdbcType=INTEGER},</if>
+				<if test="logicStatus != null">logic_status = #{logicStatus,jdbcType=INTEGER},</if>
+				<if test="attrDecimal != null">attr_decimal = #{attrDecimal,jdbcType=DECIMAL},</if>
+				<if test="mainIds != null">main_ids = #{mainIds,jdbcType=VARCHAR},</if>
+				<if test="attrStr != null">attr_str = #{attrStr,jdbcType=VARCHAR},</if>
+				<if test="attrStr2 != null">attr_str2 = #{attrStr2,jdbcType=VARCHAR},</if>
+				<if test="attrInt != null">attr_int = #{attrInt,jdbcType=INTEGER},</if>
+				<if test="attrInt2 != null">attr_int2 = #{attrInt2,jdbcType=INTEGER},</if>
+				<if test="attrNum != null">attr_num = #{attrNum,jdbcType=DECIMAL},</if>
+				<if test="attrDate != null">attr_date = #{attrDate,jdbcType=DATE},</if>
+				<if test="attrDatetime != null">attr_datetime = #{attrDatetime,jdbcType=TIMESTAMP},</if>
+				<if test="sequence != null">sequence = #{sequence,jdbcType=INTEGER},</if>
+				<if test="description != null">description = #{description,jdbcType=VARCHAR},</if>
+				<if test="remark != null">remark = #{remark,jdbcType=VARCHAR},</if>
+				<if test="deletedAt != null">deleted_at = #{deletedAt,jdbcType=TIMESTAMP},</if>
+				<if test="deletedBy != null">deleted_by = #{deletedBy,jdbcType=VARCHAR},</if>
+				<if test="createdAt != null">created_at = #{createdAt,jdbcType=TIMESTAMP},</if>
+				<if test="createdBy != null">created_by = #{createdBy,jdbcType=VARCHAR},</if>
+				<if test="updatedAt != null">updated_at = #{updatedAt,jdbcType=TIMESTAMP},</if>
+		  <if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+		  updated_at = NOW()
+		</set>
+	    WHERE serial = #{serial,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateByIdsSelective">
+	    UPDATE <include refid="table"/>
+		<set>
+				<if test="adiconBarcode != null">adicon_barcode = #{adiconBarcode,jdbcType=VARCHAR},</if>
+				<if test="patientId != null">patient_id = #{patientId,jdbcType=INTEGER},</if>
+				<if test="doctorId != null">doctor_id = #{doctorId,jdbcType=INTEGER},</if>
+				<if test="hospitalName != null">hospital_name = #{hospitalName,jdbcType=VARCHAR},</if>
+				<if test="hospitalId != null">hospital_id = #{hospitalId,jdbcType=INTEGER},</if>
+				<if test="doctorResult != null">doctor_result = #{doctorResult,jdbcType=VARCHAR},</if>
+				<if test="itemCodes != null">item_codes = #{itemCodes,jdbcType=VARCHAR},</if>
+				<if test="patientName != null">patient_name = #{patientName,jdbcType=VARCHAR},</if>
+				<if test="sex != null">sex = #{sex,jdbcType=VARCHAR},</if>
+				<if test="age != null">age = #{age,jdbcType=VARCHAR},</if>
+				<if test="ageType != null">age_type = #{ageType,jdbcType=VARCHAR},</if>
+				<if test="department != null">department = #{department,jdbcType=VARCHAR},</if>
+				<if test="bedNo != null">bed_no = #{bedNo,jdbcType=VARCHAR},</if>
+				<if test="collectionDate != null">collection_date = #{collectionDate,jdbcType=TIMESTAMP},</if>
+				<if test="receivedDate != null">received_date = #{receivedDate,jdbcType=TIMESTAMP},</if>
+				<if test="lisDate != null">lis_date = #{lisDate,jdbcType=TIMESTAMP},</if>
+				<if test="reportDate != null">report_date = #{reportDate,jdbcType=TIMESTAMP},</if>
+				<if test="customerBarcode != null">customer_barcode = #{customerBarcode,jdbcType=VARCHAR},</if>
+				<if test="doctor != null">doctor = #{doctor,jdbcType=VARCHAR},</if>
+				<if test="technician != null">technician = #{technician,jdbcType=VARCHAR},</if>
+				<if test="checkedBy != null">checked_by = #{checkedBy,jdbcType=VARCHAR},</if>
+				<if test="instrument != null">instrument = #{instrument,jdbcType=VARCHAR},</if>
+				<if test="serialNumber != null">serial_number = #{serialNumber,jdbcType=INTEGER},</if>
+				<if test="sampleType != null">sample_type = #{sampleType,jdbcType=VARCHAR},</if>
+				<if test="clinicalDiagnosis != null">clinical_diagnosis = #{clinicalDiagnosis,jdbcType=VARCHAR},</if>
+				<if test="itemCode != null">item_code = #{itemCode,jdbcType=VARCHAR},</if>
+				<if test="itemName_CN != null">item_name_CN = #{itemName_CN,jdbcType=VARCHAR},</if>
+				<if test="itemName_EN != null">item_name_EN = #{itemName_EN,jdbcType=VARCHAR},</if>
+				<if test="result != null">result = #{result,jdbcType=VARCHAR},</if>
+				<if test="resultHint != null">result_hint = #{resultHint,jdbcType=VARCHAR},</if>
+				<if test="resultReference != null">result_reference = #{resultReference,jdbcType=VARCHAR},</if>
+				<if test="resultUnit != null">result_unit = #{resultUnit,jdbcType=VARCHAR},</if>
+				<if test="testMethod != null">test_method = #{testMethod,jdbcType=VARCHAR},</if>
+				<if test="testMethod_EN != null">test_method_EN = #{testMethod_EN,jdbcType=VARCHAR},</if>
+				<if test="resultPathology != null">result_pathology = #{resultPathology,jdbcType=VARCHAR},</if>
+				<if test="sampleChar != null">sample_char = #{sampleChar,jdbcType=VARCHAR},</if>
+				<if test="patientNumber != null">patient_number = #{patientNumber,jdbcType=VARCHAR},</if>
+				<if test="patientPhone != null">patient_phone = #{patientPhone,jdbcType=VARCHAR},</if>
+				<if test="str1 != null">str1 = #{str1,jdbcType=VARCHAR},</if>
+				<if test="str2 != null">str2 = #{str2,jdbcType=VARCHAR},</if>
+				<if test="str3 != null">str3 = #{str3,jdbcType=VARCHAR},</if>
+				<if test="str4 != null">str4 = #{str4,jdbcType=VARCHAR},</if>
+				<if test="str5 != null">str5 = #{str5,jdbcType=VARCHAR},</if>
+				<if test="serviceFlag != null">service_flag = #{serviceFlag,jdbcType=VARCHAR},</if>
+				<if test="serial != null">serial = #{serial,jdbcType=VARCHAR},</if>
+				<if test="typeId != null">type_id = #{typeId,jdbcType=INTEGER},</if>
+				<if test="linkId != null">link_id = #{linkId,jdbcType=INTEGER},</if>
+				<if test="groupId != null">group_id = #{groupId,jdbcType=INTEGER},</if>
+				<if test="gradeId != null">grade_id = #{gradeId,jdbcType=INTEGER},</if>
+				<if test="mainStatus != null">main_status = #{mainStatus,jdbcType=INTEGER},</if>
+				<if test="logicStatus != null">logic_status = #{logicStatus,jdbcType=INTEGER},</if>
+				<if test="attrDecimal != null">attr_decimal = #{attrDecimal,jdbcType=DECIMAL},</if>
+				<if test="mainIds != null">main_ids = #{mainIds,jdbcType=VARCHAR},</if>
+				<if test="attrStr != null">attr_str = #{attrStr,jdbcType=VARCHAR},</if>
+				<if test="attrStr2 != null">attr_str2 = #{attrStr2,jdbcType=VARCHAR},</if>
+				<if test="attrInt != null">attr_int = #{attrInt,jdbcType=INTEGER},</if>
+				<if test="attrInt2 != null">attr_int2 = #{attrInt2,jdbcType=INTEGER},</if>
+				<if test="attrNum != null">attr_num = #{attrNum,jdbcType=DECIMAL},</if>
+				<if test="attrDate != null">attr_date = #{attrDate,jdbcType=DATE},</if>
+				<if test="attrDatetime != null">attr_datetime = #{attrDatetime,jdbcType=TIMESTAMP},</if>
+				<if test="sequence != null">sequence = #{sequence,jdbcType=INTEGER},</if>
+				<if test="description != null">description = #{description,jdbcType=VARCHAR},</if>
+				<if test="remark != null">remark = #{remark,jdbcType=VARCHAR},</if>
+				<if test="deletedAt != null">deleted_at = #{deletedAt,jdbcType=TIMESTAMP},</if>
+				<if test="deletedBy != null">deleted_by = #{deletedBy,jdbcType=VARCHAR},</if>
+				<if test="createdAt != null">created_at = #{createdAt,jdbcType=TIMESTAMP},</if>
+				<if test="createdBy != null">created_by = #{createdBy,jdbcType=VARCHAR},</if>
+				<if test="updatedAt != null">updated_at = #{updatedAt,jdbcType=TIMESTAMP},</if>
+		  <if test="updatedBy != null">updated_by = #{updatedBy},</if>
+		  updated_at = NOW()
+		</set>
+	    WHERE id IN( ${ids} )
+	</update>
+    <!--====================================== 修改结束-UPDATE_FINISH ======================================-->
+	
+	<!--====================================== 新增开始-INSERT_BEGIN ======================================-->
+	<insert id="insert" parameterType="com.lhfeiyu.po.PatientReport" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO <include refid="table"/>(
+			adicon_barcode,patient_id,doctor_id,hospital_name,hospital_id,doctor_result,item_codes,patient_name,sex,age,age_type,department,bed_no,collection_date,received_date,lis_date,report_date,customer_barcode,doctor,technician,checked_by,instrument,serial_number,sample_type,clinical_diagnosis,item_code,item_name_CN,item_name_EN,result,result_hint,result_reference,result_unit,test_method,test_method_EN,result_pathology,sample_char,patient_number,patient_phone,str1,str2,str3,str4,str5,service_flag,serial,type_id,link_id,group_id,grade_id,main_status,logic_status,attr_decimal,main_ids,attr_str,attr_str2,attr_int,attr_int2,attr_num,attr_date,attr_datetime,sequence,description,remark,deleted_at,deleted_by,created_at,created_by,updated_at,updated_by
+		)VALUES(
+		    #{adiconBarcode,jdbcType=VARCHAR},#{patientId,jdbcType=INTEGER},#{doctorId,jdbcType=INTEGER},#{hospitalName,jdbcType=VARCHAR},#{hospitalId,jdbcType=INTEGER},#{doctorResult,jdbcType=VARCHAR},#{itemCodes,jdbcType=VARCHAR},#{patientName,jdbcType=VARCHAR},#{sex,jdbcType=VARCHAR},#{age,jdbcType=VARCHAR},#{ageType,jdbcType=VARCHAR},#{department,jdbcType=VARCHAR},#{bedNo,jdbcType=VARCHAR},#{collectionDate,jdbcType=TIMESTAMP},#{receivedDate,jdbcType=TIMESTAMP},#{lisDate,jdbcType=TIMESTAMP},#{reportDate,jdbcType=TIMESTAMP},#{customerBarcode,jdbcType=VARCHAR},#{doctor,jdbcType=VARCHAR},#{technician,jdbcType=VARCHAR},#{checkedBy,jdbcType=VARCHAR},#{instrument,jdbcType=VARCHAR},#{serialNumber,jdbcType=INTEGER},#{sampleType,jdbcType=VARCHAR},#{clinicalDiagnosis,jdbcType=VARCHAR},#{itemCode,jdbcType=VARCHAR},#{itemName_CN,jdbcType=VARCHAR},#{itemName_EN,jdbcType=VARCHAR},#{result,jdbcType=VARCHAR},#{resultHint,jdbcType=VARCHAR},#{resultReference,jdbcType=VARCHAR},#{resultUnit,jdbcType=VARCHAR},#{testMethod,jdbcType=VARCHAR},#{testMethod_EN,jdbcType=VARCHAR},#{resultPathology,jdbcType=VARCHAR},#{sampleChar,jdbcType=VARCHAR},#{patientNumber,jdbcType=VARCHAR},#{patientPhone,jdbcType=VARCHAR},#{str1,jdbcType=VARCHAR},#{str2,jdbcType=VARCHAR},#{str3,jdbcType=VARCHAR},#{str4,jdbcType=VARCHAR},#{str5,jdbcType=VARCHAR},#{serviceFlag,jdbcType=VARCHAR},#{serial,jdbcType=VARCHAR},#{typeId,jdbcType=INTEGER},#{linkId,jdbcType=INTEGER},#{groupId,jdbcType=INTEGER},#{gradeId,jdbcType=INTEGER},#{mainStatus,jdbcType=INTEGER},#{logicStatus,jdbcType=INTEGER},#{attrDecimal,jdbcType=DECIMAL},#{mainIds,jdbcType=VARCHAR},#{attrStr,jdbcType=VARCHAR},#{attrStr2,jdbcType=VARCHAR},#{attrInt,jdbcType=INTEGER},#{attrInt2,jdbcType=INTEGER},#{attrNum,jdbcType=DECIMAL},#{attrDate,jdbcType=DATE},#{attrDatetime,jdbcType=TIMESTAMP},#{sequence,jdbcType=INTEGER},#{description,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR},#{deletedAt,jdbcType=TIMESTAMP},#{deletedBy,jdbcType=VARCHAR},#{createdAt,jdbcType=TIMESTAMP},#{createdBy,jdbcType=VARCHAR},#{updatedAt,jdbcType=TIMESTAMP},#{updatedBy,jdbcType=VARCHAR}
+	    )
+	</insert>
+	
+	<insert id="insertBatch">
+		INSERT INTO <include refid="table"/>(
+			adicon_barcode,patient_id,doctor_id,hospital_name,hospital_id,doctor_result,item_codes,patient_name,sex,age,age_type,department,bed_no,collection_date,received_date,lis_date,report_date,customer_barcode,doctor,technician,checked_by,instrument,serial_number,sample_type,clinical_diagnosis,item_code,item_name_CN,item_name_EN,result,result_hint,result_reference,result_unit,test_method,test_method_EN,result_pathology,sample_char,patient_number,patient_phone,str1,str2,str3,str4,str5,service_flag,serial,type_id,link_id,group_id,grade_id,main_status,logic_status,attr_decimal,main_ids,attr_str,attr_str2,attr_int,attr_int2,attr_num,attr_date,attr_datetime,sequence,description,remark,deleted_at,deleted_by,created_at,created_by,updated_at,updated_by
+		)VALUES
+		<foreach collection="list" item="c" separator=",">
+			(
+		    #{c.adiconBarcode,dbcType=VARCHAR},#{c.patientId,dbcType=INTEGER},#{c.doctorId,dbcType=INTEGER},#{c.hospitalName,dbcType=VARCHAR},#{c.hospitalId,dbcType=INTEGER},#{c.doctorResult,dbcType=VARCHAR},#{c.itemCodes,dbcType=VARCHAR},#{c.patientName,dbcType=VARCHAR},#{c.sex,dbcType=VARCHAR},#{c.age,dbcType=VARCHAR},#{c.ageType,dbcType=VARCHAR},#{c.department,dbcType=VARCHAR},#{c.bedNo,dbcType=VARCHAR},#{c.collectionDate,dbcType=TIMESTAMP},#{c.receivedDate,dbcType=TIMESTAMP},#{c.lisDate,dbcType=TIMESTAMP},#{c.reportDate,dbcType=TIMESTAMP},#{c.customerBarcode,dbcType=VARCHAR},#{c.doctor,dbcType=VARCHAR},#{c.technician,dbcType=VARCHAR},#{c.checkedBy,dbcType=VARCHAR},#{c.instrument,dbcType=VARCHAR},#{c.serialNumber,dbcType=INTEGER},#{c.sampleType,dbcType=VARCHAR},#{c.clinicalDiagnosis,dbcType=VARCHAR},#{c.itemCode,dbcType=VARCHAR},#{c.itemName_CN,dbcType=VARCHAR},#{c.itemName_EN,dbcType=VARCHAR},#{c.result,dbcType=VARCHAR},#{c.resultHint,dbcType=VARCHAR},#{c.resultReference,dbcType=VARCHAR},#{c.resultUnit,dbcType=VARCHAR},#{c.testMethod,dbcType=VARCHAR},#{c.testMethod_EN,dbcType=VARCHAR},#{c.resultPathology,dbcType=VARCHAR},#{c.sampleChar,dbcType=VARCHAR},#{c.patientNumber,dbcType=VARCHAR},#{c.patientPhone,dbcType=VARCHAR},#{c.str1,dbcType=VARCHAR},#{c.str2,dbcType=VARCHAR},#{c.str3,dbcType=VARCHAR},#{c.str4,dbcType=VARCHAR},#{c.str5,dbcType=VARCHAR},#{c.serviceFlag,dbcType=VARCHAR},#{c.serial,dbcType=VARCHAR},#{c.typeId,dbcType=INTEGER},#{c.linkId,dbcType=INTEGER},#{c.groupId,dbcType=INTEGER},#{c.gradeId,dbcType=INTEGER},#{c.mainStatus,dbcType=INTEGER},#{c.logicStatus,dbcType=INTEGER},#{c.attrDecimal,dbcType=DECIMAL},#{c.mainIds,dbcType=VARCHAR},#{c.attrStr,dbcType=VARCHAR},#{c.attrStr2,dbcType=VARCHAR},#{c.attrInt,dbcType=INTEGER},#{c.attrInt2,dbcType=INTEGER},#{c.attrNum,dbcType=DECIMAL},#{c.attrDate,dbcType=DATE},#{c.attrDatetime,dbcType=TIMESTAMP},#{c.sequence,dbcType=INTEGER},#{c.description,dbcType=VARCHAR},#{c.remark,dbcType=VARCHAR},#{c.deletedAt,dbcType=TIMESTAMP},#{c.deletedBy,dbcType=VARCHAR},#{c.createdAt,dbcType=TIMESTAMP},#{c.createdBy,dbcType=VARCHAR},#{c.updatedAt,dbcType=TIMESTAMP},#{c.updatedBy,dbcType=VARCHAR}
+	    	)
+		</foreach>
+	</insert>
+  	
+	<insert id="insertSelective" parameterType="com.lhfeiyu.po.PatientReport" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO <include refid="table"/>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+					<if test="adiconBarcode != null"> adicon_barcode,</if>
+					<if test="patientId != null"> patient_id,</if>
+					<if test="doctorId != null"> doctor_id,</if>
+					<if test="hospitalName != null"> hospital_name,</if>
+					<if test="hospitalId != null"> hospital_id,</if>
+					<if test="doctorResult != null"> doctor_result,</if>
+					<if test="itemCodes != null"> item_codes,</if>
+					<if test="patientName != null"> patient_name,</if>
+					<if test="sex != null"> sex,</if>
+					<if test="age != null"> age,</if>
+					<if test="ageType != null"> age_type,</if>
+					<if test="department != null"> department,</if>
+					<if test="bedNo != null"> bed_no,</if>
+					<if test="collectionDate != null"> collection_date,</if>
+					<if test="receivedDate != null"> received_date,</if>
+					<if test="lisDate != null"> lis_date,</if>
+					<if test="reportDate != null"> report_date,</if>
+					<if test="customerBarcode != null"> customer_barcode,</if>
+					<if test="doctor != null"> doctor,</if>
+					<if test="technician != null"> technician,</if>
+					<if test="checkedBy != null"> checked_by,</if>
+					<if test="instrument != null"> instrument,</if>
+					<if test="serialNumber != null"> serial_number,</if>
+					<if test="sampleType != null"> sample_type,</if>
+					<if test="clinicalDiagnosis != null"> clinical_diagnosis,</if>
+					<if test="itemCode != null"> item_code,</if>
+					<if test="itemName_CN != null"> item_name_CN,</if>
+					<if test="itemName_EN != null"> item_name_EN,</if>
+					<if test="result != null"> result,</if>
+					<if test="resultHint != null"> result_hint,</if>
+					<if test="resultReference != null"> result_reference,</if>
+					<if test="resultUnit != null"> result_unit,</if>
+					<if test="testMethod != null"> test_method,</if>
+					<if test="testMethod_EN != null"> test_method_EN,</if>
+					<if test="resultPathology != null"> result_pathology,</if>
+					<if test="sampleChar != null"> sample_char,</if>
+					<if test="patientNumber != null"> patient_number,</if>
+					<if test="patientPhone != null"> patient_phone,</if>
+					<if test="str1 != null"> str1,</if>
+					<if test="str2 != null"> str2,</if>
+					<if test="str3 != null"> str3,</if>
+					<if test="str4 != null"> str4,</if>
+					<if test="str5 != null"> str5,</if>
+					<if test="serviceFlag != null"> service_flag,</if>
+					<if test="serial != null"> serial,</if>
+					<if test="typeId != null"> type_id,</if>
+					<if test="linkId != null"> link_id,</if>
+					<if test="groupId != null"> group_id,</if>
+					<if test="gradeId != null"> grade_id,</if>
+					<if test="mainStatus != null"> main_status,</if>
+					<if test="logicStatus != null"> logic_status,</if>
+					<if test="attrDecimal != null"> attr_decimal,</if>
+					<if test="mainIds != null"> main_ids,</if>
+					<if test="attrStr != null"> attr_str,</if>
+					<if test="attrStr2 != null"> attr_str2,</if>
+					<if test="attrInt != null"> attr_int,</if>
+					<if test="attrInt2 != null"> attr_int2,</if>
+					<if test="attrNum != null"> attr_num,</if>
+					<if test="attrDate != null"> attr_date,</if>
+					<if test="attrDatetime != null"> attr_datetime,</if>
+					<if test="sequence != null"> sequence,</if>
+					<if test="description != null"> description,</if>
+					<if test="remark != null"> remark,</if>
+					<if test="deletedAt != null"> deleted_at,</if>
+					<if test="deletedBy != null"> deleted_by,</if>
+					<if test="createdAt != null"> created_at,</if>
+					<if test="createdBy != null"> created_by,</if>
+					<if test="updatedAt != null"> updated_at,</if>
+					<if test="updatedBy != null"> updated_by,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+					<if test="adiconBarcode != null">#{adiconBarcode,jdbcType=VARCHAR},</if>
+					<if test="patientId != null">#{patientId,jdbcType=INTEGER},</if>
+					<if test="doctorId != null">#{doctorId,jdbcType=INTEGER},</if>
+					<if test="hospitalName != null">#{hospitalName,jdbcType=VARCHAR},</if>
+					<if test="hospitalId != null">#{hospitalId,jdbcType=INTEGER},</if>
+					<if test="doctorResult != null">#{doctorResult,jdbcType=VARCHAR},</if>
+					<if test="itemCodes != null">#{itemCodes,jdbcType=VARCHAR},</if>
+					<if test="patientName != null">#{patientName,jdbcType=VARCHAR},</if>
+					<if test="sex != null">#{sex,jdbcType=VARCHAR},</if>
+					<if test="age != null">#{age,jdbcType=VARCHAR},</if>
+					<if test="ageType != null">#{ageType,jdbcType=VARCHAR},</if>
+					<if test="department != null">#{department,jdbcType=VARCHAR},</if>
+					<if test="bedNo != null">#{bedNo,jdbcType=VARCHAR},</if>
+					<if test="collectionDate != null">#{collectionDate,jdbcType=TIMESTAMP},</if>
+					<if test="receivedDate != null">#{receivedDate,jdbcType=TIMESTAMP},</if>
+					<if test="lisDate != null">#{lisDate,jdbcType=TIMESTAMP},</if>
+					<if test="reportDate != null">#{reportDate,jdbcType=TIMESTAMP},</if>
+					<if test="customerBarcode != null">#{customerBarcode,jdbcType=VARCHAR},</if>
+					<if test="doctor != null">#{doctor,jdbcType=VARCHAR},</if>
+					<if test="technician != null">#{technician,jdbcType=VARCHAR},</if>
+					<if test="checkedBy != null">#{checkedBy,jdbcType=VARCHAR},</if>
+					<if test="instrument != null">#{instrument,jdbcType=VARCHAR},</if>
+					<if test="serialNumber != null">#{serialNumber,jdbcType=INTEGER},</if>
+					<if test="sampleType != null">#{sampleType,jdbcType=VARCHAR},</if>
+					<if test="clinicalDiagnosis != null">#{clinicalDiagnosis,jdbcType=VARCHAR},</if>
+					<if test="itemCode != null">#{itemCode,jdbcType=VARCHAR},</if>
+					<if test="itemName_CN != null">#{itemName_CN,jdbcType=VARCHAR},</if>
+					<if test="itemName_EN != null">#{itemName_EN,jdbcType=VARCHAR},</if>
+					<if test="result != null">#{result,jdbcType=VARCHAR},</if>
+					<if test="resultHint != null">#{resultHint,jdbcType=VARCHAR},</if>
+					<if test="resultReference != null">#{resultReference,jdbcType=VARCHAR},</if>
+					<if test="resultUnit != null">#{resultUnit,jdbcType=VARCHAR},</if>
+					<if test="testMethod != null">#{testMethod,jdbcType=VARCHAR},</if>
+					<if test="testMethod_EN != null">#{testMethod_EN,jdbcType=VARCHAR},</if>
+					<if test="resultPathology != null">#{resultPathology,jdbcType=VARCHAR},</if>
+					<if test="sampleChar != null">#{sampleChar,jdbcType=VARCHAR},</if>
+					<if test="patientNumber != null">#{patientNumber,jdbcType=VARCHAR},</if>
+					<if test="patientPhone != null">#{patientPhone,jdbcType=VARCHAR},</if>
+					<if test="str1 != null">#{str1,jdbcType=VARCHAR},</if>
+					<if test="str2 != null">#{str2,jdbcType=VARCHAR},</if>
+					<if test="str3 != null">#{str3,jdbcType=VARCHAR},</if>
+					<if test="str4 != null">#{str4,jdbcType=VARCHAR},</if>
+					<if test="str5 != null">#{str5,jdbcType=VARCHAR},</if>
+					<if test="serviceFlag != null">#{serviceFlag,jdbcType=VARCHAR},</if>
+					<if test="serial != null">#{serial,jdbcType=VARCHAR},</if>
+					<if test="typeId != null">#{typeId,jdbcType=INTEGER},</if>
+					<if test="linkId != null">#{linkId,jdbcType=INTEGER},</if>
+					<if test="groupId != null">#{groupId,jdbcType=INTEGER},</if>
+					<if test="gradeId != null">#{gradeId,jdbcType=INTEGER},</if>
+					<if test="mainStatus != null">#{mainStatus,jdbcType=INTEGER},</if>
+					<if test="logicStatus != null">#{logicStatus,jdbcType=INTEGER},</if>
+					<if test="attrDecimal != null">#{attrDecimal,jdbcType=DECIMAL},</if>
+					<if test="mainIds != null">#{mainIds,jdbcType=VARCHAR},</if>
+					<if test="attrStr != null">#{attrStr,jdbcType=VARCHAR},</if>
+					<if test="attrStr2 != null">#{attrStr2,jdbcType=VARCHAR},</if>
+					<if test="attrInt != null">#{attrInt,jdbcType=INTEGER},</if>
+					<if test="attrInt2 != null">#{attrInt2,jdbcType=INTEGER},</if>
+					<if test="attrNum != null">#{attrNum,jdbcType=DECIMAL},</if>
+					<if test="attrDate != null">#{attrDate,jdbcType=DATE},</if>
+					<if test="attrDatetime != null">#{attrDatetime,jdbcType=TIMESTAMP},</if>
+					<if test="sequence != null">#{sequence,jdbcType=INTEGER},</if>
+					<if test="description != null">#{description,jdbcType=VARCHAR},</if>
+					<if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
+					<if test="deletedAt != null">#{deletedAt,jdbcType=TIMESTAMP},</if>
+					<if test="deletedBy != null">#{deletedBy,jdbcType=VARCHAR},</if>
+					<if test="createdAt != null">#{createdAt,jdbcType=TIMESTAMP},</if>
+					<if test="createdBy != null">#{createdBy,jdbcType=VARCHAR},</if>
+					<if test="updatedAt != null">#{updatedAt,jdbcType=TIMESTAMP},</if>
+					<if test="updatedBy != null">#{updatedBy,jdbcType=VARCHAR},</if>
+		</trim>
+	</insert>
+  	<!--====================================== 新增结束-INSERT_FINISH ======================================-->
+	
+	<!--====================================== 删除开始-DELETE_BEGIN ======================================-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	    DELETE FROM <include refid="table"/> WHERE id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<delete id="deleteByCondition">
+		DELETE FROM <include refid="table"/> WHERE ${condition}
+	</delete>
+	
+	<delete id="deleteByIds">
+	    DELETE FROM <include refid="table"/> WHERE id IN (${ids})
+	</delete>
+	<!--====================================== 删除结束-DELETE_FINISH ======================================-->
+      
+</mapper>

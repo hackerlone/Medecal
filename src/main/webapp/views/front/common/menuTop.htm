@@ -1,0 +1,80 @@
+<div class="w_1000">
+	<div class="c_1100_1">
+		<div class="logo">
+			<a href="/"> 
+				<img src="/images/front/logo.jpg" width="134" height="104" />
+			</a>
+		</div>
+		<div class="right_1">
+			<div class="so">
+				<div class="l_346">
+					<div class="searchbox" pzdatatype="select">
+						<input type="hidden" />
+						<c:if test="${searchTypeId == 2}">
+							<div class="titcon tw" pzdatatype="title">找医生</div>
+						</c:if>
+						<c:if test="${searchTypeId == 1}">
+							<div class="titcon tw" pzdatatype="title">找诊所</div>
+						</c:if>
+						<c:if test="${empty searchTypeId}">
+							<div class="titcon tw" pzdatatype="title">找医生</div>
+						</c:if>
+						<ul class='serul' pzdatatype="content">
+							<li onclick="getTypeId(1)">找诊所</li>
+							<li onclick="getTypeId(2)">找医生</li>
+						</ul>
+					</div>
+					<input type="text" value="${searchName}" class="input1" id="searchName" />
+				</div>
+				<input type="image" src="/images/front/top4.jpg" onclick="searchDoctorOrHospital()" width="48" height="48" class="input2" />
+			</div>
+			<div class="consult">
+				<a href="/consultDoctorList" target="_blank"> 
+					<span>我要咨询</span> 
+					<br />医生将为您在线解答
+				</a>
+			</div>
+		</div>
+	</div>
+	<div class="c_1100_2">
+		<div class="menu">
+			<ul>
+				<li class="nli_1">
+					<a href="/"> 
+						<img src="/images/front/menu1.png" width="24" height="20" />
+					</a>
+				</li>
+				<li class="nli">
+					<a href="javascript:;" style="background:none;text-decoration: none;cursor: default;border:none;margin:-1px;">我要预约</a>
+				</li>
+				<li class="nli">
+					<a href="/bespeakChoose/1" >远程诊疗</a>
+				</li>
+				<li class="nli">
+					<a href="/bespeakChoose/2" >上门服务</a>
+				</li>
+				<li class="nli">
+					<a href="/hospital/hospitalBloodTest" >血液检测</a>
+				</li>
+				<!--
+				<li class="nli">
+					<a href="javascript:;">基因检测</a>
+				</li>
+				-->
+			</ul>
+		</div>
+		<div class="special">
+			<a href="/articleList/42" style="width: 128px;">健康资讯</a>
+			<a href="/articleList/58" style="width: 128px">疾病专题</a>
+			<a onclick="userAddLocache(4,'/userReportList')" href="javascript:;" style="width: 128px">健康管理</a>
+            <div class="aboutus">
+                <a href="javascript:" style="width:126px;">关于我们</a>
+                <div class="aboutnav" style="position: absolute">
+                    <a href="/article/55/40">公司简介</a>
+                    <a href="/article/56/43">公司愿景</a>
+                    <a href="javascript:;" onclick="lh.alert('电话：010-80880421  传真：010-80881641 E-mail：service@wonature.com');">联系我们</a>
+                </div>
+            </div>
+		</div>
+	</div>
+</div>

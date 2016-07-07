@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+    	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+    	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+    	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+	
+	<context:component-scan base-package="com.lhfeiyu"/>
+   
+    <!-- 数据源连接信息配置文件 -->
+	<context:property-placeholder location="classpath*:jdbc.properties" />
+	<!-- 开发期间数据源  -->
+	<bean id="dataSource_dev" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="maxPoolSize" value="${c3p0.dev.maxPoolSize}" />
+		<property name="acquireIncrement" value="${c3p0.dev.acquireIncrement}" />
+		<property name="minPoolSize" value="${c3p0.dev.minPoolSize}" />
+		<property name="maxIdleTime" value="${c3p0.dev.maxIdleTime}" />
+		<property name="initialPoolSize" value="${c3p0.dev.initialPoolSize}" />
+		<property name="preferredTestQuery" value="${c3p0.dev.preferredTestQuery}" />
+		<property name="checkoutTimeout" value="${c3p0.dev.checkoutTimeout}" />
+		<property name="idleConnectionTestPeriod" value="${c3p0.dev.idleConnectionTestPeriod}" />
+	</bean>
+	
+	<!-- 运营期间数据源  -->
+	<!--
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="maxPoolSize" value="${c3p0.maxPoolSize}" />
+		<property name="acquireIncrement" value="${c3p0.acquireIncrement}" />
+		<property name="minPoolSize" value="${c3p0.minPoolSize}" />
+		<property name="maxIdleTime" value="${c3p0.maxIdleTime}" />
+		<property name="initialPoolSize" value="${c3p0.initialPoolSize}" />
+		<property name="preferredTestQuery" value="select 1" />
+		<property name="checkoutTimeout" value="${c3p0.checkoutTimeout}" />
+		<property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}" />
+	</bean>
+	-->
+	<!-- 配置sqlSessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource_dev" /><!-- dataSource_dev -->
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+		<!-- 自动到mappers包下面去搜索mybatis的映射文件 -->
+		<!-- 如果配置成value="classpath*:mappers/*.xml" 会导致在jetty环境下无法正常启动（个人认为是因为会加载两次配置文件造成的） -->
+		<!--<property name="mapperLocations" value="classpath:mappers/*.xml" />--><!-- classpath:mappers/*/*.xml -->
+		<property name="mapperLocations" value="classpath:com/lhfeiyu/dao/*.xml" /><!-- classpath:mappers/*/*.xml -->
+		<!--<property name="mapperLocations" value="classpath*:com/lhfeiyu/mappers/*.xml" />--><!-- classpath*:com/lhfeiyu/**/*Mapper.xml -->
+	</bean>
+	
+	<!-- 利用MyBatis-Spring的自动装配机制：
+		自动从com.shenyu.dao包中寻找接口装配成MapperFactoryBean 
+		有了下面这个配置，那么就不需要像上面那样一个一个的去注册映射器Bean了，大大的减少了工作量
+	-->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.lhfeiyu.dao" />
+	</bean>
+	<!--
+	<bean class="org.mybatis.spring.SqlSessionCounseling">
+        <constructor-arg ref="sqlSessionFactory"/>
+    </bean> 
+-->
+	<!-- 使用Spring的事务管理器 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource_dev" /><!-- dataSource_dev -->
+	</bean>
+
+	<!-- 选择哪些类哪些方法使用事务 -->
+	<aop:config >
+			<aop:pointcut expression="execution(* com.lhfeiyu.service.*.*(..))" id="allServiceMethod"/>
+			<aop:advisor advice-ref="txAdvice" pointcut-ref="allServiceMethod"/>
+	</aop:config>
+	
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="add*" propagation="REQUIRED"/>
+			<tx:method name="insert*" propagation="REQUIRED"/>
+			<tx:method name="del*" propagation="REQUIRED"/>
+			<tx:method name="update*" propagation="REQUIRED"/>
+			<tx:method name="get*" read-only="true"/>
+			<tx:method name="find*" read-only="true"/>
+			<tx:method name="select*" read-only="true"/>
+			<tx:method name="*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+	<!-- <bean class="com.lhfeiyu.util.WebStartExecutor"/> --> <!--Spring 窗口启动时调用 -->
+	
+	<!--计划任务  spring 与 quartz整合-->
+	<bean id="auctionJob" class="com.lhfeiyu.task.AuctionJob" />
+	<bean id="noticeJob" class="com.lhfeiyu.task.NoticeJob" />
+	<bean id="sysJob" class="com.lhfeiyu.task.SysJob" />
+	<!-- 第二步: 定义好具体要使用类的哪一个业务方法 -->
+	<bean id="auctionJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="auctionJob" /><!-- 目标bean -->
+		<property name="targetMethod" value="run" /><!-- 要执行目标bean的哪一个业务方法 -->
+		<property name="concurrent" value="false" /><!-- 是否并发 -->
+	</bean>
+	<bean id="noticeJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="noticeJob" /><!-- 目标bean -->
+		<property name="targetMethod" value="run" /><!-- 要执行目标bean的哪一个业务方法 -->
+		<property name="concurrent" value="false" /><!-- 是否并发 -->
+	</bean>
+	<bean id="sysJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="sysJob" /><!-- 目标bean -->
+		<property name="targetMethod" value="run" /><!-- 要执行目标bean的哪一个业务方法 -->
+		<property name="concurrent" value="false" /><!-- 是否并发 -->
+	</bean>
+	<!-- 第三步: 定义好调用模式: 如每隔5秒钟调用一次或每天的哪个时间调用一次等 -->
+	<bean id="auctionJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="auctionJobDetail" />
+		<property name="cronExpression"><!-- 每两分钟执行一次:0 0/2 * * * ? -->
+			<value>0/55 * * * * ?</value><!-- http://www.cnblogs.com/yaowen/p/3779284.html http://blog.csdn.net/yzh54ak/article/details/6292143-->
+		</property>
+	</bean>
+	<bean id="noticeJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="noticeJobDetail" />
+		<property name="cronExpression"><!-- 每两分钟执行一次:0 0/2 * * * ? -->
+			<value>0 0/2 * * * ?</value><!-- http://www.cnblogs.com/yaowen/p/3779284.html http://blog.csdn.net/yzh54ak/article/details/6292143-->
+		</property>
+	</bean>
+	<bean id="sysJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="sysJobDetail" />
+		<property name="cronExpression"><!-- 每两分钟执行一次:0 0/2 * * * ? --><!-- */5 * * * * ? -->
+			<value>0 0 2,6,8,12,15,22 * * ?</value><!-- 0 0/30 * * * ?  0 0 2,6,8,12,15,22 * * ? -->
+			<!-- http://www.cnblogs.com/yaowen/p/3779284.html http://blog.csdn.net/yzh54ak/article/details/6292143 -->
+		</property>
+	</bean>
+	<!--第四步 把定义好的任务放到调度（Scheduler）工厂里面,注意这里的ref bean -->
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean" >
+        <property name="jobFactory" ref="jobFactory"></property>  
+		<property name="triggers">
+			<list>
+				<!--
+					<ref bean="noticeJobTrigger" />
+					<ref bean="auctionJobTrigger" />
+				-->
+					<ref bean="sysJobTrigger" />
+			</list>
+		</property>
+	</bean>
+	<bean id="jobFactory" class="com.lhfeiyu.util.MyJobFactory"></bean><!-- 通过此Bean完成spring依赖注入 -->
+</beans>

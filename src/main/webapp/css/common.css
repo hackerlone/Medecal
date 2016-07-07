@@ -1,0 +1,149 @@
+
+.fl{float:left;}
+.fr{float:right;}
+.pointer{cursor: pointer;}
+.clear-both{clear: both;}
+.inline-center{text-align: center;}
+
+
+
+
+.widthMax{width:100%;}
+.widthMaxHalf{max-width:50%;}
+.widthHalf{width:50%;}
+.width10{height:10px;}
+.width20{width:20px;}
+.width40{width:40px;}
+.width80{width:80px;}
+.width100{width:100px;}
+.width120{width:120px;}
+.width130{width:130px;}
+.width140{width:140px;}
+.width150{width:150px;}
+.width160{width:160px;}
+.width180{width:180px;}
+.width200{width:200px;}
+.width220{width:220px;}
+.width260{width:260px;}
+.width320{width:380px;}
+.width380{width:380px;}
+.width640{width:640px;}
+.width720{width:720px;}
+.width960{width:960px;}
+.width1080{width:1080px;}
+
+.heightMax{height:100%;}
+.heightMaxHalf{max-height:50%;}
+.heightHalf{height:50%;}
+.height10{height:10px;}
+.height20{height:20px;}
+.height40{height:40px;}
+.height80{height:80px;}
+.height80{height:80px;}
+.height120{height:120px;}
+.height150{height:150px;}
+.height200{height:200px;}
+
+.mgTop20{margin-top:20px;}
+.mgTop40{margin-top:40px;}
+.mgBtm5{margin-bottom:5px;}
+.mgV5{margin:5px 0px;}
+.mgV10{margin:10px 0px;}
+.mgV20{margin:20px 0px;}
+.mgV40{margin:40px 0px;}
+.mgH1{margin:0px 1px;}
+.mgH5{margin:0px 5px;}
+.mgV20-40{margin-top:20px;margin-bottom:40px;}
+
+.padL2{padding-left:2px;}
+.padL5{padding-left:5px;}
+.padL10{padding-left:10px;}
+.padL15{padding-left:15px;}
+.padL20{padding-left:20px;}
+.padR10{padding-right:10px;}
+.padR15{padding-right:15px;}
+.padR20{padding-right:20px;}
+.padV10{padding:10px 0px;}
+.padV15{padding:15px 0px;}
+.pad5{padding:5px;}
+
+.colorGray{color:gray;}
+.colorRed{color:red;}
+.colorGreen{color:green;}
+.show-b{display:block;}
+.show-i{display:inline;}
+.show-ib{display:inline-block;}
+.hide{display:none;}
+.frontHide{display:none;}
+
+.fl-margin-5-0-1-30{float:left;margin:5px 0px 1px 30px;}
+.fl-margin-5-0-1-20{float:left;margin:5px 0px 1px 20px;}
+.fr-margin-5-3-1-0{float:right;margin:5px 3px 1px 0px;}
+.margin-5-5-10-0{margin:5px 5px 10px 0px;}
+.margin-5-5-10-15{margin:5px 5px 10px 15px;}
+.margin5{margin:5px;}
+.margin10{margin:10px;}
+.width100-margin-5-5-10-0{width:100px;margin:5px 5px 10px 0px;}
+.width120-margin-5-5-10-0{width:120px;margin:5px 5px 10px 0px;}
+
+
+.resultTip{text-align: center;font-size: 14px;line-height: 60px;color: gray;}
+.loadingTip{text-align: center;font-size: 14px;line-height: 60px;color: gray;}
+
+.upld_container{border: 1px solid #d6d6d6; box-shadow: 2px 2px 2px #E5E5E5; border-radius: 5px; padding: 3px; margin: 3px 0px;}
+.upld_ing{}
+.upld_ing_label{padding: 5px; height: 30px;}
+.upld_ing_name{float: left;font-size:15px;font-weight:bold;}
+.upld_ing_tip{float: left;color:red;padding-top:2px;}
+.upld_ed{}
+.upld_ed_label{padding: 5px; height: 30px;}
+.upld_ed_delete{float: left;margin-right:6px;}
+.upld_ed_name{float: left;font-size:15px;}
+.upld_ed_tip{float: left;color:green;padding-top:2px;}
+.upld_ed_btn{float: right;margin-right:10px;}
+.upld_ed_btn0{float: right;margin-right:0px;}
+.information_border{box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.15);padding:5px;}
+
+.picFlow{
+	float:left;
+	width:120px;
+	height:160px;
+	overflow: hidden;
+	padding:5px;
+	margin:5px;
+	border:1px solid gray
+}
+.picBottom{
+	width:110px;
+	height:40px;
+	background: rgba(25,25,25,0.9) none repeat scroll !important;
+	color:white;
+    position: relative;
+    top: 80px;
+}
+.my-has-error{
+    border-color: red;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+}
+.my-has-error:focus {
+    border-color: red;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
+}
+.my_btn_blue {
+    display: inline-block;
+    float: left;
+    height: 41px;
+    border-radius: 4px;
+    background: #2795dc;
+    border: none;
+    cursor: pointer;
+    border-bottom: 3px solid #0078b3;
+    color: #fff;
+    font-size: 16px;
+    padding: 0 10px;
+    text-align: center;
+    outline: none;
+    font-family: "Microsoft Yahei",Arial, Helvetica, sans-serif;
+}

@@ -1,0 +1,44 @@
+<div class="w_229">
+	<div class="t_229 pointer" onclick="location.href='/hospital/hospitalHome'">诊所首页</div>
+	<div class="pz_SideLayer">
+    	<li class="l1"><a href="/hospital/hospitalDoctor">医生库</a></li>
+    	<li class="l1"><a href="/hospital/hospitalNurseList">护士库</a></li>
+        <li class="l1"><a href="/hospital/diagnoseList">病历夹</a></li>
+        <li class="l1"><a href="/hospital/diagnoseTemplate">病历模版</a></li>
+        <li class="l1"><a href="/hospital/hospitalUserReportList">检测档案</a></li>
+        <li class="l1"><a href="/hospital/hospitalPatient">患者库</a></li>
+        <li class="l1"><a href="/hospital/medication">药物管理</a></li>
+        <!--<li class="l1"><a href="/hospital/medicationLog">药物记录</a></li>-->
+        <li class="l1"><a href="/hospital/diagnoseSumList">医生诊疗汇总</a></li>
+        <li class="l1"><a href="/hospital/hospitalBespeak">预约</a></li>
+        <li class="l1"><a href="/hospital/hospitalDiagnoseApply">授权记录</a></li>
+        
+        <li class="l1"><a href="/hospital/hospitalVolunteerList">志愿者</a></li>
+        
+        
+       <!-- <li class="l1"><a href="javascript:;">统计分析</a></li> -->
+    </div>
+    <!-- 
+    <div class="Search">
+    	<input type="text" class="input3" placeholder="查找医生/诊所" />
+        <input type="image" src="/images/front/main26.jpg" width="43" height="35" class="input4" />
+    </div>
+    -->
+    <div id="slideBox" class="Box">
+		<div class="hd" id="hospitalAdvertisement">
+			
+		</div>
+		<div class="bd">
+			<ul>
+				<c:if test="${!empty advertisementList}">
+					<c:forEach var="advertisement" items="${advertisementList}">
+						<li><a href="${advertisement.linkUrl}" target="_blank"><img onerror="this.src='/images/front/main27.jpg'" src="${advertisement.picPath}" width="229" height="131" /></a></li>
+					</c:forEach>
+				</c:if>
+				<c:if test="${empty advertisementList}">
+						<li><a href="javascript:;" target="_blank"><img src='/images/front/main27.jpg' width="229" height="131" /></a></li>
+				</c:if>
+			</ul>
+		</div>
+	</div>
+</div>

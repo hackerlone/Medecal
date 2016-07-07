@@ -1,0 +1,24 @@
+<div class="w_0100 back1">
+	<div class="w_1000">
+		<div class="c_1100">
+			<div class="left">沃诊无忧，您身边的家庭医生!</div>
+			<div class="right">
+				<div class="hover_l">
+					<a href="/" target="_blank">官网</a> &nbsp;&nbsp;/&nbsp;&nbsp;<a href="javascript:;" onclick="lh.alert('电话：010-80880421  传真：010-80881641 E-mail：service@wonature.com');">联系客服</a> &nbsp;&nbsp;/&nbsp;&nbsp; <a href="/">网站地图</a>
+					&nbsp;&nbsp;/&nbsp;&nbsp; <a onclick="userAddLocache(1,'/goHome')" href="javascript:;">返回主页</a>
+				</div>
+				<div class="land">
+					<c:if test="${empty user}">
+						<span> <a href="/login" class="lan_one" style="width: initial;">登录</a></span>
+						<span> <a href="/register" target="_blank" class="lan_two" style="width: initial;">注册</a></span>
+					</c:if>
+					<c:if test="${!empty user}">
+						<span style="width: initial;"> <a href="/userBaseInformation" style="width: initial;" class="lan_one">${user.username}</a></span> 
+						<span style="width: initial;"> <a href="/logout" style="width: initial;padding-left:17px;" onclick="logout()">退出</a></span>
+					</c:if>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+		

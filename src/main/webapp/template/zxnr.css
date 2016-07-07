@@ -1,0 +1,136 @@
+.pz_main .zxnr{
+    width:980px;
+    height:1128px;
+    margin:0 auto;
+    box-shadow: 0px 0px 4px gray;
+    text-align: center;
+    border:1px solid gray;
+}
+.zxnr p.h1{
+    font-size:36px;
+    letter-spacing:10px;
+    color:rgb(101,153,70);
+    padding-top: 30px;
+    padding-bottom: 10px;;
+}
+.zxnr .lhnr{
+    width:770px;
+    margin: auto;
+    text-align: left;
+}
+.zxnr .lhnr .fr{
+    float: right;
+    width:185px;
+    padding-right: 15px;
+    height:40px;
+
+}
+.zxnr .lhnr .inp1{
+    height:40px;
+    width:500px;
+    margin-bottom: 5px;
+    font-size:18px;
+    outline: none;
+}
+.zxnr .lhnr span{
+    color:red;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing:2px;
+    padding-left:10px;
+}
+.zxnr .lhnr .pgray{
+    font-size: 13px;
+    color:gray;
+    padding-top:6px;
+    line-height:20px;
+}
+.zxnr .lhnr h2{
+    font-size: 30px;
+    color:rgb(101,153,70);
+    font-weight: normal;
+    padding-bottom: 25px;
+}
+.zxnr .lhnr h3.h3_1{
+    font-size: 30px;
+    color:rgb(101,153,70);
+    font-weight: normal;
+    padding-top: 80px;
+}
+.zxnr .lhnr .smp{
+    font-size:16px;
+    color:rgb(101,153,70);
+}
+.zxnr .lhnr{
+    padding-top:25px;
+}
+.txt2{
+    height:38px;
+    width:504px;
+    background: rgb(110,172,73);
+    font-size: 24px;
+    color:#fff;
+    line-height:38px;
+    text-indent: 5px;
+    float: left;
+}
+.lhnr textarea{
+    width:502px;
+    height:160px;
+    resize: none;
+    font-size:18px;
+    color:#000;
+    outline: none;
+    overflow:auto;
+}
+.box2{
+    margin-top: 25px;
+}
+.txt3{
+    float: right;
+    width:185px;
+    padding-right: 15px;
+    height:40px;
+    font-size: 13px;
+    color:gray;
+    line-height:20px;
+}
+.txt5{
+    float: right;
+    width:185px;
+    padding-right: 15px;
+    height:40px;
+    font-size: 13px;
+    color:gray;
+    line-height:20px;
+    padding-top: 30px;
+}
+.pbt{
+    font-size: 13px;
+    color:gray;
+    line-height:20px;
+}
+.box3{
+    padding-top: 80px;
+}
+.txt4{
+    width:490px;
+}
+.bt1{
+    width:260px;
+    height:55px;
+    margin:0 auto;
+    margin-top:40px;
+}
+.bt1 input{
+    width:260px;
+    height:55px;
+    background: rgb(110,172,73);
+    border: none;
+    font-size:30px;
+    color:#fff;
+    letter-spacing:5px;
+}
+.spa1{
+    display: inline;
+}

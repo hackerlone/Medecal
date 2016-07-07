@@ -1,0 +1,686 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lhfeiyu.dao.MedicationMapper">
+	<!--====================================== 设置开始-CONFIG_BEGIN ======================================-->
+	<sql id="table">medication</sql>
+	<!-- 基础字段 -->
+	<sql id="baseColumns">
+		A.id AS id,A.name AS name,A.english_name AS englishName,A.price AS price,A.cover_words AS coverWords,A.qr_code AS qrCode,A.producer AS producer,A.produce_address AS produceAddress,A.producer_tel AS producerTel,A.producer_code AS producerCode,A.approval_number AS approvalNumber,A.element AS element,A.properties AS properties,A.malady AS malady,A.store AS store,A.attention AS attention,A.specifications AS specifications,A.unit AS unit,A.package_words AS packageWords,A.usage_and_dosage AS usageAndDosage,A.lot_number AS lotNumber,A.produce_date AS produceDate,A.valid_till AS validTill,A.capacity AS capacity,A.serial AS serial,A.type_id AS typeId,A.link_id AS linkId,A.group_id AS groupId,A.grade_id AS gradeId,A.main_status AS mainStatus,A.logic_status AS logicStatus,A.attr_decimal AS attrDecimal,A.main_ids AS mainIds,A.attr_str AS attrStr,A.attr_str2 AS attrStr2,A.attr_int AS attrInt,A.attr_int2 AS attrInt2,A.attr_num AS attrNum,A.attr_date AS attrDate,A.attr_datetime AS attrDatetime,A.sequence AS sequence,A.description AS description,A.remark AS remark,A.deleted_at AS deletedAt,A.deleted_by AS deletedBy,A.created_at AS createdAt,A.created_by AS createdBy,A.updated_at AS updatedAt,A.updated_by AS updatedBy
+	</sql>
+	<sql id="baseSearch">
+		<if test="deleted == null">AND A.deleted_at IS NULL</if> 
+		<if test="deleted != null">AND A.deleted_at IS not NULL</if>
+		<if test="id != null and id != '' ">AND A.id = #{id}</if>
+		<if test="medicationId != null and medicationId != '' ">AND A.id = #{medicationId}</if>
+		<if test="serial != null and serial != '' ">AND A.serial = #{serial}</if>
+		<if test="mainStatus != null and mainStatus != '' ">AND A.main_status = #{mainStatus}</if>
+		<if test="logicStatus != null and logicStatus != '' ">AND A.logic_status = #{logicStatus}</if>
+	</sql>
+	<sql id="suffix"><!-- 分组排序  -->
+		<if test="groupBy != null and groupBy !='' "> GROUP BY #{groupBy,jdbcType=VARCHAR}</if>
+		<if test="orderBy != null and orderBy !='' "> ORDER BY <if test="selfOrder == null">A.</if>${orderBy}</if>
+		<if test="ascOrdesc != null and ascOrdesc !='' "> ${ascOrdesc}</if>
+		<if test="orderBy == null and ascOrdesc == null "> ORDER BY A.id DESC</if>
+	</sql>
+	<sql id="limitCount"><!-- 分页 -->
+		<if test="count != null and count !='' "> LIMIT ${start},${count}</if> 
+	</sql>
+	<!--====================================== 设置结束-CONFIG_FINISH ======================================-->
+	
+	<!--=@@@@@@============================= 自定义内容 开始 _@CAUTION_SELF_BEGIN@_ =============================@@@@@@=-->
+	<sql id="columns">
+		,mt.name AS medicationTypeName
+	</sql>
+	<sql id="search">
+		<if test="typeId != null and typeId != '' ">AND A.type_id = #{typeId}</if>
+		<if test="name != null and name != '' ">
+			AND A.name LIKE '%${name}%'
+		</if>
+		<if test="englishName != null and englishName != '' ">
+			AND A.englishName LIKE '%${englishName}%'
+		</if>
+		<if test="producer != null and producer != '' ">
+			AND A.producer LIKE '%${producer}%'
+		</if>
+		<if test="produceAddress != null and produceAddress != '' ">
+			AND A.produceAddress LIKE '%${produceAddress}%'
+		</if>
+		<if test="lotNumber != null and lotNumber != '' ">
+			AND A.lotNumber LIKE '%${lotNumber}%'
+		</if>
+		<if test="producerTel != null and producerTel != '' ">
+			AND A.producerTel LIKE '%${producerTel}%'
+		</if>
+		<if test="producerCode != null and producerCode != '' ">
+			AND A.producerCode LIKE '%${producerCode}%'
+		</if>
+		<if test="remainNum != null and remainNum != '' ">
+			AND A.remainNum LIKE '%${remainNum}%'
+		</if>
+		<if test="warningNum != null and warningNum != '' ">
+			AND A.warningNum LIKE '%${warningNum}%'
+		</if>
+		<if test="produceDate != null and produceDate != '' ">
+			AND DATE(A.produceDate)  = DATE(#{produceDate})
+		</if>
+		<if test="validTill != null and validTill != '' ">
+			AND DATE(A.validTill) = DATE(#{validTill})
+		</if>
+		<if test="hospitalId != null and hospitalId != '' ">
+			AND mr.hospital_id = #{hospitalId}
+		</if>
+		
+	</sql>
+	<sql id="leftJoin">
+		LEFT JOIN medication_type mt ON mt.id = A.type_id
+		LEFT JOIN medication_repertory mr ON mr.medication_id = A.id
+	</sql>
+	
+	<!--=@@@@@@============================= 自定义内容 结束 _@CAUTION_SELF_FINISH@_ =============================@@@@@@=-->
+	
+	
+	<!--====================================== 查询开始-SELECT_BEGIN ======================================-->
+	<select id="selectListByCondition" parameterType="java.util.Map" resultType="com.lhfeiyu.po.Medication">
+    	SELECT 
+		<include refid="baseColumns"/><include refid="columns"/>
+		FROM <include refid="table"/> A 
+		<include refid="leftJoin"/>
+		WHERE 1=1 
+		<include refid="baseSearch"/><include refid="search"/>
+		<include refid="suffix"/>
+		<include refid="limitCount"/>
+	</select>
+	
+	<select id="selectByCondition" parameterType="java.util.Map" resultType="com.lhfeiyu.po.Medication">
+   		SELECT 
+		<include refid="baseColumns"/><include refid="columns"/>
+		FROM <include refid="table"/> A 
+		<include refid="leftJoin"/>
+		WHERE 1=1 
+		<include refid="baseSearch"/><include refid="search"/>
+		<include refid="suffix"/>
+		LIMIT 0,1 
+	</select>
+	
+	<select id="selectCountByCondition" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM <include refid="table"/> A 
+		<include refid="leftJoin"/>
+		WHERE 1=1
+		<include refid="baseSearch"/><include refid="search"/>
+	</select>
+	
+	<select id="selectByPrimaryKey" resultType="com.lhfeiyu.po.Medication" parameterType="java.lang.Integer">
+		SELECT <include refid="baseColumns"/> FROM <include refid="table"/> A WHERE A.id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<select id="selectBySerial" resultType="com.lhfeiyu.po.Medication">
+   		SELECT 
+		<include refid="baseColumns"/><include refid="columns"/>
+		FROM <include refid="table"/> A
+		<include refid="leftJoin"/>
+    	WHERE A.serial = #{serial,jdbcType=VARCHAR}
+		LIMIT 0,1 
+	</select>
+	<!--====================================== 查询结束-SELECT_FINISH ======================================-->
+	
+	<!--====================================== 修改开始-UPDATE_BEGIN ======================================-->
+	<!-- <-#-if cMap_has_next>,</-#-if> -->
+	<update id="updateByPrimaryKey" parameterType="com.lhfeiyu.po.Medication">
+	    UPDATE <include refid="table"/>
+		<set>
+			
+			name = #{name,jdbcType=VARCHAR},
+			english_name = #{englishName,jdbcType=VARCHAR},
+			price = #{price,jdbcType=DECIMAL},
+			cover_words = #{coverWords,jdbcType=VARCHAR},
+			qr_code = #{qrCode,jdbcType=VARCHAR},
+			producer = #{producer,jdbcType=VARCHAR},
+			produce_address = #{produceAddress,jdbcType=VARCHAR},
+			producer_tel = #{producerTel,jdbcType=VARCHAR},
+			producer_code = #{producerCode,jdbcType=VARCHAR},
+			approval_number = #{approvalNumber,jdbcType=VARCHAR},
+			element = #{element,jdbcType=VARCHAR},
+			properties = #{properties,jdbcType=VARCHAR},
+			malady = #{malady,jdbcType=VARCHAR},
+			store = #{store,jdbcType=VARCHAR},
+			attention = #{attention,jdbcType=VARCHAR},
+			specifications = #{specifications,jdbcType=VARCHAR},
+			unit = #{unit,jdbcType=VARCHAR},
+			package_words = #{packageWords,jdbcType=VARCHAR},
+			usage_and_dosage = #{usageAndDosage,jdbcType=VARCHAR},
+			lot_number = #{lotNumber,jdbcType=INTEGER},
+			produce_date = #{produceDate,jdbcType=DATE},
+			valid_till = #{validTill,jdbcType=DATE},
+			capacity = #{capacity,jdbcType=VARCHAR},
+			serial = #{serial,jdbcType=VARCHAR},
+			type_id = #{typeId,jdbcType=INTEGER},
+			link_id = #{linkId,jdbcType=INTEGER},
+			group_id = #{groupId,jdbcType=INTEGER},
+			grade_id = #{gradeId,jdbcType=INTEGER},
+			main_status = #{mainStatus,jdbcType=INTEGER},
+			logic_status = #{logicStatus,jdbcType=INTEGER},
+			attr_decimal = #{attrDecimal,jdbcType=DECIMAL},
+			main_ids = #{mainIds,jdbcType=VARCHAR},
+			attr_str = #{attrStr,jdbcType=VARCHAR},
+			attr_str2 = #{attrStr2,jdbcType=VARCHAR},
+			attr_int = #{attrInt,jdbcType=INTEGER},
+			attr_int2 = #{attrInt2,jdbcType=INTEGER},
+			attr_num = #{attrNum,jdbcType=DECIMAL},
+			attr_date = #{attrDate,jdbcType=DATE},
+			attr_datetime = #{attrDatetime,jdbcType=TIMESTAMP},
+			sequence = #{sequence,jdbcType=INTEGER},
+			description = #{description,jdbcType=VARCHAR},
+			remark = #{remark,jdbcType=VARCHAR},
+			deleted_at = #{deletedAt,jdbcType=TIMESTAMP},
+			deleted_by = #{deletedBy,jdbcType=VARCHAR},
+			created_at = #{createdAt,jdbcType=TIMESTAMP},
+			created_by = #{createdBy,jdbcType=VARCHAR},
+			updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+			
+		  <if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+		  updated_at = NOW()
+		</set>
+	    WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateBySerial" parameterType="com.lhfeiyu.po.Medication">
+	    UPDATE <include refid="table"/>
+		<set>
+		  	
+		  	name = #{name,jdbcType=VARCHAR},
+		  	english_name = #{englishName,jdbcType=VARCHAR},
+		  	price = #{price,jdbcType=DECIMAL},
+		  	cover_words = #{coverWords,jdbcType=VARCHAR},
+		  	qr_code = #{qrCode,jdbcType=VARCHAR},
+		  	producer = #{producer,jdbcType=VARCHAR},
+		  	produce_address = #{produceAddress,jdbcType=VARCHAR},
+		  	producer_tel = #{producerTel,jdbcType=VARCHAR},
+		  	producer_code = #{producerCode,jdbcType=VARCHAR},
+		  	approval_number = #{approvalNumber,jdbcType=VARCHAR},
+		  	element = #{element,jdbcType=VARCHAR},
+		  	properties = #{properties,jdbcType=VARCHAR},
+		  	malady = #{malady,jdbcType=VARCHAR},
+		  	store = #{store,jdbcType=VARCHAR},
+		  	attention = #{attention,jdbcType=VARCHAR},
+		  	specifications = #{specifications,jdbcType=VARCHAR},
+		  	unit = #{unit,jdbcType=VARCHAR},
+		  	package_words = #{packageWords,jdbcType=VARCHAR},
+		  	usage_and_dosage = #{usageAndDosage,jdbcType=VARCHAR},
+		  	lot_number = #{lotNumber,jdbcType=INTEGER},
+		  	produce_date = #{produceDate,jdbcType=DATE},
+		  	valid_till = #{validTill,jdbcType=DATE},
+		  	capacity = #{capacity,jdbcType=VARCHAR},
+		  	serial = #{serial,jdbcType=VARCHAR},
+		  	type_id = #{typeId,jdbcType=INTEGER},
+		  	link_id = #{linkId,jdbcType=INTEGER},
+		  	group_id = #{groupId,jdbcType=INTEGER},
+		  	grade_id = #{gradeId,jdbcType=INTEGER},
+		  	main_status = #{mainStatus,jdbcType=INTEGER},
+		  	logic_status = #{logicStatus,jdbcType=INTEGER},
+		  	attr_decimal = #{attrDecimal,jdbcType=DECIMAL},
+		  	main_ids = #{mainIds,jdbcType=VARCHAR},
+		  	attr_str = #{attrStr,jdbcType=VARCHAR},
+		  	attr_str2 = #{attrStr2,jdbcType=VARCHAR},
+		  	attr_int = #{attrInt,jdbcType=INTEGER},
+		  	attr_int2 = #{attrInt2,jdbcType=INTEGER},
+		  	attr_num = #{attrNum,jdbcType=DECIMAL},
+		  	attr_date = #{attrDate,jdbcType=DATE},
+		  	attr_datetime = #{attrDatetime,jdbcType=TIMESTAMP},
+		  	sequence = #{sequence,jdbcType=INTEGER},
+		  	description = #{description,jdbcType=VARCHAR},
+		  	remark = #{remark,jdbcType=VARCHAR},
+		  	deleted_at = #{deletedAt,jdbcType=TIMESTAMP},
+		  	deleted_by = #{deletedBy,jdbcType=VARCHAR},
+		  	created_at = #{createdAt,jdbcType=TIMESTAMP},
+		  	created_by = #{createdBy,jdbcType=VARCHAR},
+		  	updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+		  	
+		  <if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+		  updated_at = NOW()
+		</set>
+	    WHERE serial = #{serial,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateByIds">
+	    UPDATE <include refid="table"/>
+		<set>
+			
+			name = #{name,jdbcType=VARCHAR},
+			english_name = #{englishName,jdbcType=VARCHAR},
+			price = #{price,jdbcType=DECIMAL},
+			cover_words = #{coverWords,jdbcType=VARCHAR},
+			qr_code = #{qrCode,jdbcType=VARCHAR},
+			producer = #{producer,jdbcType=VARCHAR},
+			produce_address = #{produceAddress,jdbcType=VARCHAR},
+			producer_tel = #{producerTel,jdbcType=VARCHAR},
+			producer_code = #{producerCode,jdbcType=VARCHAR},
+			approval_number = #{approvalNumber,jdbcType=VARCHAR},
+			element = #{element,jdbcType=VARCHAR},
+			properties = #{properties,jdbcType=VARCHAR},
+			malady = #{malady,jdbcType=VARCHAR},
+			store = #{store,jdbcType=VARCHAR},
+			attention = #{attention,jdbcType=VARCHAR},
+			specifications = #{specifications,jdbcType=VARCHAR},
+			unit = #{unit,jdbcType=VARCHAR},
+			package_words = #{packageWords,jdbcType=VARCHAR},
+			usage_and_dosage = #{usageAndDosage,jdbcType=VARCHAR},
+			lot_number = #{lotNumber,jdbcType=INTEGER},
+			produce_date = #{produceDate,jdbcType=DATE},
+			valid_till = #{validTill,jdbcType=DATE},
+			capacity = #{capacity,jdbcType=VARCHAR},
+			serial = #{serial,jdbcType=VARCHAR},
+			type_id = #{typeId,jdbcType=INTEGER},
+			link_id = #{linkId,jdbcType=INTEGER},
+			group_id = #{groupId,jdbcType=INTEGER},
+			grade_id = #{gradeId,jdbcType=INTEGER},
+			main_status = #{mainStatus,jdbcType=INTEGER},
+			logic_status = #{logicStatus,jdbcType=INTEGER},
+			attr_decimal = #{attrDecimal,jdbcType=DECIMAL},
+			main_ids = #{mainIds,jdbcType=VARCHAR},
+			attr_str = #{attrStr,jdbcType=VARCHAR},
+			attr_str2 = #{attrStr2,jdbcType=VARCHAR},
+			attr_int = #{attrInt,jdbcType=INTEGER},
+			attr_int2 = #{attrInt2,jdbcType=INTEGER},
+			attr_num = #{attrNum,jdbcType=DECIMAL},
+			attr_date = #{attrDate,jdbcType=DATE},
+			attr_datetime = #{attrDatetime,jdbcType=TIMESTAMP},
+			sequence = #{sequence,jdbcType=INTEGER},
+			description = #{description,jdbcType=VARCHAR},
+			remark = #{remark,jdbcType=VARCHAR},
+			deleted_at = #{deletedAt,jdbcType=TIMESTAMP},
+			deleted_by = #{deletedBy,jdbcType=VARCHAR},
+			created_at = #{createdAt,jdbcType=TIMESTAMP},
+			created_by = #{createdBy,jdbcType=VARCHAR},
+			updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+			
+		  <if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+		  updated_at = NOW()
+		</set>
+	    WHERE id IN( ${ids} )
+	</update>
+	
+	<update id="updateByCondition">
+		UPDATE <include refid="table"/> SET
+		<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+		updated_at = NOW(),
+		${condition}
+	</update>
+	
+	<update id="updateDeletedNowByIds">
+		UPDATE <include refid="table"/>
+		<set>
+			deleted_at = NOW(),
+			<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+			updated_at = NOW()
+		</set>
+		WHERE id IN( ${ids} )
+	</update>
+	
+	<update id="updateDeletedNullByIds">
+		UPDATE <include refid="table"/>
+		<set>
+			deleted_at = NULL,
+			<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+			updated_at = NOW()
+		</set>
+		WHERE id IN( ${ids} )
+	</update>
+	
+	<update id="updateDeletedNowById" parameterType="java.lang.Integer">
+		UPDATE <include refid="table"/>
+		<set>
+			deleted_at = NOW(),
+			<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+			updated_at = NOW()
+		</set>
+		WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateDeletedNullById">
+		UPDATE <include refid="table"/>
+		<set> 
+			deleted_at = NULL, 
+			<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+			updated_at = NOW()
+		</set>
+		WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateFieldById" parameterType="java.util.Map">
+		UPDATE <include refid="table"/>
+		<set>
+			<if test="expression1 != null">${expression1},</if>
+			<if test="expression2 != null">${expression2},</if>
+			<if test="expression3 != null">${expression3},</if>
+			<if test="expression4 != null">${expression4},</if>
+			<if test="expression5 != null">${expression5},</if>
+			<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+			updated_at = NOW()
+		</set>
+		WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateFieldByIds" parameterType="java.util.Map">
+		UPDATE <include refid="table"/>
+		<set>
+			<if test="expression1 != null">${expression1},</if>
+			<if test="expression2 != null">${expression2},</if>
+			<if test="expression3 != null">${expression3},</if>
+			<if test="expression4 != null">${expression4},</if>
+			<if test="expression5 != null">${expression5},</if>
+			<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+			updated_at = NOW()
+		</set>
+		WHERE id IN( ${ids} )
+	</update>
+	
+	
+	<update id="updateByPrimaryKeySelective" parameterType="com.lhfeiyu.po.Medication">
+	    UPDATE <include refid="table"/>
+		<set>
+				<if test="name != null">name = #{name,jdbcType=VARCHAR},</if>
+				<if test="englishName != null">english_name = #{englishName,jdbcType=VARCHAR},</if>
+				<if test="price != null">price = #{price,jdbcType=DECIMAL},</if>
+				<if test="coverWords != null">cover_words = #{coverWords,jdbcType=VARCHAR},</if>
+				<if test="qrCode != null">qr_code = #{qrCode,jdbcType=VARCHAR},</if>
+				<if test="producer != null">producer = #{producer,jdbcType=VARCHAR},</if>
+				<if test="produceAddress != null">produce_address = #{produceAddress,jdbcType=VARCHAR},</if>
+				<if test="producerTel != null">producer_tel = #{producerTel,jdbcType=VARCHAR},</if>
+				<if test="producerCode != null">producer_code = #{producerCode,jdbcType=VARCHAR},</if>
+				<if test="approvalNumber != null">approval_number = #{approvalNumber,jdbcType=VARCHAR},</if>
+				<if test="element != null">element = #{element,jdbcType=VARCHAR},</if>
+				<if test="properties != null">properties = #{properties,jdbcType=VARCHAR},</if>
+				<if test="malady != null">malady = #{malady,jdbcType=VARCHAR},</if>
+				<if test="store != null">store = #{store,jdbcType=VARCHAR},</if>
+				<if test="attention != null">attention = #{attention,jdbcType=VARCHAR},</if>
+				<if test="specifications != null">specifications = #{specifications,jdbcType=VARCHAR},</if>
+				<if test="unit != null">unit = #{unit,jdbcType=VARCHAR},</if>
+				<if test="packageWords != null">package_words = #{packageWords,jdbcType=VARCHAR},</if>
+				<if test="usageAndDosage != null">usage_and_dosage = #{usageAndDosage,jdbcType=VARCHAR},</if>
+				<if test="lotNumber != null">lot_number = #{lotNumber,jdbcType=INTEGER},</if>
+				<if test="produceDate != null">produce_date = #{produceDate,jdbcType=DATE},</if>
+				<if test="validTill != null">valid_till = #{validTill,jdbcType=DATE},</if>
+				<if test="capacity != null">capacity = #{capacity,jdbcType=VARCHAR},</if>
+				<if test="serial != null">serial = #{serial,jdbcType=VARCHAR},</if>
+				<if test="typeId != null">type_id = #{typeId,jdbcType=INTEGER},</if>
+				<if test="linkId != null">link_id = #{linkId,jdbcType=INTEGER},</if>
+				<if test="groupId != null">group_id = #{groupId,jdbcType=INTEGER},</if>
+				<if test="gradeId != null">grade_id = #{gradeId,jdbcType=INTEGER},</if>
+				<if test="mainStatus != null">main_status = #{mainStatus,jdbcType=INTEGER},</if>
+				<if test="logicStatus != null">logic_status = #{logicStatus,jdbcType=INTEGER},</if>
+				<if test="attrDecimal != null">attr_decimal = #{attrDecimal,jdbcType=DECIMAL},</if>
+				<if test="mainIds != null">main_ids = #{mainIds,jdbcType=VARCHAR},</if>
+				<if test="attrStr != null">attr_str = #{attrStr,jdbcType=VARCHAR},</if>
+				<if test="attrStr2 != null">attr_str2 = #{attrStr2,jdbcType=VARCHAR},</if>
+				<if test="attrInt != null">attr_int = #{attrInt,jdbcType=INTEGER},</if>
+				<if test="attrInt2 != null">attr_int2 = #{attrInt2,jdbcType=INTEGER},</if>
+				<if test="attrNum != null">attr_num = #{attrNum,jdbcType=DECIMAL},</if>
+				<if test="attrDate != null">attr_date = #{attrDate,jdbcType=DATE},</if>
+				<if test="attrDatetime != null">attr_datetime = #{attrDatetime,jdbcType=TIMESTAMP},</if>
+				<if test="sequence != null">sequence = #{sequence,jdbcType=INTEGER},</if>
+				<if test="description != null">description = #{description,jdbcType=VARCHAR},</if>
+				<if test="remark != null">remark = #{remark,jdbcType=VARCHAR},</if>
+				<if test="deletedAt != null">deleted_at = #{deletedAt,jdbcType=TIMESTAMP},</if>
+				<if test="deletedBy != null">deleted_by = #{deletedBy,jdbcType=VARCHAR},</if>
+				<if test="createdAt != null">created_at = #{createdAt,jdbcType=TIMESTAMP},</if>
+				<if test="createdBy != null">created_by = #{createdBy,jdbcType=VARCHAR},</if>
+				<if test="updatedAt != null">updated_at = #{updatedAt,jdbcType=TIMESTAMP},</if>
+		  <if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+		  updated_at = NOW()
+		</set>
+	    WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateBySerialSelective" parameterType="com.lhfeiyu.po.Medication">
+	    UPDATE <include refid="table"/>
+		<set>
+				<if test="name != null">name = #{name,jdbcType=VARCHAR},</if>
+				<if test="englishName != null">english_name = #{englishName,jdbcType=VARCHAR},</if>
+				<if test="price != null">price = #{price,jdbcType=DECIMAL},</if>
+				<if test="coverWords != null">cover_words = #{coverWords,jdbcType=VARCHAR},</if>
+				<if test="qrCode != null">qr_code = #{qrCode,jdbcType=VARCHAR},</if>
+				<if test="producer != null">producer = #{producer,jdbcType=VARCHAR},</if>
+				<if test="produceAddress != null">produce_address = #{produceAddress,jdbcType=VARCHAR},</if>
+				<if test="producerTel != null">producer_tel = #{producerTel,jdbcType=VARCHAR},</if>
+				<if test="producerCode != null">producer_code = #{producerCode,jdbcType=VARCHAR},</if>
+				<if test="approvalNumber != null">approval_number = #{approvalNumber,jdbcType=VARCHAR},</if>
+				<if test="element != null">element = #{element,jdbcType=VARCHAR},</if>
+				<if test="properties != null">properties = #{properties,jdbcType=VARCHAR},</if>
+				<if test="malady != null">malady = #{malady,jdbcType=VARCHAR},</if>
+				<if test="store != null">store = #{store,jdbcType=VARCHAR},</if>
+				<if test="attention != null">attention = #{attention,jdbcType=VARCHAR},</if>
+				<if test="specifications != null">specifications = #{specifications,jdbcType=VARCHAR},</if>
+				<if test="unit != null">unit = #{unit,jdbcType=VARCHAR},</if>
+				<if test="packageWords != null">package_words = #{packageWords,jdbcType=VARCHAR},</if>
+				<if test="usageAndDosage != null">usage_and_dosage = #{usageAndDosage,jdbcType=VARCHAR},</if>
+				<if test="lotNumber != null">lot_number = #{lotNumber,jdbcType=INTEGER},</if>
+				<if test="produceDate != null">produce_date = #{produceDate,jdbcType=DATE},</if>
+				<if test="validTill != null">valid_till = #{validTill,jdbcType=DATE},</if>
+				<if test="capacity != null">capacity = #{capacity,jdbcType=VARCHAR},</if>
+				<if test="serial != null">serial = #{serial,jdbcType=VARCHAR},</if>
+				<if test="typeId != null">type_id = #{typeId,jdbcType=INTEGER},</if>
+				<if test="linkId != null">link_id = #{linkId,jdbcType=INTEGER},</if>
+				<if test="groupId != null">group_id = #{groupId,jdbcType=INTEGER},</if>
+				<if test="gradeId != null">grade_id = #{gradeId,jdbcType=INTEGER},</if>
+				<if test="mainStatus != null">main_status = #{mainStatus,jdbcType=INTEGER},</if>
+				<if test="logicStatus != null">logic_status = #{logicStatus,jdbcType=INTEGER},</if>
+				<if test="attrDecimal != null">attr_decimal = #{attrDecimal,jdbcType=DECIMAL},</if>
+				<if test="mainIds != null">main_ids = #{mainIds,jdbcType=VARCHAR},</if>
+				<if test="attrStr != null">attr_str = #{attrStr,jdbcType=VARCHAR},</if>
+				<if test="attrStr2 != null">attr_str2 = #{attrStr2,jdbcType=VARCHAR},</if>
+				<if test="attrInt != null">attr_int = #{attrInt,jdbcType=INTEGER},</if>
+				<if test="attrInt2 != null">attr_int2 = #{attrInt2,jdbcType=INTEGER},</if>
+				<if test="attrNum != null">attr_num = #{attrNum,jdbcType=DECIMAL},</if>
+				<if test="attrDate != null">attr_date = #{attrDate,jdbcType=DATE},</if>
+				<if test="attrDatetime != null">attr_datetime = #{attrDatetime,jdbcType=TIMESTAMP},</if>
+				<if test="sequence != null">sequence = #{sequence,jdbcType=INTEGER},</if>
+				<if test="description != null">description = #{description,jdbcType=VARCHAR},</if>
+				<if test="remark != null">remark = #{remark,jdbcType=VARCHAR},</if>
+				<if test="deletedAt != null">deleted_at = #{deletedAt,jdbcType=TIMESTAMP},</if>
+				<if test="deletedBy != null">deleted_by = #{deletedBy,jdbcType=VARCHAR},</if>
+				<if test="createdAt != null">created_at = #{createdAt,jdbcType=TIMESTAMP},</if>
+				<if test="createdBy != null">created_by = #{createdBy,jdbcType=VARCHAR},</if>
+				<if test="updatedAt != null">updated_at = #{updatedAt,jdbcType=TIMESTAMP},</if>
+		  <if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+		  updated_at = NOW()
+		</set>
+	    WHERE serial = #{serial,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateByIdsSelective">
+	    UPDATE <include refid="table"/>
+		<set>
+				<if test="name != null">name = #{name,jdbcType=VARCHAR},</if>
+				<if test="englishName != null">english_name = #{englishName,jdbcType=VARCHAR},</if>
+				<if test="price != null">price = #{price,jdbcType=DECIMAL},</if>
+				<if test="coverWords != null">cover_words = #{coverWords,jdbcType=VARCHAR},</if>
+				<if test="qrCode != null">qr_code = #{qrCode,jdbcType=VARCHAR},</if>
+				<if test="producer != null">producer = #{producer,jdbcType=VARCHAR},</if>
+				<if test="produceAddress != null">produce_address = #{produceAddress,jdbcType=VARCHAR},</if>
+				<if test="producerTel != null">producer_tel = #{producerTel,jdbcType=VARCHAR},</if>
+				<if test="producerCode != null">producer_code = #{producerCode,jdbcType=VARCHAR},</if>
+				<if test="approvalNumber != null">approval_number = #{approvalNumber,jdbcType=VARCHAR},</if>
+				<if test="element != null">element = #{element,jdbcType=VARCHAR},</if>
+				<if test="properties != null">properties = #{properties,jdbcType=VARCHAR},</if>
+				<if test="malady != null">malady = #{malady,jdbcType=VARCHAR},</if>
+				<if test="store != null">store = #{store,jdbcType=VARCHAR},</if>
+				<if test="attention != null">attention = #{attention,jdbcType=VARCHAR},</if>
+				<if test="specifications != null">specifications = #{specifications,jdbcType=VARCHAR},</if>
+				<if test="unit != null">unit = #{unit,jdbcType=VARCHAR},</if>
+				<if test="packageWords != null">package_words = #{packageWords,jdbcType=VARCHAR},</if>
+				<if test="usageAndDosage != null">usage_and_dosage = #{usageAndDosage,jdbcType=VARCHAR},</if>
+				<if test="lotNumber != null">lot_number = #{lotNumber,jdbcType=INTEGER},</if>
+				<if test="produceDate != null">produce_date = #{produceDate,jdbcType=DATE},</if>
+				<if test="validTill != null">valid_till = #{validTill,jdbcType=DATE},</if>
+				<if test="capacity != null">capacity = #{capacity,jdbcType=VARCHAR},</if>
+				<if test="serial != null">serial = #{serial,jdbcType=VARCHAR},</if>
+				<if test="typeId != null">type_id = #{typeId,jdbcType=INTEGER},</if>
+				<if test="linkId != null">link_id = #{linkId,jdbcType=INTEGER},</if>
+				<if test="groupId != null">group_id = #{groupId,jdbcType=INTEGER},</if>
+				<if test="gradeId != null">grade_id = #{gradeId,jdbcType=INTEGER},</if>
+				<if test="mainStatus != null">main_status = #{mainStatus,jdbcType=INTEGER},</if>
+				<if test="logicStatus != null">logic_status = #{logicStatus,jdbcType=INTEGER},</if>
+				<if test="attrDecimal != null">attr_decimal = #{attrDecimal,jdbcType=DECIMAL},</if>
+				<if test="mainIds != null">main_ids = #{mainIds,jdbcType=VARCHAR},</if>
+				<if test="attrStr != null">attr_str = #{attrStr,jdbcType=VARCHAR},</if>
+				<if test="attrStr2 != null">attr_str2 = #{attrStr2,jdbcType=VARCHAR},</if>
+				<if test="attrInt != null">attr_int = #{attrInt,jdbcType=INTEGER},</if>
+				<if test="attrInt2 != null">attr_int2 = #{attrInt2,jdbcType=INTEGER},</if>
+				<if test="attrNum != null">attr_num = #{attrNum,jdbcType=DECIMAL},</if>
+				<if test="attrDate != null">attr_date = #{attrDate,jdbcType=DATE},</if>
+				<if test="attrDatetime != null">attr_datetime = #{attrDatetime,jdbcType=TIMESTAMP},</if>
+				<if test="sequence != null">sequence = #{sequence,jdbcType=INTEGER},</if>
+				<if test="description != null">description = #{description,jdbcType=VARCHAR},</if>
+				<if test="remark != null">remark = #{remark,jdbcType=VARCHAR},</if>
+				<if test="deletedAt != null">deleted_at = #{deletedAt,jdbcType=TIMESTAMP},</if>
+				<if test="deletedBy != null">deleted_by = #{deletedBy,jdbcType=VARCHAR},</if>
+				<if test="createdAt != null">created_at = #{createdAt,jdbcType=TIMESTAMP},</if>
+				<if test="createdBy != null">created_by = #{createdBy,jdbcType=VARCHAR},</if>
+				<if test="updatedAt != null">updated_at = #{updatedAt,jdbcType=TIMESTAMP},</if>
+		  <if test="updatedBy != null">updated_by = #{updatedBy},</if>
+		  updated_at = NOW()
+		</set>
+	    WHERE id IN( ${ids} )
+	</update>
+    <!--====================================== 修改结束-UPDATE_FINISH ======================================-->
+	
+	<!--====================================== 新增开始-INSERT_BEGIN ======================================-->
+	<insert id="insert" parameterType="com.lhfeiyu.po.Medication" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO <include refid="table"/>(
+			name,english_name,price,cover_words,qr_code,producer,produce_address,producer_tel,producer_code,approval_number,element,properties,malady,store,attention,specifications,unit,package_words,usage_and_dosage,lot_number,produce_date,valid_till,capacity,serial,type_id,link_id,group_id,grade_id,main_status,logic_status,attr_decimal,main_ids,attr_str,attr_str2,attr_int,attr_int2,attr_num,attr_date,attr_datetime,sequence,description,remark,deleted_at,deleted_by,created_at,created_by,updated_at,updated_by
+		)VALUES(
+		    #{name,jdbcType=VARCHAR},#{englishName,jdbcType=VARCHAR},#{price,jdbcType=DECIMAL},#{coverWords,jdbcType=VARCHAR},#{qrCode,jdbcType=VARCHAR},#{producer,jdbcType=VARCHAR},#{produceAddress,jdbcType=VARCHAR},#{producerTel,jdbcType=VARCHAR},#{producerCode,jdbcType=VARCHAR},#{approvalNumber,jdbcType=VARCHAR},#{element,jdbcType=VARCHAR},#{properties,jdbcType=VARCHAR},#{malady,jdbcType=VARCHAR},#{store,jdbcType=VARCHAR},#{attention,jdbcType=VARCHAR},#{specifications,jdbcType=VARCHAR},#{unit,jdbcType=VARCHAR},#{packageWords,jdbcType=VARCHAR},#{usageAndDosage,jdbcType=VARCHAR},#{lotNumber,jdbcType=INTEGER},#{produceDate,jdbcType=DATE},#{validTill,jdbcType=DATE},#{capacity,jdbcType=VARCHAR},#{serial,jdbcType=VARCHAR},#{typeId,jdbcType=INTEGER},#{linkId,jdbcType=INTEGER},#{groupId,jdbcType=INTEGER},#{gradeId,jdbcType=INTEGER},#{mainStatus,jdbcType=INTEGER},#{logicStatus,jdbcType=INTEGER},#{attrDecimal,jdbcType=DECIMAL},#{mainIds,jdbcType=VARCHAR},#{attrStr,jdbcType=VARCHAR},#{attrStr2,jdbcType=VARCHAR},#{attrInt,jdbcType=INTEGER},#{attrInt2,jdbcType=INTEGER},#{attrNum,jdbcType=DECIMAL},#{attrDate,jdbcType=DATE},#{attrDatetime,jdbcType=TIMESTAMP},#{sequence,jdbcType=INTEGER},#{description,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR},#{deletedAt,jdbcType=TIMESTAMP},#{deletedBy,jdbcType=VARCHAR},#{createdAt,jdbcType=TIMESTAMP},#{createdBy,jdbcType=VARCHAR},#{updatedAt,jdbcType=TIMESTAMP},#{updatedBy,jdbcType=VARCHAR}
+	    )
+	</insert>
+	
+	<insert id="insertBatch">
+		INSERT INTO <include refid="table"/>(
+			name,english_name,price,cover_words,qr_code,producer,produce_address,producer_tel,producer_code,approval_number,element,properties,malady,store,attention,specifications,unit,package_words,usage_and_dosage,lot_number,produce_date,valid_till,capacity,serial,type_id,link_id,group_id,grade_id,main_status,logic_status,attr_decimal,main_ids,attr_str,attr_str2,attr_int,attr_int2,attr_num,attr_date,attr_datetime,sequence,description,remark,deleted_at,deleted_by,created_at,created_by,updated_at,updated_by
+		)VALUES
+		<foreach collection="list" item="c" separator=",">
+			(
+		    #{c.name,dbcType=VARCHAR},#{c.englishName,dbcType=VARCHAR},#{c.price,dbcType=DECIMAL},#{c.coverWords,dbcType=VARCHAR},#{c.qrCode,dbcType=VARCHAR},#{c.producer,dbcType=VARCHAR},#{c.produceAddress,dbcType=VARCHAR},#{c.producerTel,dbcType=VARCHAR},#{c.producerCode,dbcType=VARCHAR},#{c.approvalNumber,dbcType=VARCHAR},#{c.element,dbcType=VARCHAR},#{c.properties,dbcType=VARCHAR},#{c.malady,dbcType=VARCHAR},#{c.store,dbcType=VARCHAR},#{c.attention,dbcType=VARCHAR},#{c.specifications,dbcType=VARCHAR},#{c.unit,dbcType=VARCHAR},#{c.packageWords,dbcType=VARCHAR},#{c.usageAndDosage,dbcType=VARCHAR},#{c.lotNumber,dbcType=INTEGER},#{c.produceDate,dbcType=DATE},#{c.validTill,dbcType=DATE},#{c.capacity,dbcType=VARCHAR},#{c.serial,dbcType=VARCHAR},#{c.typeId,dbcType=INTEGER},#{c.linkId,dbcType=INTEGER},#{c.groupId,dbcType=INTEGER},#{c.gradeId,dbcType=INTEGER},#{c.mainStatus,dbcType=INTEGER},#{c.logicStatus,dbcType=INTEGER},#{c.attrDecimal,dbcType=DECIMAL},#{c.mainIds,dbcType=VARCHAR},#{c.attrStr,dbcType=VARCHAR},#{c.attrStr2,dbcType=VARCHAR},#{c.attrInt,dbcType=INTEGER},#{c.attrInt2,dbcType=INTEGER},#{c.attrNum,dbcType=DECIMAL},#{c.attrDate,dbcType=DATE},#{c.attrDatetime,dbcType=TIMESTAMP},#{c.sequence,dbcType=INTEGER},#{c.description,dbcType=VARCHAR},#{c.remark,dbcType=VARCHAR},#{c.deletedAt,dbcType=TIMESTAMP},#{c.deletedBy,dbcType=VARCHAR},#{c.createdAt,dbcType=TIMESTAMP},#{c.createdBy,dbcType=VARCHAR},#{c.updatedAt,dbcType=TIMESTAMP},#{c.updatedBy,dbcType=VARCHAR}
+	    	)
+		</foreach>
+	</insert>
+  	
+	<insert id="insertSelective" parameterType="com.lhfeiyu.po.Medication" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO <include refid="table"/>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+					<if test="name != null"> name,</if>
+					<if test="englishName != null"> english_name,</if>
+					<if test="price != null"> price,</if>
+					<if test="coverWords != null"> cover_words,</if>
+					<if test="qrCode != null"> qr_code,</if>
+					<if test="producer != null"> producer,</if>
+					<if test="produceAddress != null"> produce_address,</if>
+					<if test="producerTel != null"> producer_tel,</if>
+					<if test="producerCode != null"> producer_code,</if>
+					<if test="approvalNumber != null"> approval_number,</if>
+					<if test="element != null"> element,</if>
+					<if test="properties != null"> properties,</if>
+					<if test="malady != null"> malady,</if>
+					<if test="store != null"> store,</if>
+					<if test="attention != null"> attention,</if>
+					<if test="specifications != null"> specifications,</if>
+					<if test="unit != null"> unit,</if>
+					<if test="packageWords != null"> package_words,</if>
+					<if test="usageAndDosage != null"> usage_and_dosage,</if>
+					<if test="lotNumber != null"> lot_number,</if>
+					<if test="produceDate != null"> produce_date,</if>
+					<if test="validTill != null"> valid_till,</if>
+					<if test="capacity != null"> capacity,</if>
+					<if test="serial != null"> serial,</if>
+					<if test="typeId != null"> type_id,</if>
+					<if test="linkId != null"> link_id,</if>
+					<if test="groupId != null"> group_id,</if>
+					<if test="gradeId != null"> grade_id,</if>
+					<if test="mainStatus != null"> main_status,</if>
+					<if test="logicStatus != null"> logic_status,</if>
+					<if test="attrDecimal != null"> attr_decimal,</if>
+					<if test="mainIds != null"> main_ids,</if>
+					<if test="attrStr != null"> attr_str,</if>
+					<if test="attrStr2 != null"> attr_str2,</if>
+					<if test="attrInt != null"> attr_int,</if>
+					<if test="attrInt2 != null"> attr_int2,</if>
+					<if test="attrNum != null"> attr_num,</if>
+					<if test="attrDate != null"> attr_date,</if>
+					<if test="attrDatetime != null"> attr_datetime,</if>
+					<if test="sequence != null"> sequence,</if>
+					<if test="description != null"> description,</if>
+					<if test="remark != null"> remark,</if>
+					<if test="deletedAt != null"> deleted_at,</if>
+					<if test="deletedBy != null"> deleted_by,</if>
+					<if test="createdAt != null"> created_at,</if>
+					<if test="createdBy != null"> created_by,</if>
+					<if test="updatedAt != null"> updated_at,</if>
+					<if test="updatedBy != null"> updated_by,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+					<if test="name != null">#{name,jdbcType=VARCHAR},</if>
+					<if test="englishName != null">#{englishName,jdbcType=VARCHAR},</if>
+					<if test="price != null">#{price,jdbcType=DECIMAL},</if>
+					<if test="coverWords != null">#{coverWords,jdbcType=VARCHAR},</if>
+					<if test="qrCode != null">#{qrCode,jdbcType=VARCHAR},</if>
+					<if test="producer != null">#{producer,jdbcType=VARCHAR},</if>
+					<if test="produceAddress != null">#{produceAddress,jdbcType=VARCHAR},</if>
+					<if test="producerTel != null">#{producerTel,jdbcType=VARCHAR},</if>
+					<if test="producerCode != null">#{producerCode,jdbcType=VARCHAR},</if>
+					<if test="approvalNumber != null">#{approvalNumber,jdbcType=VARCHAR},</if>
+					<if test="element != null">#{element,jdbcType=VARCHAR},</if>
+					<if test="properties != null">#{properties,jdbcType=VARCHAR},</if>
+					<if test="malady != null">#{malady,jdbcType=VARCHAR},</if>
+					<if test="store != null">#{store,jdbcType=VARCHAR},</if>
+					<if test="attention != null">#{attention,jdbcType=VARCHAR},</if>
+					<if test="specifications != null">#{specifications,jdbcType=VARCHAR},</if>
+					<if test="unit != null">#{unit,jdbcType=VARCHAR},</if>
+					<if test="packageWords != null">#{packageWords,jdbcType=VARCHAR},</if>
+					<if test="usageAndDosage != null">#{usageAndDosage,jdbcType=VARCHAR},</if>
+					<if test="lotNumber != null">#{lotNumber,jdbcType=INTEGER},</if>
+					<if test="produceDate != null">#{produceDate,jdbcType=DATE},</if>
+					<if test="validTill != null">#{validTill,jdbcType=DATE},</if>
+					<if test="capacity != null">#{capacity,jdbcType=VARCHAR},</if>
+					<if test="serial != null">#{serial,jdbcType=VARCHAR},</if>
+					<if test="typeId != null">#{typeId,jdbcType=INTEGER},</if>
+					<if test="linkId != null">#{linkId,jdbcType=INTEGER},</if>
+					<if test="groupId != null">#{groupId,jdbcType=INTEGER},</if>
+					<if test="gradeId != null">#{gradeId,jdbcType=INTEGER},</if>
+					<if test="mainStatus != null">#{mainStatus,jdbcType=INTEGER},</if>
+					<if test="logicStatus != null">#{logicStatus,jdbcType=INTEGER},</if>
+					<if test="attrDecimal != null">#{attrDecimal,jdbcType=DECIMAL},</if>
+					<if test="mainIds != null">#{mainIds,jdbcType=VARCHAR},</if>
+					<if test="attrStr != null">#{attrStr,jdbcType=VARCHAR},</if>
+					<if test="attrStr2 != null">#{attrStr2,jdbcType=VARCHAR},</if>
+					<if test="attrInt != null">#{attrInt,jdbcType=INTEGER},</if>
+					<if test="attrInt2 != null">#{attrInt2,jdbcType=INTEGER},</if>
+					<if test="attrNum != null">#{attrNum,jdbcType=DECIMAL},</if>
+					<if test="attrDate != null">#{attrDate,jdbcType=DATE},</if>
+					<if test="attrDatetime != null">#{attrDatetime,jdbcType=TIMESTAMP},</if>
+					<if test="sequence != null">#{sequence,jdbcType=INTEGER},</if>
+					<if test="description != null">#{description,jdbcType=VARCHAR},</if>
+					<if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
+					<if test="deletedAt != null">#{deletedAt,jdbcType=TIMESTAMP},</if>
+					<if test="deletedBy != null">#{deletedBy,jdbcType=VARCHAR},</if>
+					<if test="createdAt != null">#{createdAt,jdbcType=TIMESTAMP},</if>
+					<if test="createdBy != null">#{createdBy,jdbcType=VARCHAR},</if>
+					<if test="updatedAt != null">#{updatedAt,jdbcType=TIMESTAMP},</if>
+					<if test="updatedBy != null">#{updatedBy,jdbcType=VARCHAR},</if>
+		</trim>
+	</insert>
+  	<!--====================================== 新增结束-INSERT_FINISH ======================================-->
+	
+	<!--====================================== 删除开始-DELETE_BEGIN ======================================-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	    DELETE FROM <include refid="table"/> WHERE id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<delete id="deleteByCondition">
+		DELETE FROM <include refid="table"/> WHERE ${condition}
+	</delete>
+	
+	<delete id="deleteByIds">
+	    DELETE FROM <include refid="table"/> WHERE id IN (${ids})
+	</delete>
+	<!--====================================== 删除结束-DELETE_FINISH ======================================-->
+      
+</mapper>

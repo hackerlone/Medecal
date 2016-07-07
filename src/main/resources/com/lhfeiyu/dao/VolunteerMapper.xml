@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lhfeiyu.dao.VolunteerMapper">
+	<!--====================================== 设置开始-CONFIG_BEGIN ====================================== -->
+	<sql id="table">volunteer</sql>
+	<sql id="baseColumns">
+		A.id AS id,A.username AS username,A.sex AS sex,A.phone AS
+		phone,
+		A.email AS email,A.avatar AS avatar,A.address AS address,
+		A.province AS province,A.city AS city,A.weixin AS weixin,A.qq AS qq,
+		A.deleted_at AS deletedAt
+	</sql>
+	<!-- 基础字段 -->
+	<sql id="baseSearch">
+		<if test="deleted == null">AND A.deleted_at IS NULL</if>
+		<if test="deleted != null">AND A.deleted_at IS not NULL</if>
+		<if test="id != null and id != '' ">AND A.id = #{id}</if>
+	</sql>
+	<sql id="suffix"><!-- 分组排序 -->
+		<if test="groupBy != null and groupBy !='' "> GROUP BY #{groupBy,jdbcType=VARCHAR}</if>
+		<if test="orderBy != null and orderBy !='' ">
+			ORDER BY
+			<if test="selfOrder == null">A.</if>
+			${orderBy}
+		</if>
+		<if test="ascOrdesc != null and ascOrdesc !='' "> ${ascOrdesc}</if>
+		<if test="orderBy == null and ascOrdesc == null "> ORDER BY A.id DESC</if>
+	</sql>
+	<sql id="limitCount"><!-- 分页 -->
+		<if test="count != null and count !='' "> LIMIT ${start},${count}</if>
+	</sql>
+	<!--====================================== 设置结束-CONFIG_FINISH ====================================== -->
+
+	<!--=@@@@@@============================= 自定义内容 开始 _@CAUTION_SELF_BEGIN@_ 
+		=============================@@@@@@= -->
+	<sql id="columns">
+		,pca.area_name AS provinceName
+		,pca1.area_name AS cityName
+		,IF(A.sex = 1,"男",IF(A.sex = 2,"女","其他")) AS sexName
+	</sql>
+	<sql id="search">
+		<if test="username != null and username != '' ">
+			AND A.username LIKE '%${username}%'
+		</if>
+		<if test="address != null and address != '' ">
+			AND A.address LIKE '%${address}%'
+		</if>
+		<if test="phone != null and phone != '' ">
+			AND A.phone LIKE '%${phone}%'
+		</if>
+		<if test="email != null and email != '' ">
+			AND A.email LIKE '%${email}%'
+		</if>
+		<if test="sex != null and sex != '' ">
+			AND A.sex = #{sex}
+		</if>
+		<if test="province != null and province != '' ">
+			AND A.province = #{province}
+		</if>
+		<if test="city != null and city != '' ">
+			AND A.city = #{city}
+		</if>
+	</sql>
+	<sql id="leftJoin">
+		LEFT JOIN province_city_area pca ON A.province = pca.id
+		LEFT JOIN province_city_area pca1 ON A.city = pca1.id
+	</sql>
+	<!--=@@@@@@============================= 自定义内容 结束 _@CAUTION_SELF_FINISH@_ 
+		=============================@@@@@@= -->
+
+
+	<!--====================================== 查询开始-SELECT_BEGIN ====================================== -->
+	<select id="selectListByCondition" parameterType="java.util.Map"
+		resultType="com.lhfeiyu.po.Volunteer">
+		SELECT
+		<include refid="baseColumns" />
+		<include refid="columns" />
+		FROM
+		<include refid="table" />
+		A
+		<include refid="leftJoin" />
+		WHERE 1=1
+		<include refid="baseSearch" />
+		<include refid="search" />
+		<include refid="suffix" />
+		<include refid="limitCount" />
+	</select>
+
+	<select id="selectByCondition" parameterType="java.util.Map"
+		resultType="com.lhfeiyu.po.Volunteer">
+		SELECT
+		*
+		FROM
+		<include refid="table" />
+		A
+		WHERE 1=1
+		<include refid="baseSearch" />
+		<include refid="search" />
+		<include refid="suffix" />
+		LIMIT 0,1
+	</select>
+
+	<select id="selectCountByCondition" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM
+		<include refid="table" />
+		A
+		WHERE 1=1
+	</select>
+
+	<select id="selectByPrimaryKey" resultType="com.lhfeiyu.po.Volunteer"
+		parameterType="java.lang.Integer">
+		SELECT * FROM
+		<include refid="table" />
+		A WHERE A.id = #{id,jdbcType=INTEGER}
+	</select>
+	<!--====================================== 查询结束-SELECT_FINISH ====================================== -->
+
+	<!--====================================== 修改开始-UPDATE_BEGIN ====================================== -->
+	<!-- <-#-if cMap_has_next>,</-#-if> -->
+	<update id="updateService" parameterType="com.lhfeiyu.po.Volunteer">
+		UPDATE
+		<include refid="table" />
+		<set>
+			<if test="username != null">username = #{username,jdbcType=VARCHAR},</if>
+			<if test="sex != null">sex = #{sex,jdbcType=INTEGER},</if>
+			<if test="phone != null">phone = #{phone,jdbcType=VARCHAR},</if>
+			<if test="email != null">email = #{email,jdbcType=VARCHAR},</if>
+			<if test="avatar != null">avatar = #{avatar,jdbcType=VARCHAR},</if>
+			<if test="address != null">address = #{address,jdbcType=VARCHAR},</if>
+			<if test="province != null">province = #{province,jdbcType=INTEGER},</if>
+			<if test="city != null">city = #{city,jdbcType=INTEGER},</if>
+			<if test="weixin != null">weixin = #{weixin,jdbcType=VARCHAR},</if>
+			<if test="qq != null">qq = #{qq,jdbcType=VARCHAR}</if>
+		</set>
+		WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateDeletedNowByIds">
+		UPDATE
+		<include refid="table" />
+		<set>
+			deleted_at = NOW(),
+		</set>
+		WHERE id IN( ${ids} )
+	</update>
+
+	<update id="updateDeletedNullByIds">
+		UPDATE
+		<include refid="table" />
+		<set>
+			deleted_at = NULL,
+		</set>
+		WHERE id IN( ${ids} )
+	</update>
+
+	<update id="updateDeletedNowById" parameterType="java.lang.Integer">
+		UPDATE
+		<include refid="table" />
+		<set>
+			deleted_at = NOW(),
+		</set>
+		WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<update id="updateDeletedNullById">
+		UPDATE
+		<include refid="table" />
+		<set>
+			deleted_at = NULL,
+		</set>
+		WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<!--====================================== 修改结束-UPDATE_FINISH ====================================== -->
+
+	<!--====================================== 新增开始-INSERT_BEGIN ====================================== -->
+	<insert id="insertService" parameterType="com.lhfeiyu.po.Volunteer"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO
+		<include refid="table" />
+		(username,sex,phone,email,avatar,address,province,city,weixin,qq)VALUES(
+			#{username,jdbcType=VARCHAR},
+			#{sex,jdbcType=INTEGER},
+			#{phone,jdbcType=VARCHAR},
+			#{email,jdbcType=VARCHAR},
+			#{avatar,jdbcType=VARCHAR},
+			#{address,jdbcType=VARCHAR},
+			#{province,jdbcType=INTEGER},
+			#{city,jdbcType=INTEGER},
+			#{weixin,jdbcType=VARCHAR},
+			#{qq,jdbcType=VARCHAR}
+			
+		)
+	</insert>
+
+	<!--====================================== 新增结束-INSERT_FINISH ====================================== -->
+
+	<!--====================================== 删除开始-DELETE_BEGIN ====================================== -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		DELETE FROM
+		<include refid="table" />
+		WHERE id = #{id,jdbcType=INTEGER}
+	</delete>
+
+	<delete id="deleteByCondition">
+		DELETE FROM
+		<include refid="table" />
+		WHERE ${condition}
+	</delete>
+
+	<delete id="deleteByIds">
+		DELETE FROM
+		<include refid="table" />
+		WHERE id IN (${ids})
+	</delete>
+	<!--====================================== 删除结束-DELETE_FINISH ====================================== -->
+
+</mapper>

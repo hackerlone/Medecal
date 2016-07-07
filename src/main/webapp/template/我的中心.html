@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link rel="icon" href="favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" href="style.css" type="text/css" />
+<script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="js/jquery.SuperSlide.2.1.1.js"></script>
+
+</head>
+
+<body>
+<div class="pz_top">
+	<div class="w_0100 back1">
+    	<div class="w_1000">
+        	<div class="c_1100">
+            	<div class="left">沃诊无忧，您身边的家庭医生</div>
+                <div class="right">
+                	<div class="hover_l"><a href="#">官网</a> &nbsp;&nbsp;/&nbsp;&nbsp; <a href="#">联系客服</a> &nbsp;&nbsp;/&nbsp;&nbsp; <a href="#">网站地图</a></div>
+                	<div class="land">
+                    	<span><a href="#" class="lan_one">登录</a></span>
+                        <span><a href="#" class="lan_two">注册</a></span>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+    <div class="w_1000">
+    	<div class="c_1100_1">
+           <div class="logo"><a href="#"><img src="images/logo.jpg" width="134" height="104" /></a></div>
+           <div class="right_1">
+           		<div class="so">
+                	<div class="l_346">
+                    	<div class="searchbox" pzdatatype="select">
+                        	<input type="hidden" />
+                            <div class="titcon tw"  pzdatatype="title">
+                                找医生
+                            </div>
+                            <ul class='serul' pzdatatype="content">
+                               <li>找医生</li>
+                               <li>找医生</li>
+                            </ul>
+                        </div>
+                        <input type="text" class="input1" />
+                    </div>
+                    <input type="image" src="images/top4.jpg" width="48" height="48" class="input2" />
+                </div>
+                <div class="consult">
+                	<a href="#"><span>我要咨询</span><br />医生将为您在线解答</a>
+                </div>
+           </div>
+        </div>
+        <div class="c_1100_2">
+        	<div class="menu">
+            	<ul>
+                	<li class="nli_1"><a href="#"><img src="images/menu1.png" width="24" height="20" /></a></li>
+                	<li class="nli"><a href="#">我要预约</a></li>
+                    <li class="nli"><a href="#">陪诊</a></li>
+                    <li class="nli"><a href="#">挂号</a></li>
+                    <li class="nli"><a href="#">体检</a></li>
+                    <li class="nli"><a href="#">基因检测</a></li>
+                </ul>
+            </div>
+             <script>
+			jQuery(".menu").slide({ type: "menu", titCell: ".nli", targetCell: ".sub", effect: "slideDown", delayTime:200, triggerTime: 0,returnDefault: true });
+			</script>
+            <div class="special">
+            	<a href="#">健康资讯</a>
+                <a href="#">疾病专题</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="pz_main">
+	<div class="w_1000">
+    	<div class="c_1100_10">当前位置：<a href="#">首页</a> - <a href="#">我的中心</a></div>
+        <div class="w_229" style="padding-top:0;">
+        	<div class="t_229">我的中心</div>
+        	<div class="pz_SideLayer2">
+            	<li class="l4"><a href="#">疾病管理</a>
+                	<ul class="down_ul">
+                    <li class="l5 first"><a href="#">就诊记录</a></li>
+                    <li class="l5"><a href="#">病历</a></li>
+                    </ul>
+                </li>	
+                <li class="l4"><a href="#">医疗服务</a>
+                	<ul class="down_ul">
+                    	<li class="l5 first"><a href="#">我的医生</a></li>
+                        <li class="l5"><a href="#">挂号</a></li>
+                        <li class="l5"><a href="#">陪诊</a></li>
+                        <li class="l5"><a href="#">基因检测</a></li>
+                    </ul>
+                </li>
+                <li class="l4"><a href="#">通知中心</a>
+                	<ul class="down_ul">
+                    	<li class="l5 first"><a href="#">站内信</a></li>
+                    </ul>
+                </li>
+            </div> 
+            <script>
+                jQuery('.pz_SideLayer2 li').hover(function(){
+                		jQuery(this).find('.down_ul').stop().slideDown(300)
+                	},function(){
+                		jQuery(this).find('.down_ul').stop().slideUp(300)
+               	 	}
+                )
+                </script>
+        </div>
+        <div class="w_851" style="padding-top:0;">
+        	<div class="t_851_4">意向详情</div>
+            <div class="text_box1">
+            	<div class="tit_773">网上咨询</div>
+                <div class="tit_773_1">患者基本资料</div>
+                <div class="text_773">
+                <font>姓名：</font>唐某某<br />
+                <font>标题：</font>本人于3月20日在某某医院就诊<br />
+                <font>疾病：</font>肺结核<br />
+                <span id="hidden_div" style="display:none">
+                	<font>病情描述：</font>本人于3月20日在某某医院就诊，医生给我的结论是某某疾病，患病时间大概是20天左右，每天都有眩晕的感觉，头痛
+                    希望从医生那得到的帮助：希望医生能给我一些建议，长期的头痛困扰着我，工作和生活都收到了影响
+                </span>
+                </div>
+                <div class="cxq"><A href="javascript:;"><SPAN id="_strSpan">展开详情＞</SPAN></A></div>
+                <SCRIPT type=text/javascript>
+			   $('#_strSpan').click(function(){
+				   $('#hidden_div').slideToggle(0);
+				   $(this).toggleClass('hover');
+				   
+				   var _txt=$(this).text();
+				   if(_txt=='展开详情＞')
+				   {
+					   $(this).text('收起＞');
+					   }
+				   else{$(this).text('展开详情＞');}
+				   })
+			</SCRIPT>
+            </div>
+            <div class="text_box1">
+                <div class="tit_773_1" style="margin-top:5px;">诊断情况</div>
+                <div class="text_773">
+                <font>诊断科室：</font>内科<br />
+                <font>诊断日期：</font>2016年3月18日<br />
+                <font>过敏历史：</font>三年前有过青霉素过敏的情况<br />
+                <font>基本病情：</font>病人，男，39岁，于2012/7/9切除一个悬浮在大量腹水中的165×115×115mm的肿瘤，腹水中没有癌细胞，但医生说是粘液腺癌、恶
+性、广泛转移。但病人经过21天化疗后，精神很好，运动自如。请问下一步治疗：是仅仅用静脉注射（药物）还是同时加以腹腔灌注药物并热疗为
+好？手术中大夫曾说"无法刮干净"。<br />
+				<font>诊断结果：</font>粘液腺癌<br />
+                <font>诊断处方：</font>如果可以选择静脉注射化疗药物+腹腔灌注化疗药物比较好。没有检查到癌细胞，不代表不存在。
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="pz_down">
+	<div class="w_0100 back2">
+    	<div class="w_1000">
+        	<div class="c_1100_6">
+            	<div class="l_167">
+                	<div class="t_167"><a href="#">我要预约</a></div>
+                    <div class="d_167">
+                    	<span><a href="#">陪诊</a></span>
+                        <span><a href="#">挂号</a></span>
+                        <span><a href="#">体检</a></span>
+                        <span><a href="#">基因检测</a></span>
+                    </div>
+                </div>
+                <div class="l_167">
+                	<div class="t_167"><a href="#">公司动态</a></div>
+                    <div class="d_167">
+                    	<span><a href="#">公告</a></span>
+                        <span><a href="#">活动</a></span>
+                        <span><a href="#">调查</a></span>
+                    </div>
+                </div>
+                <div class="l_167">
+                	<div class="t_167"><a href="#">关于我们</a></div>
+                    <div class="d_167">
+                    	<span><a href="#">公司简介</a></span>
+                        <span><a href="#">公司愿景</a></span>
+                        <span><a href="#">联系我们</a></span>
+                    </div>
+                </div>
+                <div class="l_120">
+                	<img src="./images/down1.jpg" width="110" height="110" /><br />
+                    微信公众平台
+                </div>
+                <div class="r_240">
+                	<strong>您身边的家庭医生</strong><br />
+                    <span>4000-968-767</span><br />
+                    <p>地址：北京市通州区滨惠南三街38号2109室
+                    <br />电话：010-80880421
+                    <br />传真：010-80881641
+                    <br />E-mail：service@wonature.com</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="w_0100 back3">
+    	<div class="w_1000">
+        	<div class="c_1100_7">
+            	<div class="coy">Copyright © 2015 北京沃诊无忧健康科技有限公司 版权所有    京ICP备15018110</div>
+                <div class="r_fx"><div class="bshare-custom">
+                <a title="分享到" href="http://www.bShare.cn/" id="bshare-shareto" style="color:#fff;">分享本站：</a>
+                <a title="分享到QQ空间" class="bshare-qzone"></a>
+                <a title="分享到新浪微博" class="bshare-sinaminiblog"></a>
+                <a title="分享到人人网" class="bshare-renren"></a>
+                <a title="分享到腾讯微博" class="bshare-qqmb"></a>
+                <a title="分享到网易微博" class="bshare-neteasemb"></a>
+                <a title="更多平台" class="bshare-more bshare-more-icon more-style-addthis"></a>
+                </div>
+                <script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/buttonLite.js#style=-1&amp;uuid=&amp;pophcol=2&amp;lang=zh"></script>
+				<script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bshareC0.js"></script></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

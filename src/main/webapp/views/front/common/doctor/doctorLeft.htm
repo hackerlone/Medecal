@@ -1,0 +1,55 @@
+
+<div class="w_229">
+	<div class="t_229 pointer" onclick="location.href='/doctorHome'">我的首页</div>
+    <div class="pz_SideLayer">
+		<ul>
+	    	<li class="l1"><a id="doctorBaseInformation" href="/doctorBaseInformation">基本信息</a></li>
+	    	<li class="l1"><a id="diagnoseList" href="/diagnoseList">病历夹</a></li>
+	        <li class="l1"><a id="diagnoseTemplateList" href="/diagnoseTemplateList">病历模版</a></li>
+	        <li class="l1"><a id="doctorUserReportList" href="/doctor/doctorUserReportList">检测档案</a></li>
+	        <li class="l1"><a id="patientLibrary" href="/patientLibrary">患者库</a></li>
+	        <li class="l1"><a id="doctorBespeak" href="/doctorBespeak">预约</a></li>
+	        <!--<li class="l1"><a id="doctorChat" href="/doctorChat">消息</a></li>-->
+	        <li class="l1"><a id="doctorInformation" href="/doctorInformation">资讯</a></li>
+	        <li class="l1"><a id="consult" href="/doctorConsult">咨询</a></li>
+	        <li class="l1"><a id="doctorMessage" href="/doctorMessage">留言</a></li>
+	        <li class="l1"><a id="doctorArticle" href="/doctorArticle">随手记</a></li>
+	        <li class="l1"><a id="doctorDiagnoseApply" href="/doctorDiagnoseApply">授权记录</a></li>
+	        <!--
+	        <li class="l1"><a id="analysis" href="/analysis">统计分析</a></li>
+	        <li class="l1"><a id="medicalUtils" href="/medicalUtils">医学资料及工具</a></li>
+	        -->
+	    </ul>
+	</div>
+    <div class="c_299">
+		<div class="tit_h_47">我的圈子</div>
+	    <div class="list_229">
+	    	<ul>
+	    		<c:forEach items="${fansList}" var="fans">
+	        		<li><a href="/doctor/${fans.fansId}"><nobr>${fans.fansName}<!-- <span>${fans.provinceName}${fans.hospitalName}诊所</span>--></nobr></a></li>
+	        	</c:forEach>
+	        </ul>
+	    </div>
+	</div>
+    <div class="Search">
+    	<input type="text" class="input3" id="searchDoctorName" value="${searchDoctorName}" placeholder="查找医生" />
+        <input type="image" onclick="searchDoctor()" src="/images/front/main26.jpg" width="43" height="35" class="input4" />
+    </div>
+    <div id="slideBox" class="Box">
+		<div class="hd" id="doctorAdvertisement">
+			
+		</div>
+		<div class="bd">
+			<ul>
+				<c:if test="${!empty advertisementList}">
+					<c:forEach var="advertisement" items="${advertisementList}">
+						<li><a href="${advertisement.linkUrl}" target="_blank"><img onerror="this.src='/images/front/main27.jpg'" src="${advertisement.picPath}" width="229" height="131" /></a></li>
+					</c:forEach>
+				</c:if>
+				<c:if test="${empty advertisementList}">
+						<li><a href="javascript:;" target="_blank"><img src='/images/front/main27.jpg' width="229" height="131" /></a></li>
+				</c:if>
+			</ul>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,115 @@
+body{
+	font-family: 宋体,黑体,arial,sans-serif!important;
+}
+a {
+    color: #333;
+    text-decoration: none;
+    cursor: pointer;
+    overflow: hidden;
+    vertical-align: baseline;
+}
+
+div.fieldset .progressWrapper {
+    overflow: hidden;
+    margin: 0 5px;
+}
+
+div.fieldset .progressContainer {
+    padding: 3px 0 3px 18px;
+    background: url(/images/upload/bul_file_i.gif) no-repeat 3px 50%;
+}
+
+div.fieldset .progressName {
+    color: #4b58a7;
+    text-align: left;
+}
+
+div.fieldset .blue .progressBarStatus {
+    color: #999;
+}
+
+div.fieldset .progressBarStatus {
+    font-family: Tahoma;
+    color: #777;
+    margin: 2px 0 0 3px;
+    font-size: 11px;
+    height: 14px;
+}
+
+div.fieldset a.progressCancel {
+    margin-left: 3px;
+    vertical-align: middle;
+    display: inline-block;
+    width: 14px;
+    height: 13px;
+    background: url(/images/upload/btn_icons.gif) no-repeat -140px 0;
+}
+
+div.fieldset .progressBarInProgress {
+    display: none;
+    font-size: 2px;
+    border-top: 4px solid #8098de;
+    height: 2px;
+    margin-top: 5px;
+}
+
+div.fieldset .green .progressBarInProgress {
+    display: block;
+}
+
+div.fieldset .progressBarInProgress, div.fieldset .progressBarComplete, div.fieldset .progressBarError {
+    width: 0%;
+}
+
+div.fieldset .green {
+    margin-top: 5px;
+    border: 1px dashed #c2c2c2;
+    padding: 8px;
+    background: none;
+    min-height: 25px;
+}
+
+div.user_file {
+    margin: 15px 0 0 5px;
+}
+div.user_file div.file {
+    margin-bottom: 3px;
+}
+div.file img {
+    vertical-align: middle;
+}
+div.file a.file {
+    color: #4a58a7;
+    font-size: 12px;
+    background: none;
+}
+div.file a {
+    vertical-align: middle;
+}
+div.file span.size {
+    color: #999;
+    font-family: tahoma;
+    font-size: 11px;
+}
+div.file a.download, div.file a.preview, div.file a.upgrade, div.file a.delete {
+    color: #686868;
+    font-size: 11px;
+    padding-left: 12px;
+    font-weight: normal;
+    text-decoration: none;
+}
+div.file a.download {
+    background: url(/images/upload/bul_file.gif) no-repeat;
+    margin-left: 5px;
+}
+div.file a.preview {
+    background: url(/images/upload/bul_file.gif) no-repeat 0 -20px;
+    margin-left: 3px;
+}
+div.file a.delete {
+    background: url(/images/upload/bul_file.gif) no-repeat 0 -140px;
+    margin-left: 3px;
+}
+div.list_nav span.next_page {
+    background-position: -22px 0;
+}

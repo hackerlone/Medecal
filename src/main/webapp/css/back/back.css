@@ -1,0 +1,34 @@
+*{margin:0;padding:0}
+a{cursor:pointer}
+.header{background: #2E4550;height: 58px;overflow: hidden;}
+.head_icons{float:right;margin-right:10px;}
+.head_icon{float:right;margin: 16px 8px;padding:5px;}
+
+.head_icon:hover{cursor:pointer;background-repeat:no-repeat;background-position:center;;background-image: url('/images/back/bg28.png');}
+
+.footer{background: #2E4550;height: 28px;font-size: 15px;overflow: hidden;width:100%;color:#ffffff;}
+.foot_items{text-align:center;margin:5px 120px 5px 5px;}
+.foot_item:hover{cursor:pointer;text-decoration: underline;color:#808000;}
+
+/**左侧菜单栏-开始*/
+.menu_list{width:100%;margin:0 auto;}
+.menu_head{height:47px;line-height:47px;padding-left:38px;font-size:14px;color:#525252;cursor:pointer;border:1px solid #e1e1e1;position:relative;margin:0px;font-weight:bold;background:#f1f1f1 url(/images/back/pro_left.png) center right no-repeat;}
+.menu_list .current{background:#f1f1f1 url(/images/back/pro_down.png) center right no-repeat;}
+.menu_body{line-height:38px;border-left:1px solid #e1e1e1;backguound:#fff;border-right:1px solid #e1e1e1;}
+.menu_body a{display:block;height:38px;line-height:38px;padding-left:38px;color:#777777;background:#fff;text-decoration:none;border-bottom:1px solid #e1e1e1;}
+.menu_body a:hover{text-decoration:none;}
+/**左侧菜单栏-结束*/
+
+
+/**.search_div{background-color:#577EB2;}*/
+.datagrid_div{display: block;}
+.tr_ht{height:35px;}
+.td_pad{padding-right:10px;}
+
+.opt_cuation{cursor: pointer;color: #EC4949}
+.opt_green{cursor: pointer;color: green;}
+
+
+
+.fl_opt_div{margin:5px 0px 1px 30px;float:left}
+.fr_opt_div{margin:5px 0px 1px 40px;float:left}

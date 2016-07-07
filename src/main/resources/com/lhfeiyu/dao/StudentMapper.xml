@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lhfeiyu.dao.StudentMapper">
+<sql id="table">student</sql>
+	<sql id="baseSearch">
+		<if test="id != null and id != '' ">AND A.id = #{id}</if>
+		<if test="deleted == null">AND A.deleted_at IS NULL</if> 
+		<if test="deleted != null">AND A.deleted_at IS not NULL</if>
+	</sql>
+	<sql id="suffix"><!-- 分组排序  -->
+		<if test="groupBy != null and groupBy !='' "> GROUP BY #{groupBy,jdbcType=VARCHAR}</if>
+		<if test="orderBy != null and orderBy !='' "> ORDER BY <if test="selfOrder == null">A.</if>${orderBy}</if>
+		<if test="ascOrdesc != null and ascOrdesc !='' "> ${ascOrdesc}</if>
+		<if test="orderBy == null and ascOrdesc == null "> ORDER BY A.id DESC</if>
+	</sql>
+	<sql id="limitCount"><!-- 分页 -->
+		<if test="count != null and count !='' "> LIMIT ${start},${count}</if> 
+	</sql>
+	<sql id="search">
+		<if test="username != null and username != '' ">
+			  AND A.name LIKE '%${username}%'
+		</if>
+		<if test="phone != null and phone != '' ">
+		 	  AND A.phone LIKE '%${phone}%'
+		</if>
+		<if test="qq != null and qq != '' ">
+		  	  AND A.qq LIKE '%${qq}%'
+		</if>
+		<if test="weixin != null and weixin != '' ">
+		  	 AND A.weixin LIKE '%${weixin}%'
+		</if>
+	    <if test="sex != null and sex != '' ">
+	    	AND A.sex = #{sex} 
+	    </if>
+	    <if test="province != null and province != '' ">
+	    	AND A.area = #{province} 
+	    </if>
+	    <if test="address != null and address != '' ">
+	    	AND A.area = #{address} 
+	    </if>
+	</sql>
+	<!-- 分页查询 -->
+		<select id="selectListByCondition" parameterType="java.util.Map" resultType="com.lhfeiyu.po.Student">
+    	SELECT 
+		*
+		FROM <include refid="table"/> A 
+		WHERE 1=1 
+		<include refid="baseSearch"/>
+		<include refid="search"/>
+		<include refid="suffix"/>
+		<include refid="limitCount"/>
+	</select>
+
+<select id="selectCountByCondition" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM student A WHERE 1=1
+		<include refid="baseSearch"/>
+	</select>
+	
+
+	
+	<update id="updateByPrimaryKeySelective" parameterType="com.lhfeiyu.po.Student">
+	    UPDATE student
+		<set>
+				<if test="name != null">name = #{name,jdbcType=VARCHAR},</if>
+				<if test="sex != null">sex = #{sex,jdbcType=INTEGER},</if>
+				<if test="phone != null">phone = #{phone,jdbcType=VARCHAR},</if>
+				<if test="avatar != null">avatar = #{avatar,jdbcType=VARCHAR},</if>
+				<if test="area != null">area = #{area,jdbcType=INTEGER},</if>
+				<if test="weixin != null">weixin = #{weixin,jdbcType=VARCHAR},</if>
+				<if test="qq != null">qq = #{qq,jdbcType=VARCHAR},</if>
+		</set>
+	    WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	
+	<insert id="insert" parameterType="com.lhfeiyu.po.Student" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO student (name,phone,area,sex,avatar,weixin,qq) VALUES (
+		    #{name,jdbcType=VARCHAR},
+		    #{phone,jdbcType=VARCHAR},
+		    #{area,jdbcType=VARCHAR},
+		    #{sex,jdbcType=VARCHAR},
+		    #{avatar,jdbcType=VARCHAR},
+		    #{weixin,jdbcType=VARCHAR},
+		    #{qq,jdbcType=VARCHAR}
+	    )
+	</insert>
+	
+	<update id="updateDeletedNowByIds">
+		UPDATE <include refid="table"/>
+		<set>
+			deleted_at = NOW(),
+		</set>
+		WHERE id IN( ${ids})
+	</update>
+	
+	<update id="updateDeletedNullByIds">
+		UPDATE <include refid="table"/>
+		<set>
+			deleted_at = NULL,
+		</set>
+		WHERE id IN( #{ids,jdbcType=VARCHAR} )
+	</update>
+	
+	<delete id="deleteByIds">
+	    DELETE FROM <include refid="table"/> WHERE id IN ( ${ids})
+	</delete>
+</mapper>

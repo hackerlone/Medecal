@@ -1,0 +1,35 @@
+生成数据库表名：
+
+SELECT GROUP_CONCAT(TABLE_NAME,' = "',TABLE_NAME,'";') FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'Medical'
+逗号替换为： public static final String 
+
+delete from contact  where  id not in (
+	select  id from (select min(id) as id from contact group by num,name) as c
+)
+
+删除重复数据：
+delete from contact  where  id not in (
+	select  id from (select min(id) as id from contact group by num,name) as c
+)
+
+上传进度：
+<div class="upld_container">
+	<div class="uploading">
+		<div class="upld_ing_label">
+			<span class="upld_ing_name">附件：</span><span class="upld_ing_tip">正在上传...</span>
+			<button type="button" class="btn btn-info btn-xs fr" onclick="">取消上传</button>
+		</div>
+		<div class="progress clear-both mgBtm5">
+			<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+				style="width: 60%;">60%</div>
+		</div>
+	</div>
+	<div class="upld_ed">
+		<div class="upld_ed_label">
+			<button type="button" class="btn btn-danger btn-xs upld_ed_delete" onclick="">删除</button>
+			<span class="upld_ed_name">附件名称</span>
+			<button type="button" class="btn btn-success btn-xs upld_ed_btn0" onclick="">下载</button>
+			<button type="button" class="btn btn-success btn-xs upld_ed_btn" onclick="">预览</button>
+		</div>
+	</div>
+</div>

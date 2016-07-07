@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lhfeiyu.dao.DoctorPatientMapper">
+	<!--====================================== 设置开始-CONFIG_BEGIN ======================================-->
+	<sql id="table">doctor_patient</sql>
+	<!-- 基础字段 -->
+	<sql id="baseColumns">
+		A.id AS id,A.doctor_id AS doctorId,A.user_id AS userId,A.description AS description,A.serial AS serial,A.type_id AS typeId,A.link_id AS linkId,A.group_id AS groupId,A.grade_id AS gradeId,A.main_status AS mainStatus,A.logic_status AS logicStatus,A.attr_decimal AS attrDecimal,A.attr_str AS attrStr,A.attr_int AS attrInt,A.sequence AS sequence,A.remark AS remark,A.deleted_at AS deletedAt,A.deleted_by AS deletedBy,A.created_at AS createdAt,A.created_by AS createdBy,A.updated_at AS updatedAt,A.updated_by AS updatedBy
+	</sql>
+	<sql id="baseSearch">
+		<if test="deleted == null">AND A.deleted_at IS NULL</if> 
+		<if test="deleted != null">AND A.deleted_at IS not NULL</if>
+		<if test="id != null and id != '' ">AND A.id = #{id}</if>
+		<if test="doctorPatientId != null and doctorPatientId != '' ">AND A.id = #{doctorPatientId}</if>
+		<if test="serial != null and serial != '' ">AND A.serial = #{serial}</if>
+		<if test="mainStatus != null and mainStatus != '' ">AND A.main_status = #{mainStatus}</if>
+		<if test="logicStatus != null and logicStatus != '' ">AND A.logic_status = #{logicStatus}</if>
+	</sql>
+	<sql id="suffix"><!-- 分组排序  -->
+		<if test="groupBy != null and groupBy !='' "> GROUP BY #{groupBy,jdbcType=VARCHAR}</if>
+		<if test="orderBy != null and orderBy !='' "> ORDER BY <if test="selfOrder == null">A.</if>${orderBy}</if>
+		<if test="ascOrdesc != null and ascOrdesc !='' "> ${ascOrdesc}</if>
+		<if test="orderBy == null and ascOrdesc == null "> ORDER BY A.id DESC</if>
+	</sql>
+	<sql id="limitCount"><!-- 分页 -->
+		<if test="count != null and count !='' "> LIMIT ${start},${count}</if> 
+	</sql>
+	<!--====================================== 设置结束-CONFIG_FINISH ======================================-->
+	
+	<!--=@@@@@@============================= 自定义内容 开始 _@CAUTION_SELF_BEGIN@_ =============================@@@@@@=-->
+	<sql id="columns">
+	</sql>
+	<sql id="search">
+	    <if test="userId != null and userId !='' ">
+	    	AND A.user_id != #{userId} 
+	    </if>
+	    <if test="doctorId != null and doctorId != '' ">
+	    	AND A.doctor_id = #{doctorId} 
+	    </if>
+	    <if test="hospitalId != null and hospitalId != '' ">
+	    	AND d.hospital_id = #{hospitalId} 
+	    </if>
+	</sql>
+	<sql id="leftJoin">
+		LEFT JOIN user u ON A.user_id = u.id
+		LEFT JOIN doctor d ON A.doctor_id = d.id
+		LEFT JOIN hospital h ON d.hospital_id = h.id
+	</sql>
+	<select id="selectPatientIdsByCondition" parameterType="java.util.Map" resultType="java.lang.String">
+    	SELECT GROUP_CONCATE(A.user_id) FROM <include refid="table"/> A 
+		<include refid="leftJoin"/>
+		WHERE 1=1 
+		<include refid="baseSearch"/><include refid="search"/>
+		<include refid="suffix"/>
+		<include refid="limitCount"/>
+	</select>
+	<select id="selectDoctorIdsByCondition" parameterType="java.util.Map" resultType="java.lang.String">
+    	SELECT GROUP_CONCATE(A.doctor_id) FROM <include refid="table"/> A 
+		<include refid="leftJoin"/>
+		WHERE 1=1 
+		<include refid="baseSearch"/><include refid="search"/>
+		<include refid="suffix"/>
+		<include refid="limitCount"/>
+	</select>
+	<!--=@@@@@@============================= 自定义内容 结束 _@CAUTION_SELF_FINISH@_ =============================@@@@@@=-->
+	
+	
+	<!--====================================== 查询开始-SELECT_BEGIN ======================================-->
+	<select id="selectListByCondition" parameterType="java.util.Map" resultType="com.lhfeiyu.po.DoctorPatient">
+    	SELECT 
+		<include refid="baseColumns"/><include refid="columns"/>
+		FROM <include refid="table"/> A 
+		<include refid="leftJoin"/>
+		WHERE 1=1 
+		<include refid="baseSearch"/><include refid="search"/>
+		<include refid="suffix"/>
+		<include refid="limitCount"/>
+	</select>
+	
+	<select id="selectByCondition" parameterType="java.util.Map" resultType="com.lhfeiyu.po.DoctorPatient">
+   		SELECT 
+		<include refid="baseColumns"/><include refid="columns"/>
+		FROM <include refid="table"/> A 
+		<include refid="leftJoin"/>
+		WHERE 1=1 
+		<include refid="baseSearch"/><include refid="search"/>
+		<include refid="suffix"/>
+		LIMIT 0,1 
+	</select>
+	
+	<select id="selectCountByCondition" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM <include refid="table"/> A 
+		<include refid="leftJoin"/>
+		WHERE 1=1
+		<include refid="baseSearch"/><include refid="search"/>
+	</select>
+	
+	<select id="selectByPrimaryKey" resultType="com.lhfeiyu.po.DoctorPatient" parameterType="java.lang.Integer">
+		SELECT <include refid="baseColumns"/> FROM <include refid="table"/> A WHERE A.id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<select id="selectBySerial" resultType="com.lhfeiyu.po.DoctorPatient">
+   		SELECT 
+		<include refid="baseColumns"/><include refid="columns"/>
+		FROM <include refid="table"/> A
+		<include refid="leftJoin"/>
+    	WHERE A.serial = #{serial,jdbcType=VARCHAR}
+		LIMIT 0,1 
+	</select>
+	<!--====================================== 查询结束-SELECT_FINISH ======================================-->
+	
+	<!--====================================== 修改开始-UPDATE_BEGIN ======================================-->
+	<!-- <-#-if cMap_has_next>,</-#-if> -->
+	<update id="updateByPrimaryKey" parameterType="com.lhfeiyu.po.DoctorPatient">
+	    UPDATE <include refid="table"/>
+		<set>
+			
+			doctor_id = #{doctorId,jdbcType=INTEGER},
+			user_id = #{userId,jdbcType=INTEGER},
+			description = #{description,jdbcType=VARCHAR},
+			serial = #{serial,jdbcType=VARCHAR},
+			type_id = #{typeId,jdbcType=INTEGER},
+			link_id = #{linkId,jdbcType=INTEGER},
+			group_id = #{groupId,jdbcType=INTEGER},
+			grade_id = #{gradeId,jdbcType=INTEGER},
+			main_status = #{mainStatus,jdbcType=INTEGER},
+			logic_status = #{logicStatus,jdbcType=INTEGER},
+			attr_decimal = #{attrDecimal,jdbcType=DECIMAL},
+			attr_str = #{attrStr,jdbcType=VARCHAR},
+			attr_int = #{attrInt,jdbcType=INTEGER},
+			sequence = #{sequence,jdbcType=INTEGER},
+			remark = #{remark,jdbcType=VARCHAR},
+			deleted_at = #{deletedAt,jdbcType=TIMESTAMP},
+			deleted_by = #{deletedBy,jdbcType=VARCHAR},
+			created_at = #{createdAt,jdbcType=TIMESTAMP},
+			created_by = #{createdBy,jdbcType=VARCHAR},
+			updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+			
+		  <if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+		  updated_at = NOW()
+		</set>
+	    WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateBySerial" parameterType="com.lhfeiyu.po.DoctorPatient">
+	    UPDATE <include refid="table"/>
+		<set>
+		  	
+		  	doctor_id = #{doctorId,jdbcType=INTEGER},
+		  	user_id = #{userId,jdbcType=INTEGER},
+		  	description = #{description,jdbcType=VARCHAR},
+		  	serial = #{serial,jdbcType=VARCHAR},
+		  	type_id = #{typeId,jdbcType=INTEGER},
+		  	link_id = #{linkId,jdbcType=INTEGER},
+		  	group_id = #{groupId,jdbcType=INTEGER},
+		  	grade_id = #{gradeId,jdbcType=INTEGER},
+		  	main_status = #{mainStatus,jdbcType=INTEGER},
+		  	logic_status = #{logicStatus,jdbcType=INTEGER},
+		  	attr_decimal = #{attrDecimal,jdbcType=DECIMAL},
+		  	attr_str = #{attrStr,jdbcType=VARCHAR},
+		  	attr_int = #{attrInt,jdbcType=INTEGER},
+		  	sequence = #{sequence,jdbcType=INTEGER},
+		  	remark = #{remark,jdbcType=VARCHAR},
+		  	deleted_at = #{deletedAt,jdbcType=TIMESTAMP},
+		  	deleted_by = #{deletedBy,jdbcType=VARCHAR},
+		  	created_at = #{createdAt,jdbcType=TIMESTAMP},
+		  	created_by = #{createdBy,jdbcType=VARCHAR},
+		  	updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+		  	
+		  <if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+		  updated_at = NOW()
+		</set>
+	    WHERE serial = #{serial,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateByIds">
+	    UPDATE <include refid="table"/>
+		<set>
+			
+			doctor_id = #{doctorId,jdbcType=INTEGER},
+			user_id = #{userId,jdbcType=INTEGER},
+			description = #{description,jdbcType=VARCHAR},
+			serial = #{serial,jdbcType=VARCHAR},
+			type_id = #{typeId,jdbcType=INTEGER},
+			link_id = #{linkId,jdbcType=INTEGER},
+			group_id = #{groupId,jdbcType=INTEGER},
+			grade_id = #{gradeId,jdbcType=INTEGER},
+			main_status = #{mainStatus,jdbcType=INTEGER},
+			logic_status = #{logicStatus,jdbcType=INTEGER},
+			attr_decimal = #{attrDecimal,jdbcType=DECIMAL},
+			attr_str = #{attrStr,jdbcType=VARCHAR},
+			attr_int = #{attrInt,jdbcType=INTEGER},
+			sequence = #{sequence,jdbcType=INTEGER},
+			remark = #{remark,jdbcType=VARCHAR},
+			deleted_at = #{deletedAt,jdbcType=TIMESTAMP},
+			deleted_by = #{deletedBy,jdbcType=VARCHAR},
+			created_at = #{createdAt,jdbcType=TIMESTAMP},
+			created_by = #{createdBy,jdbcType=VARCHAR},
+			updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+			
+		  <if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+		  updated_at = NOW()
+		</set>
+	    WHERE id IN( ${ids} )
+	</update>
+	
+	<update id="updateByCondition">
+		UPDATE <include refid="table"/> SET
+		<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+		updated_at = NOW(),
+		${condition}
+	</update>
+	
+	<update id="updateDeletedNowByIds">
+		UPDATE <include refid="table"/>
+		<set>
+			deleted_at = NOW(),
+			<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+			updated_at = NOW()
+		</set>
+		WHERE id IN( ${ids} )
+	</update>
+	
+	<update id="updateDeletedNullByIds">
+		UPDATE <include refid="table"/>
+		<set>
+			deleted_at = NULL,
+			<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+			updated_at = NOW()
+		</set>
+		WHERE id IN( ${ids} )
+	</update>
+	
+	<update id="updateDeletedNowById" parameterType="java.lang.Integer">
+		UPDATE <include refid="table"/>
+		<set>
+			deleted_at = NOW(),
+			<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+			updated_at = NOW()
+		</set>
+		WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateDeletedNullById">
+		UPDATE <include refid="table"/>
+		<set> 
+			deleted_at = NULL, 
+			<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+			updated_at = NOW()
+		</set>
+		WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateFieldById" parameterType="java.util.Map">
+		UPDATE <include refid="table"/>
+		<set>
+			<if test="expression1 != null">${expression1},</if>
+			<if test="expression2 != null">${expression2},</if>
+			<if test="expression3 != null">${expression3},</if>
+			<if test="expression4 != null">${expression4},</if>
+			<if test="expression5 != null">${expression5},</if>
+			<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+			updated_at = NOW()
+		</set>
+		WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateFieldByIds" parameterType="java.util.Map">
+		UPDATE <include refid="table"/>
+		<set>
+			<if test="expression1 != null">${expression1},</if>
+			<if test="expression2 != null">${expression2},</if>
+			<if test="expression3 != null">${expression3},</if>
+			<if test="expression4 != null">${expression4},</if>
+			<if test="expression5 != null">${expression5},</if>
+			<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+			updated_at = NOW()
+		</set>
+		WHERE id IN( ${ids} )
+	</update>
+	
+	
+	<update id="updateByPrimaryKeySelective" parameterType="com.lhfeiyu.po.DoctorPatient">
+	    UPDATE <include refid="table"/>
+		<set>
+				<if test="doctorId != null">doctor_id = #{doctorId,jdbcType=INTEGER},</if>
+				<if test="userId != null">user_id = #{userId,jdbcType=INTEGER},</if>
+				<if test="description != null">description = #{description,jdbcType=VARCHAR},</if>
+				<if test="serial != null">serial = #{serial,jdbcType=VARCHAR},</if>
+				<if test="typeId != null">type_id = #{typeId,jdbcType=INTEGER},</if>
+				<if test="linkId != null">link_id = #{linkId,jdbcType=INTEGER},</if>
+				<if test="groupId != null">group_id = #{groupId,jdbcType=INTEGER},</if>
+				<if test="gradeId != null">grade_id = #{gradeId,jdbcType=INTEGER},</if>
+				<if test="mainStatus != null">main_status = #{mainStatus,jdbcType=INTEGER},</if>
+				<if test="logicStatus != null">logic_status = #{logicStatus,jdbcType=INTEGER},</if>
+				<if test="attrDecimal != null">attr_decimal = #{attrDecimal,jdbcType=DECIMAL},</if>
+				<if test="attrStr != null">attr_str = #{attrStr,jdbcType=VARCHAR},</if>
+				<if test="attrInt != null">attr_int = #{attrInt,jdbcType=INTEGER},</if>
+				<if test="sequence != null">sequence = #{sequence,jdbcType=INTEGER},</if>
+				<if test="remark != null">remark = #{remark,jdbcType=VARCHAR},</if>
+				<if test="deletedAt != null">deleted_at = #{deletedAt,jdbcType=TIMESTAMP},</if>
+				<if test="deletedBy != null">deleted_by = #{deletedBy,jdbcType=VARCHAR},</if>
+				<if test="createdAt != null">created_at = #{createdAt,jdbcType=TIMESTAMP},</if>
+				<if test="createdBy != null">created_by = #{createdBy,jdbcType=VARCHAR},</if>
+				<if test="updatedAt != null">updated_at = #{updatedAt,jdbcType=TIMESTAMP},</if>
+		  <if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+		  updated_at = NOW()
+		</set>
+	    WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateBySerialSelective" parameterType="com.lhfeiyu.po.DoctorPatient">
+	    UPDATE <include refid="table"/>
+		<set>
+				<if test="doctorId != null">doctor_id = #{doctorId,jdbcType=INTEGER},</if>
+				<if test="userId != null">user_id = #{userId,jdbcType=INTEGER},</if>
+				<if test="description != null">description = #{description,jdbcType=VARCHAR},</if>
+				<if test="serial != null">serial = #{serial,jdbcType=VARCHAR},</if>
+				<if test="typeId != null">type_id = #{typeId,jdbcType=INTEGER},</if>
+				<if test="linkId != null">link_id = #{linkId,jdbcType=INTEGER},</if>
+				<if test="groupId != null">group_id = #{groupId,jdbcType=INTEGER},</if>
+				<if test="gradeId != null">grade_id = #{gradeId,jdbcType=INTEGER},</if>
+				<if test="mainStatus != null">main_status = #{mainStatus,jdbcType=INTEGER},</if>
+				<if test="logicStatus != null">logic_status = #{logicStatus,jdbcType=INTEGER},</if>
+				<if test="attrDecimal != null">attr_decimal = #{attrDecimal,jdbcType=DECIMAL},</if>
+				<if test="attrStr != null">attr_str = #{attrStr,jdbcType=VARCHAR},</if>
+				<if test="attrInt != null">attr_int = #{attrInt,jdbcType=INTEGER},</if>
+				<if test="sequence != null">sequence = #{sequence,jdbcType=INTEGER},</if>
+				<if test="remark != null">remark = #{remark,jdbcType=VARCHAR},</if>
+				<if test="deletedAt != null">deleted_at = #{deletedAt,jdbcType=TIMESTAMP},</if>
+				<if test="deletedBy != null">deleted_by = #{deletedBy,jdbcType=VARCHAR},</if>
+				<if test="createdAt != null">created_at = #{createdAt,jdbcType=TIMESTAMP},</if>
+				<if test="createdBy != null">created_by = #{createdBy,jdbcType=VARCHAR},</if>
+				<if test="updatedAt != null">updated_at = #{updatedAt,jdbcType=TIMESTAMP},</if>
+		  <if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+		  updated_at = NOW()
+		</set>
+	    WHERE serial = #{serial,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateByIdsSelective">
+	    UPDATE <include refid="table"/>
+		<set>
+				<if test="doctorId != null">doctor_id = #{doctorId,jdbcType=INTEGER},</if>
+				<if test="userId != null">user_id = #{userId,jdbcType=INTEGER},</if>
+				<if test="description != null">description = #{description,jdbcType=VARCHAR},</if>
+				<if test="serial != null">serial = #{serial,jdbcType=VARCHAR},</if>
+				<if test="typeId != null">type_id = #{typeId,jdbcType=INTEGER},</if>
+				<if test="linkId != null">link_id = #{linkId,jdbcType=INTEGER},</if>
+				<if test="groupId != null">group_id = #{groupId,jdbcType=INTEGER},</if>
+				<if test="gradeId != null">grade_id = #{gradeId,jdbcType=INTEGER},</if>
+				<if test="mainStatus != null">main_status = #{mainStatus,jdbcType=INTEGER},</if>
+				<if test="logicStatus != null">logic_status = #{logicStatus,jdbcType=INTEGER},</if>
+				<if test="attrDecimal != null">attr_decimal = #{attrDecimal,jdbcType=DECIMAL},</if>
+				<if test="attrStr != null">attr_str = #{attrStr,jdbcType=VARCHAR},</if>
+				<if test="attrInt != null">attr_int = #{attrInt,jdbcType=INTEGER},</if>
+				<if test="sequence != null">sequence = #{sequence,jdbcType=INTEGER},</if>
+				<if test="remark != null">remark = #{remark,jdbcType=VARCHAR},</if>
+				<if test="deletedAt != null">deleted_at = #{deletedAt,jdbcType=TIMESTAMP},</if>
+				<if test="deletedBy != null">deleted_by = #{deletedBy,jdbcType=VARCHAR},</if>
+				<if test="createdAt != null">created_at = #{createdAt,jdbcType=TIMESTAMP},</if>
+				<if test="createdBy != null">created_by = #{createdBy,jdbcType=VARCHAR},</if>
+				<if test="updatedAt != null">updated_at = #{updatedAt,jdbcType=TIMESTAMP},</if>
+		  <if test="updatedBy != null">updated_by = #{updatedBy},</if>
+		  updated_at = NOW()
+		</set>
+	    WHERE id IN( ${ids} )
+	</update>
+    <!--====================================== 修改结束-UPDATE_FINISH ======================================-->
+	
+	<!--====================================== 新增开始-INSERT_BEGIN ======================================-->
+	<insert id="insert" parameterType="com.lhfeiyu.po.DoctorPatient" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO <include refid="table"/>(
+			doctor_id,user_id,description,serial,type_id,link_id,group_id,grade_id,main_status,logic_status,attr_decimal,attr_str,attr_int,sequence,remark,deleted_at,deleted_by,created_at,created_by,updated_at,updated_by
+		)VALUES(
+		    #{doctorId,jdbcType=INTEGER},#{userId,jdbcType=INTEGER},#{description,jdbcType=VARCHAR},#{serial,jdbcType=VARCHAR},#{typeId,jdbcType=INTEGER},#{linkId,jdbcType=INTEGER},#{groupId,jdbcType=INTEGER},#{gradeId,jdbcType=INTEGER},#{mainStatus,jdbcType=INTEGER},#{logicStatus,jdbcType=INTEGER},#{attrDecimal,jdbcType=DECIMAL},#{attrStr,jdbcType=VARCHAR},#{attrInt,jdbcType=INTEGER},#{sequence,jdbcType=INTEGER},#{remark,jdbcType=VARCHAR},#{deletedAt,jdbcType=TIMESTAMP},#{deletedBy,jdbcType=VARCHAR},#{createdAt,jdbcType=TIMESTAMP},#{createdBy,jdbcType=VARCHAR},#{updatedAt,jdbcType=TIMESTAMP},#{updatedBy,jdbcType=VARCHAR}
+	    )
+	</insert>
+	
+	<insert id="insertBatch">
+		INSERT INTO <include refid="table"/>(
+			doctor_id,user_id,description,serial,type_id,link_id,group_id,grade_id,main_status,logic_status,attr_decimal,attr_str,attr_int,sequence,remark,deleted_at,deleted_by,created_at,created_by,updated_at,updated_by
+		)VALUES
+		<foreach collection="list" item="c" separator=",">
+			(
+		    #{c.doctorId,dbcType=INTEGER},#{c.userId,dbcType=INTEGER},#{c.description,dbcType=VARCHAR},#{c.serial,dbcType=VARCHAR},#{c.typeId,dbcType=INTEGER},#{c.linkId,dbcType=INTEGER},#{c.groupId,dbcType=INTEGER},#{c.gradeId,dbcType=INTEGER},#{c.mainStatus,dbcType=INTEGER},#{c.logicStatus,dbcType=INTEGER},#{c.attrDecimal,dbcType=DECIMAL},#{c.attrStr,dbcType=VARCHAR},#{c.attrInt,dbcType=INTEGER},#{c.sequence,dbcType=INTEGER},#{c.remark,dbcType=VARCHAR},#{c.deletedAt,dbcType=TIMESTAMP},#{c.deletedBy,dbcType=VARCHAR},#{c.createdAt,dbcType=TIMESTAMP},#{c.createdBy,dbcType=VARCHAR},#{c.updatedAt,dbcType=TIMESTAMP},#{c.updatedBy,dbcType=VARCHAR}
+	    	)
+		</foreach>
+	</insert>
+  	
+	<insert id="insertSelective" parameterType="com.lhfeiyu.po.DoctorPatient" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO <include refid="table"/>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+					<if test="doctorId != null"> doctor_id,</if>
+					<if test="userId != null"> user_id,</if>
+					<if test="description != null"> description,</if>
+					<if test="serial != null"> serial,</if>
+					<if test="typeId != null"> type_id,</if>
+					<if test="linkId != null"> link_id,</if>
+					<if test="groupId != null"> group_id,</if>
+					<if test="gradeId != null"> grade_id,</if>
+					<if test="mainStatus != null"> main_status,</if>
+					<if test="logicStatus != null"> logic_status,</if>
+					<if test="attrDecimal != null"> attr_decimal,</if>
+					<if test="attrStr != null"> attr_str,</if>
+					<if test="attrInt != null"> attr_int,</if>
+					<if test="sequence != null"> sequence,</if>
+					<if test="remark != null"> remark,</if>
+					<if test="deletedAt != null"> deleted_at,</if>
+					<if test="deletedBy != null"> deleted_by,</if>
+					<if test="createdAt != null"> created_at,</if>
+					<if test="createdBy != null"> created_by,</if>
+					<if test="updatedAt != null"> updated_at,</if>
+					<if test="updatedBy != null"> updated_by,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+					<if test="doctorId != null">#{doctorId,jdbcType=INTEGER},</if>
+					<if test="userId != null">#{userId,jdbcType=INTEGER},</if>
+					<if test="description != null">#{description,jdbcType=VARCHAR},</if>
+					<if test="serial != null">#{serial,jdbcType=VARCHAR},</if>
+					<if test="typeId != null">#{typeId,jdbcType=INTEGER},</if>
+					<if test="linkId != null">#{linkId,jdbcType=INTEGER},</if>
+					<if test="groupId != null">#{groupId,jdbcType=INTEGER},</if>
+					<if test="gradeId != null">#{gradeId,jdbcType=INTEGER},</if>
+					<if test="mainStatus != null">#{mainStatus,jdbcType=INTEGER},</if>
+					<if test="logicStatus != null">#{logicStatus,jdbcType=INTEGER},</if>
+					<if test="attrDecimal != null">#{attrDecimal,jdbcType=DECIMAL},</if>
+					<if test="attrStr != null">#{attrStr,jdbcType=VARCHAR},</if>
+					<if test="attrInt != null">#{attrInt,jdbcType=INTEGER},</if>
+					<if test="sequence != null">#{sequence,jdbcType=INTEGER},</if>
+					<if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
+					<if test="deletedAt != null">#{deletedAt,jdbcType=TIMESTAMP},</if>
+					<if test="deletedBy != null">#{deletedBy,jdbcType=VARCHAR},</if>
+					<if test="createdAt != null">#{createdAt,jdbcType=TIMESTAMP},</if>
+					<if test="createdBy != null">#{createdBy,jdbcType=VARCHAR},</if>
+					<if test="updatedAt != null">#{updatedAt,jdbcType=TIMESTAMP},</if>
+					<if test="updatedBy != null">#{updatedBy,jdbcType=VARCHAR},</if>
+		</trim>
+	</insert>
+  	<!--====================================== 新增结束-INSERT_FINISH ======================================-->
+	
+	<!--====================================== 删除开始-DELETE_BEGIN ======================================-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	    DELETE FROM <include refid="table"/> WHERE id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<delete id="deleteByCondition">
+		DELETE FROM <include refid="table"/> WHERE ${condition}
+	</delete>
+	
+	<delete id="deleteByIds">
+	    DELETE FROM <include refid="table"/> WHERE id IN (${ids})
+	</delete>
+	<!--====================================== 删除结束-DELETE_FINISH ======================================-->
+      
+</mapper>

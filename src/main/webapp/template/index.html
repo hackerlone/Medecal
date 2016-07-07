@@ -1,0 +1,459 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link rel="icon" href="favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" href="style.css" type="text/css" />
+<script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="js/jquery.SuperSlide.2.1.1.js"></script>
+<script src="js/pzselect.1.0.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+<div class="pz_top">
+	<div class="w_0100 back1">
+    	<div class="w_1000">
+        	<div class="c_1100">
+            	<div class="left">沃诊无忧，您身边的家庭医生</div>
+                <div class="right">
+                	<div class="hover_l"><a href="#">官网</a> &nbsp;&nbsp;/&nbsp;&nbsp; <a href="#">联系客服</a> &nbsp;&nbsp;/&nbsp;&nbsp; <a href="#">网站地图</a></div>
+                	<div class="land">
+                    	<span><a href="#" class="lan_one">登录</a></span>
+                        <span><a href="#" class="lan_two">注册</a></span>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+    <div class="w_1000">
+    	<div class="c_1100_1">
+           <div class="logo"><a href="#"><img src="images/logo.jpg" width="134" height="104" /></a></div>
+           <div class="right_1">
+           		<div class="so">
+                	<div class="l_346">
+                    	<div class="searchbox" pzdatatype="select">
+                        	<input type="hidden" />
+                            <div class="titcon tw"  pzdatatype="title">
+                                找医生
+                            </div>
+                            <ul class='serul' pzdatatype="content">
+                               <li>找医生</li>
+                               <li>找医生</li>
+                            </ul>
+                        </div>
+                        <input type="text" class="input1" />
+                    </div>
+                    <input type="image" src="images/top4.jpg" width="48" height="48" class="input2" />
+                </div>
+                <div class="consult">
+                	<a href="#"><span>我要咨询</span><br />医生将为您在线解答</a>
+                </div>
+           </div>
+        </div>
+        <div class="c_1100_2">
+        	<div class="menu">
+            	<ul>
+                	<li class="nli_1"><a href="#"><img src="images/menu1.png" width="24" height="20" /></a></li>
+                	<li class="nli"><a href="#">我要预约</a></li>
+                    <li class="nli"><a href="#">陪诊</a></li>
+                    <li class="nli"><a href="#">挂号</a></li>
+                    <li class="nli"><a href="#">体检</a></li>
+                    <li class="nli"><a href="#">基因检测</a></li>
+                </ul>
+            </div>
+             <script>
+			jQuery(".menu").slide({ type: "menu", titCell: ".nli", targetCell: ".sub", effect: "slideDown", delayTime:200, triggerTime: 0,returnDefault: true });
+			</script>
+            <div class="special">
+            	<a href="#">健康资讯</a>
+                <a href="#">疾病专题</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="pz_banner">
+	<div class="w_1000">
+    	<div class="banner">
+        	<div class="pz_slides_3">
+                <div class="_btn"></div>
+                <div class="_pic">
+                	<ul>
+                    	<li><a href="#"><img src="images/banner.jpg" width="746" height="321" /></a></li>
+                        <li><a href="#"><img src="images/banner.jpg" width="746" height="321" /></a></li>
+                    </ul>
+                </div>
+            </div>
+            <script>
+          var s_count = $(".pz_slides_3 ._pic img").length;
+          var s_li = "";
+          for (j = 1; j <= s_count; j++) { s_li += "<li></li>"; }
+          $(".pz_slides_3 ._btn").html("<ul>" + s_li + "</ul>");
+          var btn = 746 - $(".pz_slides_3 ._btn").width();
+          var btnl = btn / 2;
+          $(".pz_slides_3 ._btn").css("left", btnl + "px");
+          jQuery(".pz_slides_3").slide({ titCell: "._btn li", mainCell: "._pic ul", prevCell:".prev", nextCell:".next", effect: "fold", autoPlay: true, delayTime: 1500, interTime: 3000 });
+     </script>
+        </div>
+        <div class="r_344">
+        	<div class="t_344">
+            	<a href="#"><img src="images/main1.jpg" width="344" height="155" /></a>
+                <div class="pf_280">
+                	<a href="#">
+                    	<div class="tit"><strong>医生入口</strong><br /><span>Doctor entrance</span></div>
+                        <div class="more">进入</div>
+                    </a>
+                </div>
+            </div>
+            <div class="t_344">
+            	<a href="#"><img src="images/main4.jpg" width="344" height="155" /></a>
+                <div class="pf_280">
+                	<a href="#">
+                    	<div class="tit"><strong>医疗机构入口</strong><br /><span>Medical institution entrance</span></div>
+                        <div class="more">进入</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="pz_main">
+	<div class="w_1000">
+    	<div class="c_1100_3">
+        	<div class="l_368">
+            	<div class="tit_0100">
+                	<div class="work">
+                    	热点讨论 &nbsp;<span>Hot discussion</span>
+                    </div>
+                    <div class="more_1"><a href="#">我要分享</a></div>
+                </div>
+                <div class="list1">
+                	<ul>
+                    	<li class="l1"><a href="#">
+                        	<div class="l_80"><img src="images/main8.jpg" width="80" height="60" /></div>
+                            <div class="r_256">
+                            	<div class="t_tit">英国98%的热饮含糖量超出规定 星巴克等含糖量惊人</div>
+                                <div class="d_time">2016-02-12</div>
+                            </div>
+                        </a></li>
+                        <li class="l2 first"><a href="#"><nobr>国家重点研发计划专项启动申报 有2项涉及生物医药项涉及生物医药项涉及生物医药</nobr></a></li>
+                        <li class="l2"><a href="#"><nobr>中医药"以西律中"不可取</nobr></a></li>
+                        <li class="l2"><a href="#"><nobr>国家重点研发计划专项启动</nobr></a></li>
+                        <li class="l2"><a href="#"><nobr>国务院部署医药产业创新升级 药企的机会在哪</nobr></a></li>
+                        <li class="l2"><a href="#"><nobr>国家重点研发计划专项启动申报 有2项涉及生物医药项涉及生物医药项涉及生物医药</nobr></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="l_368">
+            	<div class="tit_0100">
+                	<div class="work">
+                    	健康资讯 &nbsp;<span>Health information</span>
+                    </div>
+                    <div class="more_1"><a href="#">更多</a></div>
+                </div>
+                <div class="list1">
+                	<ul>
+                    	<li class="l1"><a href="#">
+                        	<div class="l_80"><img src="images/main10.jpg" width="80" height="60" /></div>
+                            <div class="r_256">
+                            	<div class="t_tit">春节后打好"保胃战" 13种养胃食物</div>
+                                <div class="d_time">2016-02-12</div>
+                            </div>
+                        </a></li>
+                        <li class="l2 first"><a href="#"><nobr>大蒜能防癌但这类人不要生吃</nobr></a></li>
+                        <li class="l2"><a href="#"><nobr>正月十五到 如何健康吃元宵</nobr></a></li>
+                        <li class="l2"><a href="#"><nobr>嘴唇干裂的6大原因 冬季嘴唇干裂的日常护理</nobr></a></li>
+                        <li class="l2"><a href="#"><nobr>国务院部署医药产业创新升级 药企的机会在哪</nobr></a></li>
+                        <li class="l2"><a href="#"><nobr>英国98%的热饮含糖量超出规定 星巴克等含糖量惊人</nobr></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="r_344_1 pz_tab">
+            	<div class="t_344_1 hd">
+                	<ul>
+                    	<li class="left1 on">公告</li>
+                        <li>活动</li>
+                        <li>调查</li>
+                    </ul>
+                </div>
+                <div class="d_344">
+                	<ul class="bd">
+                    	<li>
+                        	<div class="t_309">
+                            	<div class="l_55"><strong>23</strong><br />2016/02</div>
+                                <div class="r_242"><a href="#">世卫组织使用转基因蚊子新技术 阻止寨卡病毒传播</a></div>
+                            </div>
+                            <div class="d_309">
+                            	据英国媒体报道，世界卫生组织表明，尽管使用转基因蚊子这一新技术受到争议，其仍将用于阻止寨卡病毒的传播寨卡病毒是一种由埃及伊蚊传播的病毒。这种病毒起源于非洲，但是在近十年经太平洋传播到法国波利尼西亚以及巴西、哥伦比亚等地。目前，已有超过十三个美洲国家报道过该病毒的感染事例...<a href="#">详情+</a>
+                            </div>
+                        </li>
+                        <li>
+                        	<div class="t_309">
+                            	<div class="l_55"><strong>23</strong><br />2016/02</div>
+                                <div class="r_242"><a href="#">世卫组织使用转基因蚊子新技术 阻止寨卡病毒传播</a></div>
+                            </div>
+                            <div class="d_309">
+                            	据英国媒体报道，世界卫生组织表明，尽管使用转基因蚊子这一新技术受到争议，其仍将用于阻止寨卡病毒的传播寨卡病毒是一种由埃及伊蚊传播的病毒。这种病毒起源于非洲，但是在近十年经太平洋传播到法国波利尼西亚以及巴西、哥伦比亚等地。目前，已有超过十三个美洲国家报道过该病毒的感染事例...<a href="#">详情+</a>
+                            </div>
+                        </li>
+                        <li>
+                        	<div class="t_309">
+                            	<div class="l_55"><strong>23</strong><br />2016/02</div>
+                                <div class="r_242"><a href="#">世卫组织使用转基因蚊子新技术 阻止寨卡病毒传播</a></div>
+                            </div>
+                            <div class="d_309">
+                            	据英国媒体报道，世界卫生组织表明，尽管使用转基因蚊子这一新技术受到争议，其仍将用于阻止寨卡病毒的传播寨卡病毒是一种由埃及伊蚊传播的病毒。这种病毒起源于非洲，但是在近十年经太平洋传播到法国波利尼西亚以及巴西、哥伦比亚等地。目前，已有超过十三个美洲国家报道过该病毒的感染事例...<a href="#">详情+</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <script>jQuery(".pz_tab").slide({});</script>
+        </div>
+        <div class="c_1100_4">
+        	<div class="l_746">
+            	<div class="tit_0100">
+                	<div class="work">
+                    	良医在线 &nbsp;<span>Good doctor online</span>
+                    </div>
+                    <div class="more_1"><a href="#" style="background:none;">共24位医生在线</a></div>
+                </div>
+                <div class="h_1">&nbsp;</div>
+                <div class="d_746">
+                	<ul>
+                    	<li>
+                        	<div class="t_img">
+                            	<a href="#"><img src="images/main13.png" /></a>
+                            </div>
+                            <div class="tit1">
+                            	<a href="#">张建中<br /><span>外科/主任医师</span></a>
+                            </div>
+                            <div class="con">
+                            	<a href="#">在线咨询</a>
+                            </div>
+                        </li>
+                        <li>
+                        	<div class="t_img">
+                            	<a href="#"><img src="images/main13.png" /></a>
+                            </div>
+                            <div class="tit1">
+                            	<a href="#">张建中<br /><span>外科/主任医师</span></a>
+                            </div>
+                            <div class="con">
+                            	<a href="#">在线咨询</a>
+                            </div>
+                        </li>
+                        <li>
+                        	<div class="t_img">
+                            	<a href="#"><img src="images/main13.png" /></a>
+                            </div>
+                            <div class="tit1">
+                            	<a href="#">张建中<br /><span>外科/主任医师</span></a>
+                            </div>
+                            <div class="con">
+                            	<a href="#">在线咨询</a>
+                            </div>
+                        </li>
+                        <li>
+                        	<div class="t_img">
+                            	<a href="#"><img src="images/main13.png" /></a>
+                            </div>
+                            <div class="tit1">
+                            	<a href="#">张建中<br /><span>外科/主任医师</span></a>
+                            </div>
+                            <div class="con">
+                            	<a href="#">在线咨询</a>
+                            </div>
+                        </li>
+                        <li>
+                        	<div class="t_img">
+                            	<a href="#"><img src="images/main13.png" /></a>
+                            </div>
+                            <div class="tit1">
+                            	<a href="#">张建中<br /><span>外科/主任医师</span></a>
+                            </div>
+                            <div class="con">
+                            	<a href="#">在线咨询</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="r_344_2">
+            	<div class="tit_0100">
+                	<div class="work">
+                    	名医观点 &nbsp;<span>Health information</span>
+                    </div>
+                    <div class="more_1"><a href="#">更多</a></div>
+                </div>
+                <div class="d_344_1">
+                	<div class="top_314 slideBox">
+                    	<div class="hd">
+                            <ul><li>1</li><li>2</li><li>3</li></ul>
+                        </div>
+                        <div class="bd">
+                    	<ul>
+                        	<li><a href="#"><img src="images/main14.jpg" width="314" height="100" /></a>
+                            	<div class="pf_314">
+                            	 <a href="#"><nobr>李克强：发展社会办医 打造健康中国</nobr></a>
+                                </div>
+                            </li>
+                            <li><a href="#"><img src="images/main14.jpg" width="314" height="100" /></a>
+                            	<div class="pf_314">
+                            	 <a href="#"><nobr>李克强：发展社会办医 打造健康中国</nobr></a>
+                                </div>
+                            </li>
+                            <li><a href="#"><img src="images/main14.jpg" width="314" height="100" /></a>
+                            	<div class="pf_314">
+                            	 <a href="#"><nobr>李克强：发展社会办医 打造健康中国</nobr></a>
+                                </div>
+                            </li>
+                        </ul>
+                        </div>
+                        <script type="text/javascript">
+		jQuery(".slideBox").slide({mainCell:".bd ul",effect:"fade", autoPlay:true,delayTime:700});
+		</script>
+                    </div>
+                    <div class="d_list">
+                    	<ul>
+                        	<li><a href="#"><nobr>国家重点研发计划专项启动申报 有2项涉及生物医药</nobr></a></li>
+                            <li><a href="#"><nobr>中医药"以西律中"不可取</nobr></a></li>
+                            <li><a href="#"><nobr>人保健康首批获准经营个人税优健康险业务</nobr></a></li>
+                            <li><a href="#"><nobr>国务院部署医药产业创新升级 药企的机会在哪</nobr></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="c_1100_5">
+        	<div class="tit_0100">
+                	<div class="work" style="padding:0 0 0 10px; background-position:0 center;">
+                    	发生在身边的那些事
+                    </div>
+                    <div class="more_1"><a href="#">更多</a></div>
+             </div>
+             <div class="d_1100">
+             	<ul>
+                	<li>
+                    	<div class="t_260"><a href="#"><img src="images/main16.jpg" width="260" height="175" /></a></div>
+                        <div class="tit_260"><a href="#"><nobr>10岁男孩撞高压线烧伤 医生为其募捐40万</nobr></a></div>
+                        <div class="time_260">2016-02-12</div>
+                        <div class="d_260"><a href="#">本来用户是找他治疗泌尿外科疾病的，也是这个用户诸多疾病的一种，他却通过朋友圈，在微信好友、微信好友的好友等帮助下，大家筹集...</a></div>
+                    </li>
+                    <li>
+                    	<div class="t_260"><a href="#"><img src="images/main17.jpg" width="260" height="175" /></a></div>
+                        <div class="tit_260"><a href="#"><nobr>新生儿胎粪堵喉 助产士嘴吸救命</nobr></a></div>
+                        <div class="time_260">2016-02-12</div>
+                        <div class="d_260"><a href="#">本来用户是找他治疗泌尿外科疾病的，也是这个用户诸多疾病的一种，他却通过朋友圈，在微信好友、微信好友的好友等帮助下，大家筹集...</a></div>
+                    </li>
+                    <li>
+                    	<div class="t_260"><a href="#"><img src="images/main16.jpg" width="260" height="175" /></a></div>
+                        <div class="tit_260"><a href="#"><nobr>10岁男孩撞高压线烧伤 医生为其募捐40万</nobr></a></div>
+                        <div class="time_260">2016-02-12</div>
+                        <div class="d_260"><a href="#">本来用户是找他治疗泌尿外科疾病的，也是这个用户诸多疾病的一种，他却通过朋友圈，在微信好友、微信好友的好友等帮助下，大家筹集...</a></div>
+                    </li>
+                    <li>
+                    	<div class="t_260"><a href="#"><img src="images/main17.jpg" width="260" height="175" /></a></div>
+                        <div class="tit_260"><a href="#"><nobr>新生儿胎粪堵喉 助产士嘴吸救命</nobr></a></div>
+                        <div class="time_260">2016-02-12</div>
+                        <div class="d_260"><a href="#">本来用户是找他治疗泌尿外科疾病的，也是这个用户诸多疾病的一种，他却通过朋友圈，在微信好友、微信好友的好友等帮助下，大家筹集...</a></div>
+                    </li>
+                </ul>
+             </div>
+        </div>
+    </div>
+</div>
+<div class="pz_down">
+	<div class="w_0100 back2">
+    	<div class="w_1000">
+        	<div class="c_1100_6">
+            	<div class="l_167">
+                	<div class="t_167"><a href="#">我要预约</a></div>
+                    <div class="d_167">
+                    	<span><a href="#">陪诊</a></span>
+                        <span><a href="#">挂号</a></span>
+                        <span><a href="#">体检</a></span>
+                        <span><a href="#">基因检测</a></span>
+                    </div>
+                </div>
+                <div class="l_167">
+                	<div class="t_167"><a href="#">公司动态</a></div>
+                    <div class="d_167">
+                    	<span><a href="#">公告</a></span>
+                        <span><a href="#">活动</a></span>
+                        <span><a href="#">调查</a></span>
+                    </div>
+                </div>
+                <div class="l_167">
+                	<div class="t_167"><a href="#">关于我们</a></div>
+                    <div class="d_167">
+                    	<span><a href="#">公司简介</a></span>
+                        <span><a href="#">公司愿景</a></span>
+                        <span><a href="#">联系我们</a></span>
+                    </div>
+                </div>
+                <div class="l_120">
+                	<img src="images/down1.jpg" width="110" height="110" /><br />
+                    微信公众平台
+                </div>
+                <div class="r_240">
+                	<strong>您身边的家庭医生</strong><br />
+                    <span>4000-968-767</span><br />
+                    <p>地址：北京市通州区滨惠南三街38号2109室
+                    <br />电话：010-80880421
+                    <br />传真：010-80881641
+                    <br />E-mail：service@wonature.com</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="w_0100 back3">
+    	<div class="w_1000">
+        	<div class="c_1100_7">
+            	<div class="coy">Copyright © 2015 北京沃诊无忧健康科技有限公司 版权所有    京ICP备15018110</div>
+                <div class="r_fx"><div class="bshare-custom">
+                <a title="分享到" href="http://www.bShare.cn/" id="bshare-shareto" style="color:#fff;">分享本站：</a>
+                <a title="分享到QQ空间" class="bshare-qzone"></a>
+                <a title="分享到新浪微博" class="bshare-sinaminiblog"></a>
+                <a title="分享到人人网" class="bshare-renren"></a>
+                <a title="分享到腾讯微博" class="bshare-qqmb"></a>
+                <a title="分享到网易微博" class="bshare-neteasemb"></a>
+                <a title="更多平台" class="bshare-more bshare-more-icon more-style-addthis"></a>
+                </div>
+                <script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/buttonLite.js#style=-1&amp;uuid=&amp;pophcol=2&amp;lang=zh"></script>
+				<script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bshareC0.js"></script></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="fixed" id="pf">
+	<span><a href="#"><i><br /></i>检测报告</a></span>
+    <span><a href="#"><i><br /></i>就诊记录</a></span>
+    <span class="hover"><a href="#"><i><img src="images/main20.png" width="24" height="24" /><br /></i>个人中心</a></span>
+    <span><a href="#"><i><br /></i>我的消息</a></span>
+    <span><a href="#"><i><br /></i>我的医生</a></span>
+</div>
+<script>
+    $(function () {
+        $(window).resize(function () { goTop(); });
+        $(window).scroll(function () { goTop(); });
+    });
+    function goTop() {
+        var _top = $(window).scrollTop();
+        if (_top > 300) {
+            $("#pf").stop().animate({
+                "top": (($(window).height() - $("#pf").height()) / 2) + $(window).scrollTop()
+            }, 1000);
+
+        } else {
+            $("#pf").stop().animate({
+                "top": "285px"
+            }, 1000);
+        }
+       
+    }
+
+
+</script></body>
+</html>

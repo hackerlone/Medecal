@@ -1,0 +1,25 @@
+
+前端：
+1.HTML页面中尽量不直接包含CSS/JS代码，全部放到单独的文件中。
+2.JS中方法命名：（一般采用动词短语）
+	加载内容：loadXXX();/getXXX();
+	渲染组件或初始化页面：initXXX();
+	新增或修改：addOrUpdateXXX();
+	删除：deleteXXX();
+	生成DOM内容：makeXXXDom();
+	打开：openXXX();
+	关闭：closeXXX();
+	打开/关闭：toggleXXX();
+	跳转页面：jumpToXXX();
+	
+后台：
+1.action中的访问地址：
+	返回页面一般用一个名词如：/market
+	返回Json数据一般用动词短语如：/getShopList,/getShop,/addShop,/deleteShop,/updateShop,/addOrUpdateShop等
+	action中的JSON对象名默认叫json:JSONObject json = new JSONObject();
+	
+2.po:将非本表的字段和SET/GET方法写在最上面，方便区分和替换生成的本表字段，参看：PO/SHOP
+
+
+数据库：
+

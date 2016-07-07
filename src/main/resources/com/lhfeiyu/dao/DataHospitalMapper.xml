@@ -1,0 +1,891 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lhfeiyu.dao.DataHospitalMapper">
+	<!--====================================== 设置开始-CONFIG_BEGIN ======================================-->
+	<sql id="table">data_hospital</sql>
+	<!-- 基础字段 -->
+	<sql id="baseColumns">
+		A.id AS id,A.brief_name AS briefName,A.whole_name AS wholeName,A.type_name AS typeName,A.admin_id AS adminId,A.password AS password,A.logo AS logo,A.logo_pic_id AS logoPicId,A.website AS website,A.province AS province,A.city AS city,A.address AS address,A.email AS email,A.login_name AS loginName,A.last_login_time AS lastLoginTime,A.phone AS phone,A.tel AS tel,A.fax AS fax,A.qq AS qq,A.weixin AS weixin,A.weibo AS weibo,A.area AS area,A.doctor_num AS doctorNum,A.doctor_info AS doctorInfo,A.nurse_num AS nurseNum,A.nurse_info AS nurseInfo,A.admin_name AS adminName,A.indoor_pic_paths AS indoorPicPaths,A.outdoor_pic_paths AS outdoorPicPaths,A.age_between AS ageBetween,A.contact_way AS contactWay,A.medical_from AS medicalFrom,A.stock_way AS stockWay,A.is_doctor AS isDoctor,A.is_legal_person AS isLegalPerson,A.reputition AS reputition,A.patient_flow AS patientFlow,A.health_doc AS healthDoc,A.is_advertisement AS isAdvertisement,A.bed AS bed,A.hygienism_condition AS hygienismCondition,A.gps AS gps,A.coporation_attitude AS coporationAttitude,A.visit_info AS visitInfo,A.is_assign_contract AS isAssignContract,A.contract_info AS contractInfo,A.is_assign_intention AS isAssignIntention,A.have_visit_valid AS haveVisitValid,A.other_facility AS otherFacility,A.qr_code AS qrCode,A.qr_code2 AS qrCode2,A.introduction AS introduction,A.serial AS serial,A.type_id AS typeId,A.link_id AS linkId,A.group_id AS groupId,A.grade_id AS gradeId,A.main_status AS mainStatus,A.logic_status AS logicStatus,A.attr_decimal AS attrDecimal,A.main_ids AS mainIds,A.attr_str AS attrStr,A.attr_str2 AS attrStr2,A.attr_int AS attrInt,A.attr_int2 AS attrInt2,A.attr_num AS attrNum,A.attr_date AS attrDate,A.attr_datetime AS attrDatetime,A.sequence AS sequence,A.description AS description,A.remark AS remark,A.deleted_at AS deletedAt,A.deleted_by AS deletedBy,A.created_at AS createdAt,A.created_by AS createdBy,A.updated_at AS updatedAt,A.updated_by AS updatedBy
+	</sql>
+	<sql id="baseSearch">
+		<if test="deleted == null">AND A.deleted_at IS NULL</if> 
+		<if test="deleted != null">AND A.deleted_at IS not NULL</if>
+		<if test="id != null and id != '' ">AND A.id = #{id}</if>
+		<if test="dataHospitalId != null and dataHospitalId != '' ">AND A.id = #{dataHospitalId}</if>
+		<if test="serial != null and serial != '' ">AND A.serial = #{serial}</if>
+		<if test="mainStatus != null and mainStatus != '' ">AND A.main_status = #{mainStatus}</if>
+		<if test="logicStatus != null and logicStatus != '' ">AND A.logic_status = #{logicStatus}</if>
+	</sql>
+	<sql id="suffix"><!-- 分组排序  -->
+		<if test="groupBy != null and groupBy !='' "> GROUP BY #{groupBy,jdbcType=VARCHAR}</if>
+		<if test="orderBy != null and orderBy !='' "> ORDER BY <if test="selfOrder == null">A.</if>${orderBy}</if>
+		<if test="ascOrdesc != null and ascOrdesc !='' "> ${ascOrdesc}</if>
+		<if test="orderBy == null and ascOrdesc == null "> ORDER BY A.id DESC</if>
+	</sql>
+	<sql id="limitCount"><!-- 分页 -->
+		<if test="count != null and count !='' "> LIMIT ${start},${count}</if> 
+	</sql>
+	<!--====================================== 设置结束-CONFIG_FINISH ======================================-->
+	
+	<!--=@@@@@@============================= 自定义内容 开始 _@CAUTION_SELF_BEGIN@_ =============================@@@@@@=-->
+	<sql id="columns">
+		,d.code_name AS hospitalTypeName
+	</sql>
+	<sql id="search">
+		<if test="wholeName != null and wholeName != ''  ">
+        	AND A.whole_name LIKE '%${wholeName}%'
+		</if>
+		<if test="address != null and address != ''  ">
+        	AND A.address LIKE '%${address}%'
+		</if>
+		<if test="phone != null and phone != ''  ">
+        	AND A.phone LIKE '%${phone}%'
+		</if>
+		<if test="haveVisitValid != null and haveVisitValid != ''  ">
+        	AND A.have_visit_valid = #{haveVisitValid}
+		</if>
+		<if test="isAssignIntention != null and isAssignIntention != ''  ">
+        	AND A.is_assign_intention = #{isAssignIntention}
+		</if>
+		<if test="isAssignContract != null and isAssignContract != ''  ">
+        	AND A.is_assign_contract = #{isAssignContract}
+		</if>
+		<if test="adminId != null and adminId != ''  ">
+        	AND A.admin_id = #{adminId}
+		</if>
+	</sql>
+	<sql id="leftJoin">
+		LEFT JOIN dict d ON A.type_id = d.id
+	</sql>
+	<!--=@@@@@@============================= 自定义内容 结束 _@CAUTION_SELF_FINISH@_ =============================@@@@@@=-->
+	
+	
+	<!--====================================== 查询开始-SELECT_BEGIN ======================================-->
+	<select id="selectListByCondition" parameterType="java.util.Map" resultType="com.lhfeiyu.po.DataHospital">
+    	SELECT 
+		<include refid="baseColumns"/><include refid="columns"/>
+		FROM <include refid="table"/> A 
+		<include refid="leftJoin"/>
+		WHERE 1=1 
+		<include refid="baseSearch"/><include refid="search"/>
+		<include refid="suffix"/>
+		<include refid="limitCount"/>
+	</select>
+	
+	<select id="selectByCondition" parameterType="java.util.Map" resultType="com.lhfeiyu.po.DataHospital">
+   		SELECT 
+		<include refid="baseColumns"/><include refid="columns"/>
+		FROM <include refid="table"/> A 
+		<include refid="leftJoin"/>
+		WHERE 1=1 
+		<include refid="baseSearch"/><include refid="search"/>
+		<include refid="suffix"/>
+		LIMIT 0,1 
+	</select>
+	
+	<select id="selectCountByCondition" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM <include refid="table"/> A 
+		<include refid="leftJoin"/>
+		WHERE 1=1
+		<include refid="baseSearch"/><include refid="search"/>
+	</select>
+	
+	<select id="selectByPrimaryKey" resultType="com.lhfeiyu.po.DataHospital" parameterType="java.lang.Integer">
+		SELECT <include refid="baseColumns"/> FROM <include refid="table"/> A WHERE A.id = #{id,jdbcType=INTEGER}
+	</select>
+	
+	<select id="selectBySerial" resultType="com.lhfeiyu.po.DataHospital">
+   		SELECT 
+		<include refid="baseColumns"/><include refid="columns"/>
+		FROM <include refid="table"/> A
+		<include refid="leftJoin"/>
+    	WHERE A.serial = #{serial,jdbcType=VARCHAR}
+		LIMIT 0,1 
+	</select>
+	<!--====================================== 查询结束-SELECT_FINISH ======================================-->
+	
+	<!--====================================== 修改开始-UPDATE_BEGIN ======================================-->
+	<!-- <-#-if cMap_has_next>,</-#-if> -->
+	<update id="updateByPrimaryKey" parameterType="com.lhfeiyu.po.DataHospital">
+	    UPDATE <include refid="table"/>
+		<set>
+			
+			brief_name = #{briefName,jdbcType=VARCHAR},
+			whole_name = #{wholeName,jdbcType=VARCHAR},
+			type_name = #{typeName,jdbcType=VARCHAR},
+			admin_id = #{adminId,jdbcType=INTEGER},
+			password = #{password,jdbcType=VARCHAR},
+			logo = #{logo,jdbcType=VARCHAR},
+			logo_pic_id = #{logoPicId,jdbcType=INTEGER},
+			website = #{website,jdbcType=VARCHAR},
+			province = #{province,jdbcType=INTEGER},
+			city = #{city,jdbcType=INTEGER},
+			address = #{address,jdbcType=VARCHAR},
+			email = #{email,jdbcType=VARCHAR},
+			login_name = #{loginName,jdbcType=VARCHAR},
+			last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+			phone = #{phone,jdbcType=VARCHAR},
+			tel = #{tel,jdbcType=VARCHAR},
+			fax = #{fax,jdbcType=VARCHAR},
+			qq = #{qq,jdbcType=VARCHAR},
+			weixin = #{weixin,jdbcType=VARCHAR},
+			weibo = #{weibo,jdbcType=VARCHAR},
+			area = #{area,jdbcType=VARCHAR},
+			doctor_num = #{doctorNum,jdbcType=INTEGER},
+			doctor_info = #{doctorInfo,jdbcType=LONGVARCHAR},
+			nurse_num = #{nurseNum,jdbcType=INTEGER},
+			nurse_info = #{nurseInfo,jdbcType=LONGVARCHAR},
+			admin_name = #{adminName,jdbcType=VARCHAR},
+			indoor_pic_paths = #{indoorPicPaths,jdbcType=VARCHAR},
+			outdoor_pic_paths = #{outdoorPicPaths,jdbcType=VARCHAR},
+			age_between = #{ageBetween,jdbcType=VARCHAR},
+			contact_way = #{contactWay,jdbcType=VARCHAR},
+			medical_from = #{medicalFrom,jdbcType=VARCHAR},
+			stock_way = #{stockWay,jdbcType=VARCHAR},
+			is_doctor = #{isDoctor,jdbcType=INTEGER},
+			is_legal_person = #{isLegalPerson,jdbcType=INTEGER},
+			reputition = #{reputition,jdbcType=VARCHAR},
+			patient_flow = #{patientFlow,jdbcType=VARCHAR},
+			health_doc = #{healthDoc,jdbcType=VARCHAR},
+			is_advertisement = #{isAdvertisement,jdbcType=INTEGER},
+			bed = #{bed,jdbcType=VARCHAR},
+			hygienism_condition = #{hygienismCondition,jdbcType=VARCHAR},
+			gps = #{gps,jdbcType=VARCHAR},
+			coporation_attitude = #{coporationAttitude,jdbcType=VARCHAR},
+			visit_info = #{visitInfo,jdbcType=VARCHAR},
+			is_assign_contract = #{isAssignContract,jdbcType=INTEGER},
+			contract_info = #{contractInfo,jdbcType=VARCHAR},
+			is_assign_intention = #{isAssignIntention,jdbcType=INTEGER},
+			have_visit_valid = #{haveVisitValid,jdbcType=INTEGER},
+			other_facility = #{otherFacility,jdbcType=VARCHAR},
+			qr_code = #{qrCode,jdbcType=VARCHAR},
+			qr_code2 = #{qrCode2,jdbcType=VARCHAR},
+			introduction = #{introduction,jdbcType=VARCHAR},
+			serial = #{serial,jdbcType=VARCHAR},
+			type_id = #{typeId,jdbcType=INTEGER},
+			link_id = #{linkId,jdbcType=INTEGER},
+			group_id = #{groupId,jdbcType=INTEGER},
+			grade_id = #{gradeId,jdbcType=INTEGER},
+			main_status = #{mainStatus,jdbcType=INTEGER},
+			logic_status = #{logicStatus,jdbcType=INTEGER},
+			attr_decimal = #{attrDecimal,jdbcType=DECIMAL},
+			main_ids = #{mainIds,jdbcType=VARCHAR},
+			attr_str = #{attrStr,jdbcType=VARCHAR},
+			attr_str2 = #{attrStr2,jdbcType=VARCHAR},
+			attr_int = #{attrInt,jdbcType=INTEGER},
+			attr_int2 = #{attrInt2,jdbcType=INTEGER},
+			attr_num = #{attrNum,jdbcType=DECIMAL},
+			attr_date = #{attrDate,jdbcType=DATE},
+			attr_datetime = #{attrDatetime,jdbcType=TIMESTAMP},
+			sequence = #{sequence,jdbcType=INTEGER},
+			description = #{description,jdbcType=VARCHAR},
+			remark = #{remark,jdbcType=VARCHAR},
+			deleted_at = #{deletedAt,jdbcType=TIMESTAMP},
+			deleted_by = #{deletedBy,jdbcType=VARCHAR},
+			created_at = #{createdAt,jdbcType=TIMESTAMP},
+			created_by = #{createdBy,jdbcType=VARCHAR},
+			updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+			
+		  <if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+		  updated_at = NOW()
+		</set>
+	    WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateBySerial" parameterType="com.lhfeiyu.po.DataHospital">
+	    UPDATE <include refid="table"/>
+		<set>
+		  	
+		  	brief_name = #{briefName,jdbcType=VARCHAR},
+		  	whole_name = #{wholeName,jdbcType=VARCHAR},
+		  	type_name = #{typeName,jdbcType=VARCHAR},
+		  	admin_id = #{adminId,jdbcType=INTEGER},
+		  	password = #{password,jdbcType=VARCHAR},
+		  	logo = #{logo,jdbcType=VARCHAR},
+		  	logo_pic_id = #{logoPicId,jdbcType=INTEGER},
+		  	website = #{website,jdbcType=VARCHAR},
+		  	province = #{province,jdbcType=INTEGER},
+		  	city = #{city,jdbcType=INTEGER},
+		  	address = #{address,jdbcType=VARCHAR},
+		  	email = #{email,jdbcType=VARCHAR},
+		  	login_name = #{loginName,jdbcType=VARCHAR},
+		  	last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+		  	phone = #{phone,jdbcType=VARCHAR},
+		  	tel = #{tel,jdbcType=VARCHAR},
+		  	fax = #{fax,jdbcType=VARCHAR},
+		  	qq = #{qq,jdbcType=VARCHAR},
+		  	weixin = #{weixin,jdbcType=VARCHAR},
+		  	weibo = #{weibo,jdbcType=VARCHAR},
+		  	area = #{area,jdbcType=VARCHAR},
+		  	doctor_num = #{doctorNum,jdbcType=INTEGER},
+		  	doctor_info = #{doctorInfo,jdbcType=LONGVARCHAR},
+		  	nurse_num = #{nurseNum,jdbcType=INTEGER},
+		  	nurse_info = #{nurseInfo,jdbcType=LONGVARCHAR},
+		  	admin_name = #{adminName,jdbcType=VARCHAR},
+		  	indoor_pic_paths = #{indoorPicPaths,jdbcType=VARCHAR},
+		  	outdoor_pic_paths = #{outdoorPicPaths,jdbcType=VARCHAR},
+		  	age_between = #{ageBetween,jdbcType=VARCHAR},
+		  	contact_way = #{contactWay,jdbcType=VARCHAR},
+		  	medical_from = #{medicalFrom,jdbcType=VARCHAR},
+		  	stock_way = #{stockWay,jdbcType=VARCHAR},
+		  	is_doctor = #{isDoctor,jdbcType=INTEGER},
+		  	is_legal_person = #{isLegalPerson,jdbcType=INTEGER},
+		  	reputition = #{reputition,jdbcType=VARCHAR},
+		  	patient_flow = #{patientFlow,jdbcType=VARCHAR},
+		  	health_doc = #{healthDoc,jdbcType=VARCHAR},
+		  	is_advertisement = #{isAdvertisement,jdbcType=INTEGER},
+		  	bed = #{bed,jdbcType=VARCHAR},
+		  	hygienism_condition = #{hygienismCondition,jdbcType=VARCHAR},
+		  	gps = #{gps,jdbcType=VARCHAR},
+		  	coporation_attitude = #{coporationAttitude,jdbcType=VARCHAR},
+		  	visit_info = #{visitInfo,jdbcType=VARCHAR},
+		  	is_assign_contract = #{isAssignContract,jdbcType=INTEGER},
+		  	contract_info = #{contractInfo,jdbcType=VARCHAR},
+		  	is_assign_intention = #{isAssignIntention,jdbcType=INTEGER},
+		  	have_visit_valid = #{haveVisitValid,jdbcType=INTEGER},
+		  	other_facility = #{otherFacility,jdbcType=VARCHAR},
+		  	qr_code = #{qrCode,jdbcType=VARCHAR},
+		  	qr_code2 = #{qrCode2,jdbcType=VARCHAR},
+		  	introduction = #{introduction,jdbcType=VARCHAR},
+		  	serial = #{serial,jdbcType=VARCHAR},
+		  	type_id = #{typeId,jdbcType=INTEGER},
+		  	link_id = #{linkId,jdbcType=INTEGER},
+		  	group_id = #{groupId,jdbcType=INTEGER},
+		  	grade_id = #{gradeId,jdbcType=INTEGER},
+		  	main_status = #{mainStatus,jdbcType=INTEGER},
+		  	logic_status = #{logicStatus,jdbcType=INTEGER},
+		  	attr_decimal = #{attrDecimal,jdbcType=DECIMAL},
+		  	main_ids = #{mainIds,jdbcType=VARCHAR},
+		  	attr_str = #{attrStr,jdbcType=VARCHAR},
+		  	attr_str2 = #{attrStr2,jdbcType=VARCHAR},
+		  	attr_int = #{attrInt,jdbcType=INTEGER},
+		  	attr_int2 = #{attrInt2,jdbcType=INTEGER},
+		  	attr_num = #{attrNum,jdbcType=DECIMAL},
+		  	attr_date = #{attrDate,jdbcType=DATE},
+		  	attr_datetime = #{attrDatetime,jdbcType=TIMESTAMP},
+		  	sequence = #{sequence,jdbcType=INTEGER},
+		  	description = #{description,jdbcType=VARCHAR},
+		  	remark = #{remark,jdbcType=VARCHAR},
+		  	deleted_at = #{deletedAt,jdbcType=TIMESTAMP},
+		  	deleted_by = #{deletedBy,jdbcType=VARCHAR},
+		  	created_at = #{createdAt,jdbcType=TIMESTAMP},
+		  	created_by = #{createdBy,jdbcType=VARCHAR},
+		  	updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+		  	
+		  <if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+		  updated_at = NOW()
+		</set>
+	    WHERE serial = #{serial,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateByIds">
+	    UPDATE <include refid="table"/>
+		<set>
+			
+			brief_name = #{briefName,jdbcType=VARCHAR},
+			whole_name = #{wholeName,jdbcType=VARCHAR},
+			type_name = #{typeName,jdbcType=VARCHAR},
+			admin_id = #{adminId,jdbcType=INTEGER},
+			password = #{password,jdbcType=VARCHAR},
+			logo = #{logo,jdbcType=VARCHAR},
+			logo_pic_id = #{logoPicId,jdbcType=INTEGER},
+			website = #{website,jdbcType=VARCHAR},
+			province = #{province,jdbcType=INTEGER},
+			city = #{city,jdbcType=INTEGER},
+			address = #{address,jdbcType=VARCHAR},
+			email = #{email,jdbcType=VARCHAR},
+			login_name = #{loginName,jdbcType=VARCHAR},
+			last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+			phone = #{phone,jdbcType=VARCHAR},
+			tel = #{tel,jdbcType=VARCHAR},
+			fax = #{fax,jdbcType=VARCHAR},
+			qq = #{qq,jdbcType=VARCHAR},
+			weixin = #{weixin,jdbcType=VARCHAR},
+			weibo = #{weibo,jdbcType=VARCHAR},
+			area = #{area,jdbcType=VARCHAR},
+			doctor_num = #{doctorNum,jdbcType=INTEGER},
+			doctor_info = #{doctorInfo,jdbcType=LONGVARCHAR},
+			nurse_num = #{nurseNum,jdbcType=INTEGER},
+			nurse_info = #{nurseInfo,jdbcType=LONGVARCHAR},
+			admin_name = #{adminName,jdbcType=VARCHAR},
+			indoor_pic_paths = #{indoorPicPaths,jdbcType=VARCHAR},
+			outdoor_pic_paths = #{outdoorPicPaths,jdbcType=VARCHAR},
+			age_between = #{ageBetween,jdbcType=VARCHAR},
+			contact_way = #{contactWay,jdbcType=VARCHAR},
+			medical_from = #{medicalFrom,jdbcType=VARCHAR},
+			stock_way = #{stockWay,jdbcType=VARCHAR},
+			is_doctor = #{isDoctor,jdbcType=INTEGER},
+			is_legal_person = #{isLegalPerson,jdbcType=INTEGER},
+			reputition = #{reputition,jdbcType=VARCHAR},
+			patient_flow = #{patientFlow,jdbcType=VARCHAR},
+			health_doc = #{healthDoc,jdbcType=VARCHAR},
+			is_advertisement = #{isAdvertisement,jdbcType=INTEGER},
+			bed = #{bed,jdbcType=VARCHAR},
+			hygienism_condition = #{hygienismCondition,jdbcType=VARCHAR},
+			gps = #{gps,jdbcType=VARCHAR},
+			coporation_attitude = #{coporationAttitude,jdbcType=VARCHAR},
+			visit_info = #{visitInfo,jdbcType=VARCHAR},
+			is_assign_contract = #{isAssignContract,jdbcType=INTEGER},
+			contract_info = #{contractInfo,jdbcType=VARCHAR},
+			is_assign_intention = #{isAssignIntention,jdbcType=INTEGER},
+			have_visit_valid = #{haveVisitValid,jdbcType=INTEGER},
+			other_facility = #{otherFacility,jdbcType=VARCHAR},
+			qr_code = #{qrCode,jdbcType=VARCHAR},
+			qr_code2 = #{qrCode2,jdbcType=VARCHAR},
+			introduction = #{introduction,jdbcType=VARCHAR},
+			serial = #{serial,jdbcType=VARCHAR},
+			type_id = #{typeId,jdbcType=INTEGER},
+			link_id = #{linkId,jdbcType=INTEGER},
+			group_id = #{groupId,jdbcType=INTEGER},
+			grade_id = #{gradeId,jdbcType=INTEGER},
+			main_status = #{mainStatus,jdbcType=INTEGER},
+			logic_status = #{logicStatus,jdbcType=INTEGER},
+			attr_decimal = #{attrDecimal,jdbcType=DECIMAL},
+			main_ids = #{mainIds,jdbcType=VARCHAR},
+			attr_str = #{attrStr,jdbcType=VARCHAR},
+			attr_str2 = #{attrStr2,jdbcType=VARCHAR},
+			attr_int = #{attrInt,jdbcType=INTEGER},
+			attr_int2 = #{attrInt2,jdbcType=INTEGER},
+			attr_num = #{attrNum,jdbcType=DECIMAL},
+			attr_date = #{attrDate,jdbcType=DATE},
+			attr_datetime = #{attrDatetime,jdbcType=TIMESTAMP},
+			sequence = #{sequence,jdbcType=INTEGER},
+			description = #{description,jdbcType=VARCHAR},
+			remark = #{remark,jdbcType=VARCHAR},
+			deleted_at = #{deletedAt,jdbcType=TIMESTAMP},
+			deleted_by = #{deletedBy,jdbcType=VARCHAR},
+			created_at = #{createdAt,jdbcType=TIMESTAMP},
+			created_by = #{createdBy,jdbcType=VARCHAR},
+			updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+			
+		  <if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+		  updated_at = NOW()
+		</set>
+	    WHERE id IN( ${ids} )
+	</update>
+	
+	<update id="updateByCondition">
+		UPDATE <include refid="table"/> SET
+		<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+		updated_at = NOW(),
+		${condition}
+	</update>
+	
+	<update id="updateDeletedNowByIds">
+		UPDATE <include refid="table"/>
+		<set>
+			deleted_at = NOW(),
+			<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+			updated_at = NOW()
+		</set>
+		WHERE id IN( ${ids} )
+	</update>
+	
+	<update id="updateDeletedNullByIds">
+		UPDATE <include refid="table"/>
+		<set>
+			deleted_at = NULL,
+			<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+			updated_at = NOW()
+		</set>
+		WHERE id IN( ${ids} )
+	</update>
+	
+	<update id="updateDeletedNowById" parameterType="java.lang.Integer">
+		UPDATE <include refid="table"/>
+		<set>
+			deleted_at = NOW(),
+			<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+			updated_at = NOW()
+		</set>
+		WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateDeletedNullById">
+		UPDATE <include refid="table"/>
+		<set> 
+			deleted_at = NULL, 
+			<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+			updated_at = NOW()
+		</set>
+		WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateFieldById" parameterType="java.util.Map">
+		UPDATE <include refid="table"/>
+		<set>
+			<if test="expression1 != null">${expression1},</if>
+			<if test="expression2 != null">${expression2},</if>
+			<if test="expression3 != null">${expression3},</if>
+			<if test="expression4 != null">${expression4},</if>
+			<if test="expression5 != null">${expression5},</if>
+			<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+			updated_at = NOW()
+		</set>
+		WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateFieldByIds" parameterType="java.util.Map">
+		UPDATE <include refid="table"/>
+		<set>
+			<if test="expression1 != null">${expression1},</if>
+			<if test="expression2 != null">${expression2},</if>
+			<if test="expression3 != null">${expression3},</if>
+			<if test="expression4 != null">${expression4},</if>
+			<if test="expression5 != null">${expression5},</if>
+			<if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+			updated_at = NOW()
+		</set>
+		WHERE id IN( ${ids} )
+	</update>
+	
+	
+	<update id="updateByPrimaryKeySelective" parameterType="com.lhfeiyu.po.DataHospital">
+	    UPDATE <include refid="table"/>
+		<set>
+				<if test="briefName != null">brief_name = #{briefName,jdbcType=VARCHAR},</if>
+				<if test="wholeName != null">whole_name = #{wholeName,jdbcType=VARCHAR},</if>
+				<if test="typeName != null">type_name = #{typeName,jdbcType=VARCHAR},</if>
+				<if test="adminId != null">admin_id = #{adminId,jdbcType=INTEGER},</if>
+				<if test="password != null">password = #{password,jdbcType=VARCHAR},</if>
+				<if test="logo != null">logo = #{logo,jdbcType=VARCHAR},</if>
+				<if test="logoPicId != null">logo_pic_id = #{logoPicId,jdbcType=INTEGER},</if>
+				<if test="website != null">website = #{website,jdbcType=VARCHAR},</if>
+				<if test="province != null">province = #{province,jdbcType=INTEGER},</if>
+				<if test="city != null">city = #{city,jdbcType=INTEGER},</if>
+				<if test="address != null">address = #{address,jdbcType=VARCHAR},</if>
+				<if test="email != null">email = #{email,jdbcType=VARCHAR},</if>
+				<if test="loginName != null">login_name = #{loginName,jdbcType=VARCHAR},</if>
+				<if test="lastLoginTime != null">last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},</if>
+				<if test="phone != null">phone = #{phone,jdbcType=VARCHAR},</if>
+				<if test="tel != null">tel = #{tel,jdbcType=VARCHAR},</if>
+				<if test="fax != null">fax = #{fax,jdbcType=VARCHAR},</if>
+				<if test="qq != null">qq = #{qq,jdbcType=VARCHAR},</if>
+				<if test="weixin != null">weixin = #{weixin,jdbcType=VARCHAR},</if>
+				<if test="weibo != null">weibo = #{weibo,jdbcType=VARCHAR},</if>
+				<if test="area != null">area = #{area,jdbcType=VARCHAR},</if>
+				<if test="doctorNum != null">doctor_num = #{doctorNum,jdbcType=INTEGER},</if>
+				<if test="doctorInfo != null">doctor_info = #{doctorInfo,jdbcType=LONGVARCHAR},</if>
+				<if test="nurseNum != null">nurse_num = #{nurseNum,jdbcType=INTEGER},</if>
+				<if test="nurseInfo != null">nurse_info = #{nurseInfo,jdbcType=LONGVARCHAR},</if>
+				<if test="adminName != null">admin_name = #{adminName,jdbcType=VARCHAR},</if>
+				<if test="indoorPicPaths != null">indoor_pic_paths = #{indoorPicPaths,jdbcType=VARCHAR},</if>
+				<if test="outdoorPicPaths != null">outdoor_pic_paths = #{outdoorPicPaths,jdbcType=VARCHAR},</if>
+				<if test="ageBetween != null">age_between = #{ageBetween,jdbcType=VARCHAR},</if>
+				<if test="contactWay != null">contact_way = #{contactWay,jdbcType=VARCHAR},</if>
+				<if test="medicalFrom != null">medical_from = #{medicalFrom,jdbcType=VARCHAR},</if>
+				<if test="stockWay != null">stock_way = #{stockWay,jdbcType=VARCHAR},</if>
+				<if test="isDoctor != null">is_doctor = #{isDoctor,jdbcType=INTEGER},</if>
+				<if test="isLegalPerson != null">is_legal_person = #{isLegalPerson,jdbcType=INTEGER},</if>
+				<if test="reputition != null">reputition = #{reputition,jdbcType=VARCHAR},</if>
+				<if test="patientFlow != null">patient_flow = #{patientFlow,jdbcType=VARCHAR},</if>
+				<if test="healthDoc != null">health_doc = #{healthDoc,jdbcType=VARCHAR},</if>
+				<if test="isAdvertisement != null">is_advertisement = #{isAdvertisement,jdbcType=INTEGER},</if>
+				<if test="bed != null">bed = #{bed,jdbcType=VARCHAR},</if>
+				<if test="hygienismCondition != null">hygienism_condition = #{hygienismCondition,jdbcType=VARCHAR},</if>
+				<if test="gps != null">gps = #{gps,jdbcType=VARCHAR},</if>
+				<if test="coporationAttitude != null">coporation_attitude = #{coporationAttitude,jdbcType=VARCHAR},</if>
+				<if test="visitInfo != null">visit_info = #{visitInfo,jdbcType=VARCHAR},</if>
+				<if test="isAssignContract != null">is_assign_contract = #{isAssignContract,jdbcType=INTEGER},</if>
+				<if test="contractInfo != null">contract_info = #{contractInfo,jdbcType=VARCHAR},</if>
+				<if test="isAssignIntention != null">is_assign_intention = #{isAssignIntention,jdbcType=INTEGER},</if>
+				<if test="haveVisitValid != null">have_visit_valid = #{haveVisitValid,jdbcType=INTEGER},</if>
+				<if test="otherFacility != null">other_facility = #{otherFacility,jdbcType=VARCHAR},</if>
+				<if test="qrCode != null">qr_code = #{qrCode,jdbcType=VARCHAR},</if>
+				<if test="qrCode2 != null">qr_code2 = #{qrCode2,jdbcType=VARCHAR},</if>
+				<if test="introduction != null">introduction = #{introduction,jdbcType=VARCHAR},</if>
+				<if test="serial != null">serial = #{serial,jdbcType=VARCHAR},</if>
+				<if test="typeId != null">type_id = #{typeId,jdbcType=INTEGER},</if>
+				<if test="linkId != null">link_id = #{linkId,jdbcType=INTEGER},</if>
+				<if test="groupId != null">group_id = #{groupId,jdbcType=INTEGER},</if>
+				<if test="gradeId != null">grade_id = #{gradeId,jdbcType=INTEGER},</if>
+				<if test="mainStatus != null">main_status = #{mainStatus,jdbcType=INTEGER},</if>
+				<if test="logicStatus != null">logic_status = #{logicStatus,jdbcType=INTEGER},</if>
+				<if test="attrDecimal != null">attr_decimal = #{attrDecimal,jdbcType=DECIMAL},</if>
+				<if test="mainIds != null">main_ids = #{mainIds,jdbcType=VARCHAR},</if>
+				<if test="attrStr != null">attr_str = #{attrStr,jdbcType=VARCHAR},</if>
+				<if test="attrStr2 != null">attr_str2 = #{attrStr2,jdbcType=VARCHAR},</if>
+				<if test="attrInt != null">attr_int = #{attrInt,jdbcType=INTEGER},</if>
+				<if test="attrInt2 != null">attr_int2 = #{attrInt2,jdbcType=INTEGER},</if>
+				<if test="attrNum != null">attr_num = #{attrNum,jdbcType=DECIMAL},</if>
+				<if test="attrDate != null">attr_date = #{attrDate,jdbcType=DATE},</if>
+				<if test="attrDatetime != null">attr_datetime = #{attrDatetime,jdbcType=TIMESTAMP},</if>
+				<if test="sequence != null">sequence = #{sequence,jdbcType=INTEGER},</if>
+				<if test="description != null">description = #{description,jdbcType=VARCHAR},</if>
+				<if test="remark != null">remark = #{remark,jdbcType=VARCHAR},</if>
+				<if test="deletedAt != null">deleted_at = #{deletedAt,jdbcType=TIMESTAMP},</if>
+				<if test="deletedBy != null">deleted_by = #{deletedBy,jdbcType=VARCHAR},</if>
+				<if test="createdAt != null">created_at = #{createdAt,jdbcType=TIMESTAMP},</if>
+				<if test="createdBy != null">created_by = #{createdBy,jdbcType=VARCHAR},</if>
+				<if test="updatedAt != null">updated_at = #{updatedAt,jdbcType=TIMESTAMP},</if>
+		  <if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+		  updated_at = NOW()
+		</set>
+	    WHERE id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	<update id="updateBySerialSelective" parameterType="com.lhfeiyu.po.DataHospital">
+	    UPDATE <include refid="table"/>
+		<set>
+				<if test="briefName != null">brief_name = #{briefName,jdbcType=VARCHAR},</if>
+				<if test="wholeName != null">whole_name = #{wholeName,jdbcType=VARCHAR},</if>
+				<if test="typeName != null">type_name = #{typeName,jdbcType=VARCHAR},</if>
+				<if test="adminId != null">admin_id = #{adminId,jdbcType=INTEGER},</if>
+				<if test="password != null">password = #{password,jdbcType=VARCHAR},</if>
+				<if test="logo != null">logo = #{logo,jdbcType=VARCHAR},</if>
+				<if test="logoPicId != null">logo_pic_id = #{logoPicId,jdbcType=INTEGER},</if>
+				<if test="website != null">website = #{website,jdbcType=VARCHAR},</if>
+				<if test="province != null">province = #{province,jdbcType=INTEGER},</if>
+				<if test="city != null">city = #{city,jdbcType=INTEGER},</if>
+				<if test="address != null">address = #{address,jdbcType=VARCHAR},</if>
+				<if test="email != null">email = #{email,jdbcType=VARCHAR},</if>
+				<if test="loginName != null">login_name = #{loginName,jdbcType=VARCHAR},</if>
+				<if test="lastLoginTime != null">last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},</if>
+				<if test="phone != null">phone = #{phone,jdbcType=VARCHAR},</if>
+				<if test="tel != null">tel = #{tel,jdbcType=VARCHAR},</if>
+				<if test="fax != null">fax = #{fax,jdbcType=VARCHAR},</if>
+				<if test="qq != null">qq = #{qq,jdbcType=VARCHAR},</if>
+				<if test="weixin != null">weixin = #{weixin,jdbcType=VARCHAR},</if>
+				<if test="weibo != null">weibo = #{weibo,jdbcType=VARCHAR},</if>
+				<if test="area != null">area = #{area,jdbcType=VARCHAR},</if>
+				<if test="doctorNum != null">doctor_num = #{doctorNum,jdbcType=INTEGER},</if>
+				<if test="doctorInfo != null">doctor_info = #{doctorInfo,jdbcType=LONGVARCHAR},</if>
+				<if test="nurseNum != null">nurse_num = #{nurseNum,jdbcType=INTEGER},</if>
+				<if test="nurseInfo != null">nurse_info = #{nurseInfo,jdbcType=LONGVARCHAR},</if>
+				<if test="adminName != null">admin_name = #{adminName,jdbcType=VARCHAR},</if>
+				<if test="indoorPicPaths != null">indoor_pic_paths = #{indoorPicPaths,jdbcType=VARCHAR},</if>
+				<if test="outdoorPicPaths != null">outdoor_pic_paths = #{outdoorPicPaths,jdbcType=VARCHAR},</if>
+				<if test="ageBetween != null">age_between = #{ageBetween,jdbcType=VARCHAR},</if>
+				<if test="contactWay != null">contact_way = #{contactWay,jdbcType=VARCHAR},</if>
+				<if test="medicalFrom != null">medical_from = #{medicalFrom,jdbcType=VARCHAR},</if>
+				<if test="stockWay != null">stock_way = #{stockWay,jdbcType=VARCHAR},</if>
+				<if test="isDoctor != null">is_doctor = #{isDoctor,jdbcType=INTEGER},</if>
+				<if test="isLegalPerson != null">is_legal_person = #{isLegalPerson,jdbcType=INTEGER},</if>
+				<if test="reputition != null">reputition = #{reputition,jdbcType=VARCHAR},</if>
+				<if test="patientFlow != null">patient_flow = #{patientFlow,jdbcType=VARCHAR},</if>
+				<if test="healthDoc != null">health_doc = #{healthDoc,jdbcType=VARCHAR},</if>
+				<if test="isAdvertisement != null">is_advertisement = #{isAdvertisement,jdbcType=INTEGER},</if>
+				<if test="bed != null">bed = #{bed,jdbcType=VARCHAR},</if>
+				<if test="hygienismCondition != null">hygienism_condition = #{hygienismCondition,jdbcType=VARCHAR},</if>
+				<if test="gps != null">gps = #{gps,jdbcType=VARCHAR},</if>
+				<if test="coporationAttitude != null">coporation_attitude = #{coporationAttitude,jdbcType=VARCHAR},</if>
+				<if test="visitInfo != null">visit_info = #{visitInfo,jdbcType=VARCHAR},</if>
+				<if test="isAssignContract != null">is_assign_contract = #{isAssignContract,jdbcType=INTEGER},</if>
+				<if test="contractInfo != null">contract_info = #{contractInfo,jdbcType=VARCHAR},</if>
+				<if test="isAssignIntention != null">is_assign_intention = #{isAssignIntention,jdbcType=INTEGER},</if>
+				<if test="haveVisitValid != null">have_visit_valid = #{haveVisitValid,jdbcType=INTEGER},</if>
+				<if test="otherFacility != null">other_facility = #{otherFacility,jdbcType=VARCHAR},</if>
+				<if test="qrCode != null">qr_code = #{qrCode,jdbcType=VARCHAR},</if>
+				<if test="qrCode2 != null">qr_code2 = #{qrCode2,jdbcType=VARCHAR},</if>
+				<if test="introduction != null">introduction = #{introduction,jdbcType=VARCHAR},</if>
+				<if test="serial != null">serial = #{serial,jdbcType=VARCHAR},</if>
+				<if test="typeId != null">type_id = #{typeId,jdbcType=INTEGER},</if>
+				<if test="linkId != null">link_id = #{linkId,jdbcType=INTEGER},</if>
+				<if test="groupId != null">group_id = #{groupId,jdbcType=INTEGER},</if>
+				<if test="gradeId != null">grade_id = #{gradeId,jdbcType=INTEGER},</if>
+				<if test="mainStatus != null">main_status = #{mainStatus,jdbcType=INTEGER},</if>
+				<if test="logicStatus != null">logic_status = #{logicStatus,jdbcType=INTEGER},</if>
+				<if test="attrDecimal != null">attr_decimal = #{attrDecimal,jdbcType=DECIMAL},</if>
+				<if test="mainIds != null">main_ids = #{mainIds,jdbcType=VARCHAR},</if>
+				<if test="attrStr != null">attr_str = #{attrStr,jdbcType=VARCHAR},</if>
+				<if test="attrStr2 != null">attr_str2 = #{attrStr2,jdbcType=VARCHAR},</if>
+				<if test="attrInt != null">attr_int = #{attrInt,jdbcType=INTEGER},</if>
+				<if test="attrInt2 != null">attr_int2 = #{attrInt2,jdbcType=INTEGER},</if>
+				<if test="attrNum != null">attr_num = #{attrNum,jdbcType=DECIMAL},</if>
+				<if test="attrDate != null">attr_date = #{attrDate,jdbcType=DATE},</if>
+				<if test="attrDatetime != null">attr_datetime = #{attrDatetime,jdbcType=TIMESTAMP},</if>
+				<if test="sequence != null">sequence = #{sequence,jdbcType=INTEGER},</if>
+				<if test="description != null">description = #{description,jdbcType=VARCHAR},</if>
+				<if test="remark != null">remark = #{remark,jdbcType=VARCHAR},</if>
+				<if test="deletedAt != null">deleted_at = #{deletedAt,jdbcType=TIMESTAMP},</if>
+				<if test="deletedBy != null">deleted_by = #{deletedBy,jdbcType=VARCHAR},</if>
+				<if test="createdAt != null">created_at = #{createdAt,jdbcType=TIMESTAMP},</if>
+				<if test="createdBy != null">created_by = #{createdBy,jdbcType=VARCHAR},</if>
+				<if test="updatedAt != null">updated_at = #{updatedAt,jdbcType=TIMESTAMP},</if>
+		  <if test="updatedBy != null">updated_by = #{updatedBy,jdbcType=VARCHAR},</if>
+		  updated_at = NOW()
+		</set>
+	    WHERE serial = #{serial,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateByIdsSelective">
+	    UPDATE <include refid="table"/>
+		<set>
+				<if test="briefName != null">brief_name = #{briefName,jdbcType=VARCHAR},</if>
+				<if test="wholeName != null">whole_name = #{wholeName,jdbcType=VARCHAR},</if>
+				<if test="typeName != null">type_name = #{typeName,jdbcType=VARCHAR},</if>
+				<if test="adminId != null">admin_id = #{adminId,jdbcType=INTEGER},</if>
+				<if test="password != null">password = #{password,jdbcType=VARCHAR},</if>
+				<if test="logo != null">logo = #{logo,jdbcType=VARCHAR},</if>
+				<if test="logoPicId != null">logo_pic_id = #{logoPicId,jdbcType=INTEGER},</if>
+				<if test="website != null">website = #{website,jdbcType=VARCHAR},</if>
+				<if test="province != null">province = #{province,jdbcType=INTEGER},</if>
+				<if test="city != null">city = #{city,jdbcType=INTEGER},</if>
+				<if test="address != null">address = #{address,jdbcType=VARCHAR},</if>
+				<if test="email != null">email = #{email,jdbcType=VARCHAR},</if>
+				<if test="loginName != null">login_name = #{loginName,jdbcType=VARCHAR},</if>
+				<if test="lastLoginTime != null">last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},</if>
+				<if test="phone != null">phone = #{phone,jdbcType=VARCHAR},</if>
+				<if test="tel != null">tel = #{tel,jdbcType=VARCHAR},</if>
+				<if test="fax != null">fax = #{fax,jdbcType=VARCHAR},</if>
+				<if test="qq != null">qq = #{qq,jdbcType=VARCHAR},</if>
+				<if test="weixin != null">weixin = #{weixin,jdbcType=VARCHAR},</if>
+				<if test="weibo != null">weibo = #{weibo,jdbcType=VARCHAR},</if>
+				<if test="area != null">area = #{area,jdbcType=VARCHAR},</if>
+				<if test="doctorNum != null">doctor_num = #{doctorNum,jdbcType=INTEGER},</if>
+				<if test="doctorInfo != null">doctor_info = #{doctorInfo,jdbcType=LONGVARCHAR},</if>
+				<if test="nurseNum != null">nurse_num = #{nurseNum,jdbcType=INTEGER},</if>
+				<if test="nurseInfo != null">nurse_info = #{nurseInfo,jdbcType=LONGVARCHAR},</if>
+				<if test="adminName != null">admin_name = #{adminName,jdbcType=VARCHAR},</if>
+				<if test="indoorPicPaths != null">indoor_pic_paths = #{indoorPicPaths,jdbcType=VARCHAR},</if>
+				<if test="outdoorPicPaths != null">outdoor_pic_paths = #{outdoorPicPaths,jdbcType=VARCHAR},</if>
+				<if test="ageBetween != null">age_between = #{ageBetween,jdbcType=VARCHAR},</if>
+				<if test="contactWay != null">contact_way = #{contactWay,jdbcType=VARCHAR},</if>
+				<if test="medicalFrom != null">medical_from = #{medicalFrom,jdbcType=VARCHAR},</if>
+				<if test="stockWay != null">stock_way = #{stockWay,jdbcType=VARCHAR},</if>
+				<if test="isDoctor != null">is_doctor = #{isDoctor,jdbcType=INTEGER},</if>
+				<if test="isLegalPerson != null">is_legal_person = #{isLegalPerson,jdbcType=INTEGER},</if>
+				<if test="reputition != null">reputition = #{reputition,jdbcType=VARCHAR},</if>
+				<if test="patientFlow != null">patient_flow = #{patientFlow,jdbcType=VARCHAR},</if>
+				<if test="healthDoc != null">health_doc = #{healthDoc,jdbcType=VARCHAR},</if>
+				<if test="isAdvertisement != null">is_advertisement = #{isAdvertisement,jdbcType=INTEGER},</if>
+				<if test="bed != null">bed = #{bed,jdbcType=VARCHAR},</if>
+				<if test="hygienismCondition != null">hygienism_condition = #{hygienismCondition,jdbcType=VARCHAR},</if>
+				<if test="gps != null">gps = #{gps,jdbcType=VARCHAR},</if>
+				<if test="coporationAttitude != null">coporation_attitude = #{coporationAttitude,jdbcType=VARCHAR},</if>
+				<if test="visitInfo != null">visit_info = #{visitInfo,jdbcType=VARCHAR},</if>
+				<if test="isAssignContract != null">is_assign_contract = #{isAssignContract,jdbcType=INTEGER},</if>
+				<if test="contractInfo != null">contract_info = #{contractInfo,jdbcType=VARCHAR},</if>
+				<if test="isAssignIntention != null">is_assign_intention = #{isAssignIntention,jdbcType=INTEGER},</if>
+				<if test="haveVisitValid != null">have_visit_valid = #{haveVisitValid,jdbcType=INTEGER},</if>
+				<if test="otherFacility != null">other_facility = #{otherFacility,jdbcType=VARCHAR},</if>
+				<if test="qrCode != null">qr_code = #{qrCode,jdbcType=VARCHAR},</if>
+				<if test="qrCode2 != null">qr_code2 = #{qrCode2,jdbcType=VARCHAR},</if>
+				<if test="introduction != null">introduction = #{introduction,jdbcType=VARCHAR},</if>
+				<if test="serial != null">serial = #{serial,jdbcType=VARCHAR},</if>
+				<if test="typeId != null">type_id = #{typeId,jdbcType=INTEGER},</if>
+				<if test="linkId != null">link_id = #{linkId,jdbcType=INTEGER},</if>
+				<if test="groupId != null">group_id = #{groupId,jdbcType=INTEGER},</if>
+				<if test="gradeId != null">grade_id = #{gradeId,jdbcType=INTEGER},</if>
+				<if test="mainStatus != null">main_status = #{mainStatus,jdbcType=INTEGER},</if>
+				<if test="logicStatus != null">logic_status = #{logicStatus,jdbcType=INTEGER},</if>
+				<if test="attrDecimal != null">attr_decimal = #{attrDecimal,jdbcType=DECIMAL},</if>
+				<if test="mainIds != null">main_ids = #{mainIds,jdbcType=VARCHAR},</if>
+				<if test="attrStr != null">attr_str = #{attrStr,jdbcType=VARCHAR},</if>
+				<if test="attrStr2 != null">attr_str2 = #{attrStr2,jdbcType=VARCHAR},</if>
+				<if test="attrInt != null">attr_int = #{attrInt,jdbcType=INTEGER},</if>
+				<if test="attrInt2 != null">attr_int2 = #{attrInt2,jdbcType=INTEGER},</if>
+				<if test="attrNum != null">attr_num = #{attrNum,jdbcType=DECIMAL},</if>
+				<if test="attrDate != null">attr_date = #{attrDate,jdbcType=DATE},</if>
+				<if test="attrDatetime != null">attr_datetime = #{attrDatetime,jdbcType=TIMESTAMP},</if>
+				<if test="sequence != null">sequence = #{sequence,jdbcType=INTEGER},</if>
+				<if test="description != null">description = #{description,jdbcType=VARCHAR},</if>
+				<if test="remark != null">remark = #{remark,jdbcType=VARCHAR},</if>
+				<if test="deletedAt != null">deleted_at = #{deletedAt,jdbcType=TIMESTAMP},</if>
+				<if test="deletedBy != null">deleted_by = #{deletedBy,jdbcType=VARCHAR},</if>
+				<if test="createdAt != null">created_at = #{createdAt,jdbcType=TIMESTAMP},</if>
+				<if test="createdBy != null">created_by = #{createdBy,jdbcType=VARCHAR},</if>
+				<if test="updatedAt != null">updated_at = #{updatedAt,jdbcType=TIMESTAMP},</if>
+		  <if test="updatedBy != null">updated_by = #{updatedBy},</if>
+		  updated_at = NOW()
+		</set>
+	    WHERE id IN( ${ids} )
+	</update>
+    <!--====================================== 修改结束-UPDATE_FINISH ======================================-->
+	
+	<!--====================================== 新增开始-INSERT_BEGIN ======================================-->
+	<insert id="insert" parameterType="com.lhfeiyu.po.DataHospital" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO <include refid="table"/>(
+			brief_name,whole_name,type_name,admin_id,password,logo,logo_pic_id,website,province,city,address,email,login_name,last_login_time,phone,tel,fax,qq,weixin,weibo,area,doctor_num,doctor_info,nurse_num,nurse_info,admin_name,indoor_pic_paths,outdoor_pic_paths,age_between,contact_way,medical_from,stock_way,is_doctor,is_legal_person,reputition,patient_flow,health_doc,is_advertisement,bed,hygienism_condition,gps,coporation_attitude,visit_info,is_assign_contract,contract_info,is_assign_intention,have_visit_valid,other_facility,qr_code,qr_code2,introduction,serial,type_id,link_id,group_id,grade_id,main_status,logic_status,attr_decimal,main_ids,attr_str,attr_str2,attr_int,attr_int2,attr_num,attr_date,attr_datetime,sequence,description,remark,deleted_at,deleted_by,created_at,created_by,updated_at,updated_by
+		)VALUES(
+		    #{briefName,jdbcType=VARCHAR},#{wholeName,jdbcType=VARCHAR},#{typeName,jdbcType=VARCHAR},#{adminId,jdbcType=INTEGER},#{password,jdbcType=VARCHAR},#{logo,jdbcType=VARCHAR},#{logoPicId,jdbcType=INTEGER},#{website,jdbcType=VARCHAR},#{province,jdbcType=INTEGER},#{city,jdbcType=INTEGER},#{address,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR},#{loginName,jdbcType=VARCHAR},#{lastLoginTime,jdbcType=TIMESTAMP},#{phone,jdbcType=VARCHAR},#{tel,jdbcType=VARCHAR},#{fax,jdbcType=VARCHAR},#{qq,jdbcType=VARCHAR},#{weixin,jdbcType=VARCHAR},#{weibo,jdbcType=VARCHAR},#{area,jdbcType=VARCHAR},#{doctorNum,jdbcType=INTEGER},#{doctorInfo,jdbcType=LONGVARCHAR},#{nurseNum,jdbcType=INTEGER},#{nurseInfo,jdbcType=LONGVARCHAR},#{adminName,jdbcType=VARCHAR},#{indoorPicPaths,jdbcType=VARCHAR},#{outdoorPicPaths,jdbcType=VARCHAR},#{ageBetween,jdbcType=VARCHAR},#{contactWay,jdbcType=VARCHAR},#{medicalFrom,jdbcType=VARCHAR},#{stockWay,jdbcType=VARCHAR},#{isDoctor,jdbcType=INTEGER},#{isLegalPerson,jdbcType=INTEGER},#{reputition,jdbcType=VARCHAR},#{patientFlow,jdbcType=VARCHAR},#{healthDoc,jdbcType=VARCHAR},#{isAdvertisement,jdbcType=INTEGER},#{bed,jdbcType=VARCHAR},#{hygienismCondition,jdbcType=VARCHAR},#{gps,jdbcType=VARCHAR},#{coporationAttitude,jdbcType=VARCHAR},#{visitInfo,jdbcType=VARCHAR},#{isAssignContract,jdbcType=INTEGER},#{contractInfo,jdbcType=VARCHAR},#{isAssignIntention,jdbcType=INTEGER},#{haveVisitValid,jdbcType=INTEGER},#{otherFacility,jdbcType=VARCHAR},#{qrCode,jdbcType=VARCHAR},#{qrCode2,jdbcType=VARCHAR},#{introduction,jdbcType=VARCHAR},#{serial,jdbcType=VARCHAR},#{typeId,jdbcType=INTEGER},#{linkId,jdbcType=INTEGER},#{groupId,jdbcType=INTEGER},#{gradeId,jdbcType=INTEGER},#{mainStatus,jdbcType=INTEGER},#{logicStatus,jdbcType=INTEGER},#{attrDecimal,jdbcType=DECIMAL},#{mainIds,jdbcType=VARCHAR},#{attrStr,jdbcType=VARCHAR},#{attrStr2,jdbcType=VARCHAR},#{attrInt,jdbcType=INTEGER},#{attrInt2,jdbcType=INTEGER},#{attrNum,jdbcType=DECIMAL},#{attrDate,jdbcType=DATE},#{attrDatetime,jdbcType=TIMESTAMP},#{sequence,jdbcType=INTEGER},#{description,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR},#{deletedAt,jdbcType=TIMESTAMP},#{deletedBy,jdbcType=VARCHAR},#{createdAt,jdbcType=TIMESTAMP},#{createdBy,jdbcType=VARCHAR},#{updatedAt,jdbcType=TIMESTAMP},#{updatedBy,jdbcType=VARCHAR}
+	    )
+	</insert>
+	
+	<insert id="insertBatch">
+		INSERT INTO <include refid="table"/>(
+			brief_name,whole_name,type_name,admin_id,password,logo,logo_pic_id,website,province,city,address,email,login_name,last_login_time,phone,tel,fax,qq,weixin,weibo,area,doctor_num,doctor_info,nurse_num,nurse_info,admin_name,indoor_pic_paths,outdoor_pic_paths,age_between,contact_way,medical_from,stock_way,is_doctor,is_legal_person,reputition,patient_flow,health_doc,is_advertisement,bed,hygienism_condition,gps,coporation_attitude,visit_info,is_assign_contract,contract_info,is_assign_intention,have_visit_valid,other_facility,qr_code,qr_code2,introduction,serial,type_id,link_id,group_id,grade_id,main_status,logic_status,attr_decimal,main_ids,attr_str,attr_str2,attr_int,attr_int2,attr_num,attr_date,attr_datetime,sequence,description,remark,deleted_at,deleted_by,created_at,created_by,updated_at,updated_by
+		)VALUES
+		<foreach collection="list" item="c" separator=",">
+			(
+		    #{c.briefName,dbcType=VARCHAR},#{c.wholeName,dbcType=VARCHAR},#{c.typeName,dbcType=VARCHAR},#{c.adminId,dbcType=INTEGER},#{c.password,dbcType=VARCHAR},#{c.logo,dbcType=VARCHAR},#{c.logoPicId,dbcType=INTEGER},#{c.website,dbcType=VARCHAR},#{c.province,dbcType=INTEGER},#{c.city,dbcType=INTEGER},#{c.address,dbcType=VARCHAR},#{c.email,dbcType=VARCHAR},#{c.loginName,dbcType=VARCHAR},#{c.lastLoginTime,dbcType=TIMESTAMP},#{c.phone,dbcType=VARCHAR},#{c.tel,dbcType=VARCHAR},#{c.fax,dbcType=VARCHAR},#{c.qq,dbcType=VARCHAR},#{c.weixin,dbcType=VARCHAR},#{c.weibo,dbcType=VARCHAR},#{c.area,dbcType=VARCHAR},#{c.doctorNum,dbcType=INTEGER},#{c.doctorInfo,dbcType=LONGVARCHAR},#{c.nurseNum,dbcType=INTEGER},#{c.nurseInfo,dbcType=LONGVARCHAR},#{c.adminName,dbcType=VARCHAR},#{c.indoorPicPaths,dbcType=VARCHAR},#{c.outdoorPicPaths,dbcType=VARCHAR},#{c.ageBetween,dbcType=VARCHAR},#{c.contactWay,dbcType=VARCHAR},#{c.medicalFrom,dbcType=VARCHAR},#{c.stockWay,dbcType=VARCHAR},#{c.isDoctor,dbcType=INTEGER},#{c.isLegalPerson,dbcType=INTEGER},#{c.reputition,dbcType=VARCHAR},#{c.patientFlow,dbcType=VARCHAR},#{c.healthDoc,dbcType=VARCHAR},#{c.isAdvertisement,dbcType=INTEGER},#{c.bed,dbcType=VARCHAR},#{c.hygienismCondition,dbcType=VARCHAR},#{c.gps,dbcType=VARCHAR},#{c.coporationAttitude,dbcType=VARCHAR},#{c.visitInfo,dbcType=VARCHAR},#{c.isAssignContract,dbcType=INTEGER},#{c.contractInfo,dbcType=VARCHAR},#{c.isAssignIntention,dbcType=INTEGER},#{c.haveVisitValid,dbcType=INTEGER},#{c.otherFacility,dbcType=VARCHAR},#{c.qrCode,dbcType=VARCHAR},#{c.qrCode2,dbcType=VARCHAR},#{c.introduction,dbcType=VARCHAR},#{c.serial,dbcType=VARCHAR},#{c.typeId,dbcType=INTEGER},#{c.linkId,dbcType=INTEGER},#{c.groupId,dbcType=INTEGER},#{c.gradeId,dbcType=INTEGER},#{c.mainStatus,dbcType=INTEGER},#{c.logicStatus,dbcType=INTEGER},#{c.attrDecimal,dbcType=DECIMAL},#{c.mainIds,dbcType=VARCHAR},#{c.attrStr,dbcType=VARCHAR},#{c.attrStr2,dbcType=VARCHAR},#{c.attrInt,dbcType=INTEGER},#{c.attrInt2,dbcType=INTEGER},#{c.attrNum,dbcType=DECIMAL},#{c.attrDate,dbcType=DATE},#{c.attrDatetime,dbcType=TIMESTAMP},#{c.sequence,dbcType=INTEGER},#{c.description,dbcType=VARCHAR},#{c.remark,dbcType=VARCHAR},#{c.deletedAt,dbcType=TIMESTAMP},#{c.deletedBy,dbcType=VARCHAR},#{c.createdAt,dbcType=TIMESTAMP},#{c.createdBy,dbcType=VARCHAR},#{c.updatedAt,dbcType=TIMESTAMP},#{c.updatedBy,dbcType=VARCHAR}
+	    	)
+		</foreach>
+	</insert>
+  	
+	<insert id="insertSelective" parameterType="com.lhfeiyu.po.DataHospital" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO <include refid="table"/>
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+					<if test="briefName != null"> brief_name,</if>
+					<if test="wholeName != null"> whole_name,</if>
+					<if test="typeName != null"> type_name,</if>
+					<if test="adminId != null"> admin_id,</if>
+					<if test="password != null"> password,</if>
+					<if test="logo != null"> logo,</if>
+					<if test="logoPicId != null"> logo_pic_id,</if>
+					<if test="website != null"> website,</if>
+					<if test="province != null"> province,</if>
+					<if test="city != null"> city,</if>
+					<if test="address != null"> address,</if>
+					<if test="email != null"> email,</if>
+					<if test="loginName != null"> login_name,</if>
+					<if test="lastLoginTime != null"> last_login_time,</if>
+					<if test="phone != null"> phone,</if>
+					<if test="tel != null"> tel,</if>
+					<if test="fax != null"> fax,</if>
+					<if test="qq != null"> qq,</if>
+					<if test="weixin != null"> weixin,</if>
+					<if test="weibo != null"> weibo,</if>
+					<if test="area != null"> area,</if>
+					<if test="doctorNum != null"> doctor_num,</if>
+					<if test="doctorInfo != null"> doctor_info,</if>
+					<if test="nurseNum != null"> nurse_num,</if>
+					<if test="nurseInfo != null"> nurse_info,</if>
+					<if test="adminName != null"> admin_name,</if>
+					<if test="indoorPicPaths != null"> indoor_pic_paths,</if>
+					<if test="outdoorPicPaths != null"> outdoor_pic_paths,</if>
+					<if test="ageBetween != null"> age_between,</if>
+					<if test="contactWay != null"> contact_way,</if>
+					<if test="medicalFrom != null"> medical_from,</if>
+					<if test="stockWay != null"> stock_way,</if>
+					<if test="isDoctor != null"> is_doctor,</if>
+					<if test="isLegalPerson != null"> is_legal_person,</if>
+					<if test="reputition != null"> reputition,</if>
+					<if test="patientFlow != null"> patient_flow,</if>
+					<if test="healthDoc != null"> health_doc,</if>
+					<if test="isAdvertisement != null"> is_advertisement,</if>
+					<if test="bed != null"> bed,</if>
+					<if test="hygienismCondition != null"> hygienism_condition,</if>
+					<if test="gps != null"> gps,</if>
+					<if test="coporationAttitude != null"> coporation_attitude,</if>
+					<if test="visitInfo != null"> visit_info,</if>
+					<if test="isAssignContract != null"> is_assign_contract,</if>
+					<if test="contractInfo != null"> contract_info,</if>
+					<if test="isAssignIntention != null"> is_assign_intention,</if>
+					<if test="haveVisitValid != null"> have_visit_valid,</if>
+					<if test="otherFacility != null"> other_facility,</if>
+					<if test="qrCode != null"> qr_code,</if>
+					<if test="qrCode2 != null"> qr_code2,</if>
+					<if test="introduction != null"> introduction,</if>
+					<if test="serial != null"> serial,</if>
+					<if test="typeId != null"> type_id,</if>
+					<if test="linkId != null"> link_id,</if>
+					<if test="groupId != null"> group_id,</if>
+					<if test="gradeId != null"> grade_id,</if>
+					<if test="mainStatus != null"> main_status,</if>
+					<if test="logicStatus != null"> logic_status,</if>
+					<if test="attrDecimal != null"> attr_decimal,</if>
+					<if test="mainIds != null"> main_ids,</if>
+					<if test="attrStr != null"> attr_str,</if>
+					<if test="attrStr2 != null"> attr_str2,</if>
+					<if test="attrInt != null"> attr_int,</if>
+					<if test="attrInt2 != null"> attr_int2,</if>
+					<if test="attrNum != null"> attr_num,</if>
+					<if test="attrDate != null"> attr_date,</if>
+					<if test="attrDatetime != null"> attr_datetime,</if>
+					<if test="sequence != null"> sequence,</if>
+					<if test="description != null"> description,</if>
+					<if test="remark != null"> remark,</if>
+					<if test="deletedAt != null"> deleted_at,</if>
+					<if test="deletedBy != null"> deleted_by,</if>
+					<if test="createdAt != null"> created_at,</if>
+					<if test="createdBy != null"> created_by,</if>
+					<if test="updatedAt != null"> updated_at,</if>
+					<if test="updatedBy != null"> updated_by,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+					<if test="briefName != null">#{briefName,jdbcType=VARCHAR},</if>
+					<if test="wholeName != null">#{wholeName,jdbcType=VARCHAR},</if>
+					<if test="typeName != null">#{typeName,jdbcType=VARCHAR},</if>
+					<if test="adminId != null">#{adminId,jdbcType=INTEGER},</if>
+					<if test="password != null">#{password,jdbcType=VARCHAR},</if>
+					<if test="logo != null">#{logo,jdbcType=VARCHAR},</if>
+					<if test="logoPicId != null">#{logoPicId,jdbcType=INTEGER},</if>
+					<if test="website != null">#{website,jdbcType=VARCHAR},</if>
+					<if test="province != null">#{province,jdbcType=INTEGER},</if>
+					<if test="city != null">#{city,jdbcType=INTEGER},</if>
+					<if test="address != null">#{address,jdbcType=VARCHAR},</if>
+					<if test="email != null">#{email,jdbcType=VARCHAR},</if>
+					<if test="loginName != null">#{loginName,jdbcType=VARCHAR},</if>
+					<if test="lastLoginTime != null">#{lastLoginTime,jdbcType=TIMESTAMP},</if>
+					<if test="phone != null">#{phone,jdbcType=VARCHAR},</if>
+					<if test="tel != null">#{tel,jdbcType=VARCHAR},</if>
+					<if test="fax != null">#{fax,jdbcType=VARCHAR},</if>
+					<if test="qq != null">#{qq,jdbcType=VARCHAR},</if>
+					<if test="weixin != null">#{weixin,jdbcType=VARCHAR},</if>
+					<if test="weibo != null">#{weibo,jdbcType=VARCHAR},</if>
+					<if test="area != null">#{area,jdbcType=VARCHAR},</if>
+					<if test="doctorNum != null">#{doctorNum,jdbcType=INTEGER},</if>
+					<if test="doctorInfo != null">#{doctorInfo,jdbcType=LONGVARCHAR},</if>
+					<if test="nurseNum != null">#{nurseNum,jdbcType=INTEGER},</if>
+					<if test="nurseInfo != null">#{nurseInfo,jdbcType=LONGVARCHAR},</if>
+					<if test="adminName != null">#{adminName,jdbcType=VARCHAR},</if>
+					<if test="indoorPicPaths != null">#{indoorPicPaths,jdbcType=VARCHAR},</if>
+					<if test="outdoorPicPaths != null">#{outdoorPicPaths,jdbcType=VARCHAR},</if>
+					<if test="ageBetween != null">#{ageBetween,jdbcType=VARCHAR},</if>
+					<if test="contactWay != null">#{contactWay,jdbcType=VARCHAR},</if>
+					<if test="medicalFrom != null">#{medicalFrom,jdbcType=VARCHAR},</if>
+					<if test="stockWay != null">#{stockWay,jdbcType=VARCHAR},</if>
+					<if test="isDoctor != null">#{isDoctor,jdbcType=INTEGER},</if>
+					<if test="isLegalPerson != null">#{isLegalPerson,jdbcType=INTEGER},</if>
+					<if test="reputition != null">#{reputition,jdbcType=VARCHAR},</if>
+					<if test="patientFlow != null">#{patientFlow,jdbcType=VARCHAR},</if>
+					<if test="healthDoc != null">#{healthDoc,jdbcType=VARCHAR},</if>
+					<if test="isAdvertisement != null">#{isAdvertisement,jdbcType=INTEGER},</if>
+					<if test="bed != null">#{bed,jdbcType=VARCHAR},</if>
+					<if test="hygienismCondition != null">#{hygienismCondition,jdbcType=VARCHAR},</if>
+					<if test="gps != null">#{gps,jdbcType=VARCHAR},</if>
+					<if test="coporationAttitude != null">#{coporationAttitude,jdbcType=VARCHAR},</if>
+					<if test="visitInfo != null">#{visitInfo,jdbcType=VARCHAR},</if>
+					<if test="isAssignContract != null">#{isAssignContract,jdbcType=INTEGER},</if>
+					<if test="contractInfo != null">#{contractInfo,jdbcType=VARCHAR},</if>
+					<if test="isAssignIntention != null">#{isAssignIntention,jdbcType=INTEGER},</if>
+					<if test="haveVisitValid != null">#{haveVisitValid,jdbcType=INTEGER},</if>
+					<if test="otherFacility != null">#{otherFacility,jdbcType=VARCHAR},</if>
+					<if test="qrCode != null">#{qrCode,jdbcType=VARCHAR},</if>
+					<if test="qrCode2 != null">#{qrCode2,jdbcType=VARCHAR},</if>
+					<if test="introduction != null">#{introduction,jdbcType=VARCHAR},</if>
+					<if test="serial != null">#{serial,jdbcType=VARCHAR},</if>
+					<if test="typeId != null">#{typeId,jdbcType=INTEGER},</if>
+					<if test="linkId != null">#{linkId,jdbcType=INTEGER},</if>
+					<if test="groupId != null">#{groupId,jdbcType=INTEGER},</if>
+					<if test="gradeId != null">#{gradeId,jdbcType=INTEGER},</if>
+					<if test="mainStatus != null">#{mainStatus,jdbcType=INTEGER},</if>
+					<if test="logicStatus != null">#{logicStatus,jdbcType=INTEGER},</if>
+					<if test="attrDecimal != null">#{attrDecimal,jdbcType=DECIMAL},</if>
+					<if test="mainIds != null">#{mainIds,jdbcType=VARCHAR},</if>
+					<if test="attrStr != null">#{attrStr,jdbcType=VARCHAR},</if>
+					<if test="attrStr2 != null">#{attrStr2,jdbcType=VARCHAR},</if>
+					<if test="attrInt != null">#{attrInt,jdbcType=INTEGER},</if>
+					<if test="attrInt2 != null">#{attrInt2,jdbcType=INTEGER},</if>
+					<if test="attrNum != null">#{attrNum,jdbcType=DECIMAL},</if>
+					<if test="attrDate != null">#{attrDate,jdbcType=DATE},</if>
+					<if test="attrDatetime != null">#{attrDatetime,jdbcType=TIMESTAMP},</if>
+					<if test="sequence != null">#{sequence,jdbcType=INTEGER},</if>
+					<if test="description != null">#{description,jdbcType=VARCHAR},</if>
+					<if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
+					<if test="deletedAt != null">#{deletedAt,jdbcType=TIMESTAMP},</if>
+					<if test="deletedBy != null">#{deletedBy,jdbcType=VARCHAR},</if>
+					<if test="createdAt != null">#{createdAt,jdbcType=TIMESTAMP},</if>
+					<if test="createdBy != null">#{createdBy,jdbcType=VARCHAR},</if>
+					<if test="updatedAt != null">#{updatedAt,jdbcType=TIMESTAMP},</if>
+					<if test="updatedBy != null">#{updatedBy,jdbcType=VARCHAR},</if>
+		</trim>
+	</insert>
+  	<!--====================================== 新增结束-INSERT_FINISH ======================================-->
+	
+	<!--====================================== 删除开始-DELETE_BEGIN ======================================-->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+	    DELETE FROM <include refid="table"/> WHERE id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<delete id="deleteByCondition">
+		DELETE FROM <include refid="table"/> WHERE ${condition}
+	</delete>
+	
+	<delete id="deleteByIds">
+	    DELETE FROM <include refid="table"/> WHERE id IN (${ids})
+	</delete>
+	<!--====================================== 删除结束-DELETE_FINISH ======================================-->
+      
+</mapper>

@@ -1,0 +1,14 @@
+2016年3月16日11:30:25：沃诊医疗项目初始版本上传
+
+需要了解的插件：
+前端：bootstrap,lodash.js,is.js,moment.js
+后台：http://commons.apache.org/:apache的commons工具包，主要了解：Lang，Validator，Configuration，Io
+
+参数的功能：
+	前台：文章article
+	后台：管理员Admin,用户User
+	
+	
+	
+	
+自动生成PO中非数据库字段的SET/GET方法
